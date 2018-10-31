@@ -1,0 +1,165 @@
+<root>
+	<OBJECT_ID>			INT32		</OBJECT_ID>
+	<BOOL>				UINT8		</BOOL>
+	<CONTROLLER_ID>		INT32		</CONTROLLER_ID>
+	<EXPERIENCE>		INT32		</EXPERIENCE>
+	<ITEM_ID>			INT32		</ITEM_ID>
+	<SKILLID>			INT32		</SKILLID>
+	<QUESTID>			INT32		</QUESTID>
+	<DBID>				UINT64		</DBID>
+	<UID>				UINT64		</UID>
+	<UID1>				PYTHON		</UID1>	
+	<ENTITY_ID>			INT32		</ENTITY_ID>
+	<ENTITY_NO>			UINT32		</ENTITY_NO>
+	<SPACE_ID>			UINT32		</SPACE_ID>
+	<POSITION3D>		VECTOR3		</POSITION3D>
+	<DIRECTION3D>		VECTOR3		</DIRECTION3D>
+	<ENTITY_UTYPE>		UINT32		</ENTITY_UTYPE>
+	<SPACE_KEY>			UINT64		</SPACE_KEY>
+	<DAMAGE_TYPE>		INT32		</DAMAGE_TYPE>
+	<ENMITY>			DAMAGE_TYPE	 </ENMITY>
+	<HP>				INT32		</HP>
+	<MP>				INT32		</MP>
+    <FRAMEID>             UINT32      </FRAMEID>
+    <CMD_TYPE>             UINT8      </CMD_TYPE>
+
+    <ENTITY_STATE> INT8		</ENTITY_STATE>
+	<ENTITY_SUBSTATE> UINT8	</ENTITY_SUBSTATE>
+	<ENTITY_FORBIDS> INT32	</ENTITY_FORBIDS>
+	<ENTITY_FORBID_COUNTER> ARRAY <of> INT8 </of>	</ENTITY_FORBID_COUNTER>
+	
+	<ENTITYID_LIST> ARRAY <of> ENTITY_ID </of>	</ENTITYID_LIST>
+	
+	<AVATAR_DATA>	FIXED_DICT
+		<implementedBy>AVATAR_DATA.inst</implementedBy>
+		<Properties>
+			<param1>
+				<Type>	INT8	</Type>
+			</param1>
+			<param2>
+				<Type>	BLOB	</Type>
+			</param2>
+		</Properties>
+	</AVATAR_DATA>	
+	
+	<AVATAR_INFOS>	FIXED_DICT
+		<implementedBy>AVATAR_INFOS.avatar_info_inst</implementedBy>
+		<Properties>
+			<dbid>
+				<Type>	DBID	</Type>
+			</dbid>
+			<name>
+				<Type>	UNICODE	</Type>
+				<DatabaseLength> 256 </DatabaseLength>
+			</name>
+			<roleType>
+				<Type>	UINT8	</Type>
+			</roleType>
+			<level>
+				<Type>	UINT16	</Type>
+			</level>
+			<data>
+				<Type>	AVATAR_DATA	</Type>
+			</data>
+		</Properties>
+	</AVATAR_INFOS>	
+	
+	<AVATAR_INFOS_LIST>	FIXED_DICT
+		<implementedBy>AVATAR_INFOS.avatar_info_list_inst</implementedBy>
+		<Properties>
+			<values>
+				<Type>	ARRAY <of> AVATAR_INFOS </of>	</Type>
+			</values>
+		</Properties>
+	</AVATAR_INFOS_LIST>	
+	
+
+	<SPACE_INFO>	FIXED_DICT
+		<implementedBy>SPACE_INFO.inst</implementedBy>
+		<Properties>
+			<space_key>
+				<Type>	SPACE_KEY	</Type>
+			</space_key>
+			<player_count>
+				<Type>	UINT8	</Type>
+			</player_count>
+			<space_state>
+				<Type>	INT8	</Type>
+			</space_state>
+			<space_creater>
+				<Type>	ENTITY_ID	</Type>
+			</space_creater>
+		</Properties>
+	</SPACE_INFO>
+
+
+	<SPACE_LIST>	FIXED_DICT
+		<implementedBy>SPACE_LIST.inst</implementedBy>
+		<Properties>
+			<values>
+				<Type>	ARRAY <of> SPACE_INFO </of>	</Type>
+			</values>
+		</Properties>
+	</SPACE_LIST>
+
+
+	<ENTITY_DATA>	FIXED_DICT
+		<implementedBy>ENTITY_DATA.inst</implementedBy>
+		<Properties>
+			<entityid>
+				<Type>	ENTITY_ID	</Type>
+			</entityid>
+			<cmd_type>
+				<Type>	CMD_TYPE	</Type>
+			</cmd_type>
+			<datas>
+				<Type>	BLOB	</Type>
+			</datas>
+		</Properties>
+	</ENTITY_DATA>
+
+
+	<FRAME_DATA>	FIXED_DICT
+		<implementedBy>FRAME_DATA.inst</implementedBy>
+		<Properties>
+			<frameid>
+				<Type>	FRAMEID	</Type>
+			</frameid>
+			<operation>
+				<Type>	ARRAY <of> ENTITY_DATA </of> </Type>
+			</operation>
+		</Properties>
+	</FRAME_DATA>
+
+	<FRAME_LIST>	FIXED_DICT
+		<implementedBy>FRAME_LIST.inst</implementedBy>
+		<Properties>
+			<values>
+				<Type>	ARRAY <of> FRAME_DATA </of>	</Type>
+			</values>
+		</Properties>
+	</FRAME_LIST>
+
+
+	<BAG>	FIXED_DICT
+		<Properties>
+			<values22>
+				<Type>	ARRAY <of> ARRAY <of>INT64 </of></of>	</Type>
+			</values22>
+		</Properties>
+	</BAG>	
+	
+	<EXAMPLES>	FIXED_DICT
+		<Properties>
+			<k1>
+				<Persistent>	false	</Persistent>
+				<Type>	INT64	</Type>
+			</k1>
+			
+			<k2>
+				<Type>	INT64	</Type>
+			</k2>
+		</Properties>
+	</EXAMPLES>	
+	
+</root>

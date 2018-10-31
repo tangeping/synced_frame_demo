@@ -1,0 +1,79 @@
+<root>
+
+	<Interfaces>
+		<Interface>	GameObject		</Interface>
+	</Interfaces>
+
+  	<Components>
+		<component1>			
+			<Type> 			Operation		</Type>
+			<Persistent>	true		</Persistent>
+		</component1>
+	</Components>
+
+	<Properties>
+		<roleType>
+			<Type>			UINT8		</Type>
+			<Flags>			BASE		</Flags>
+			<Persistent>	true		</Persistent>
+		</roleType>
+
+		<name>
+			<Type>			UNICODE			</Type>
+			<Utype> 		41003			</Utype>
+			<Flags>			ALL_CLIENTS		</Flags>
+			<Persistent>		true			</Persistent>
+			<DetailLevel>		MEDIUM			</DetailLevel>
+		</name>
+
+		<level>
+			<Utype>			41002		</Utype>
+			<Type>			UINT16		</Type>
+			<Flags>			CELL_PUBLIC_AND_OWN			</Flags>
+			<Persistent>	true		</Persistent>
+		</level>
+
+		<dbid>
+			<Type>			DBID			</Type>
+			<Flags>			CELL_PUBLIC		</Flags>
+			<Default>		0			</Default>
+			<Persistent>		true			</Persistent>
+		</dbid>
+
+        <frameId>
+            <Type>      FRAMEID                </Type>
+            <Flags>     CELL_PUBLIC         </Flags>
+            <Persistent>        false                </Persistent>
+            <Default>       0               </Default>
+        </frameId>
+
+	</Properties>
+
+	<BaseMethods>
+		<createCell>
+			<Arg>			ENTITYCALL	</Arg>
+		</createCell>
+
+		<destoryCell>
+		</destoryCell>
+
+	</BaseMethods>
+
+	<CellMethods>
+		<reqFrameChange>
+            <Exposed/>
+            <Arg>       ENTITY_DATA      </Arg>
+        </reqFrameChange>
+	</CellMethods>
+
+	<ClientMethods>
+	    <onRspFrameMessage>
+        <Arg>           FRAME_DATA               </Arg>
+        </onRspFrameMessage>
+
+        <onGameBegine>
+        <Arg>           DBID               </Arg>
+        </onGameBegine>
+	</ClientMethods>
+</root>
+

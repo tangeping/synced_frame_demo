@@ -1,0 +1,47 @@
+<root>
+
+	<Interfaces>
+		
+	</Interfaces>
+
+	<Properties>
+	</Properties>
+
+	<BaseMethods>
+		<loginToSpace>
+			<Arg>		ENTITYCALL		</Arg>
+			<Arg>		SPACE_KEY	</Arg>
+		</loginToSpace>
+
+		<logoutSpace>
+			<Arg>		ENTITYCALL		</Arg>
+			<Arg>		SPACE_KEY		</Arg>
+		</logoutSpace>
+
+		<onSpaceLoseCell>
+			<Arg>		SPACE_KEY			</Arg>
+		</onSpaceLoseCell>
+
+		<onSpaceGetCell>
+			<Arg>		ENTITYCALL		</Arg>
+			<Arg>		SPACE_KEY			</Arg>
+		</onSpaceGetCell>
+
+		<onSpaceList>
+			<Arg>		ENTITYCALL		</Arg>
+		</onSpaceList>
+
+		<onCreateSpace>
+			<Arg>		ENTITYCALL		</Arg>
+		</onCreateSpace>
+
+		<onRemoveSpace>
+			<Arg>			SPACE_KEY				</Arg>	
+		</onRemoveSpace>
+
+	</BaseMethods>
+
+	<CellMethods>
+	</CellMethods>
+</root>
+
