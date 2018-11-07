@@ -31,9 +31,8 @@
 
 			TSVector vel = Body1.LinearVelocity;
 			vel.z = 0;
-            CBFrame.Utils.Logger.Debug("line34 body2.linearVelocity:" + body2.linearVelocity + ",body1.linearVelocity:" + body1.linearVelocity);
-            Body1.LinearVelocity = vel;
-            CBFrame.Utils.Logger.Debug("line36 body2.linearVelocity:" + body2.linearVelocity + ",body1.linearVelocity:" + body1.linearVelocity);
+			Body1.LinearVelocity = vel;
+
             TSVector av = Body1.AngularVelocity;
 			av.x = 0;
 			av.y = 0;

@@ -21,7 +21,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using UnityEngine;
 #endregion
 
 namespace TrueSync.Physics3D
@@ -256,10 +255,7 @@ namespace TrueSync.Physics3D
             events.RaiseAddedSoftBody(body);
 
             foreach (Constraint constraint in body.EdgeSprings)
-            {
-                CBFrame.Utils.Logger.Debug("line260 body2.linearVelocity:" + constraint.body2.linearVelocity + ",body1.linearVelocity:" + constraint.body1.linearVelocity);
                 AddConstraint(constraint);
-            }
 
             foreach (SoftBody.MassPoint massPoint in body.VertexBodies)
             {
@@ -605,7 +601,7 @@ namespace TrueSync.Physics3D
             
             CheckDeactivation();
 
-            IntegrateForces(); //作用力
+            IntegrateForces();
 
             HandleArbiter(contactIterations);
 
@@ -787,13 +783,9 @@ namespace TrueSync.Physics3D
                 RigidBody body = rigidBodies[index];
                 if (!body.isStatic && body.IsActive)
                 {
-                    CBFrame.Utils.Logger.Debug("line787 linearVelocity:" + body.linearVelocity);
-
                     TSVector temp;
                     TSVector.Multiply(ref body.force, body.inverseMass * timestep, out temp);
                     TSVector.Add(ref temp, ref body.linearVelocity, out body.linearVelocity);
-
-                    CBFrame.Utils.Logger.Debug("line793 linearVelocity:" + body.linearVelocity);
 
                     if (!(body.isParticle))
                     {
@@ -801,25 +793,12 @@ namespace TrueSync.Physics3D
                         TSVector.Transform(ref temp, ref body.invInertiaWorld, out temp);
                         TSVector.Add(ref temp, ref body.angularVelocity, out body.angularVelocity);
                     }
-                    CBFrame.Utils.Logger.Debug("line801 linearVelocity:" + body.linearVelocity);
 
                     if (body.affectedByGravity)
                     {
-                        if(body.linearVelocity.y <= -0.0000741470 && body.linearVelocity.y >= -0.0000741475)
-                        {
-                            Debug.Log("body.linearVelocity:" + body.linearVelocity);
-                        }
                         TSVector.Multiply(ref gravity, timestep, out temp);
-                        CBFrame.Utils.Logger.Debug("line809 gravity:" + gravity + ",timestep:" + timestep + 
-                            ",temp:" + temp + ",body.linearVelocity:"+ body.linearVelocity);
                         TSVector.Add(ref body.linearVelocity, ref temp, out body.linearVelocity);
-                        
                     }
-                    if(body.linearVelocity.y <= -0.2000741000 && body.linearVelocity.y >= -0.2000742000)
-                    {
-                        Debug.Log("body.linearVelocity:" + body.linearVelocity);
-                    }
-                    CBFrame.Utils.Logger.Debug("line814 linearVelocity:" + body.linearVelocity);
                 }
 
                 body.force.MakeZero();
@@ -863,11 +842,9 @@ namespace TrueSync.Physics3D
 
                 dorn.Normalize(); TSMatrix.CreateFromQuaternion(ref dorn, out body.orientation);
             }
-            CBFrame.Utils.Logger.Debug("line852 this.linearVelocity:" + body.linearVelocity);
 
             body.linearVelocity *= 1 / (1 + timestep * body.linearDrag);
             body.angularVelocity *= 1 / (1 + timestep * body.angularDrag);
-            CBFrame.Utils.Logger.Debug("line856 this.linearVelocity:" + body.linearVelocity);
 
             /*if ((body.Damping & RigidBody.DampingType.Linear) != 0)
                 TSVector.Multiply(ref body.linearVelocity, currentLinearDampFactor, out body.linearVelocity);

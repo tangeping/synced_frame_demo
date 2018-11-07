@@ -119,19 +119,17 @@ namespace TrueSync.Physics3D {
 
             bias = - (l % (p2-p1)).magnitude * biasFactor * (FP.One / timestep);
 
-            CBFrame.Utils.Logger.Debug("line122 body2.linearVelocity:" + body2.linearVelocity + ",body1.linearVelocity:" + body1.linearVelocity);
             if (!body1.isStatic)
             {
                 body1.linearVelocity += body1.inverseMass * accumulatedImpulse * jacobian[0];
                 body1.angularVelocity += TSVector.Transform(accumulatedImpulse * jacobian[1], body1.invInertiaWorld);
             }
-            CBFrame.Utils.Logger.Debug("line128 body2.linearVelocity:" + body2.linearVelocity + ",body1.linearVelocity:" + body1.linearVelocity);
+
             if (!body2.isStatic)
             {
                 body2.linearVelocity += body2.inverseMass * accumulatedImpulse * jacobian[2];
                 body2.angularVelocity += TSVector.Transform(accumulatedImpulse * jacobian[3], body2.invInertiaWorld);
             }
-            CBFrame.Utils.Logger.Debug("line134 body2.linearVelocity:" + body2.linearVelocity + ",body1.linearVelocity:" + body1.linearVelocity);
         }
 
         /// <summary>
@@ -150,19 +148,18 @@ namespace TrueSync.Physics3D {
             FP lambda = -effectiveMass * (jv + bias + softnessScalar);
 
             accumulatedImpulse += lambda;
-            CBFrame.Utils.Logger.Debug("line151 body2.linearVelocity:" + body2.linearVelocity + ",body1.linearVelocity:" + body1.linearVelocity);
+
             if (!body1.isStatic)
             {
                 body1.linearVelocity += body1.inverseMass * lambda * jacobian[0];
                 body1.angularVelocity += TSVector.Transform(lambda * jacobian[1], body1.invInertiaWorld);
             }
-            CBFrame.Utils.Logger.Debug("line157 body2.linearVelocity:" + body2.linearVelocity + ",body1.linearVelocity:" + body1.linearVelocity);
+
             if (!body2.isStatic)
             {
                 body2.linearVelocity += body2.inverseMass * lambda * jacobian[2];
                 body2.angularVelocity += TSVector.Transform(lambda * jacobian[3], body2.invInertiaWorld);
             }
-            CBFrame.Utils.Logger.Debug("line163 body2.linearVelocity:" + body2.linearVelocity + ",body1.linearVelocity:" + body1.linearVelocity);
         }
 
         public override void DebugDraw(IDebugDrawer drawer)

@@ -89,8 +89,7 @@ namespace TrueSync.Physics3D {
 			this.position = rb.Position;
 			this.orientation = rb.Orientation;
 			this.linearVelocity = rb.LinearVelocity;
-            CBFrame.Utils.Logger.Debug("line401 this.linearVelocity:" + this.linearVelocity);
-            this.angularVelocity = rb.AngularVelocity;
+			this.angularVelocity = rb.AngularVelocity;
 			this.inertia = rb.Inertia;
 			this.invInertia = rb.InverseInertia;
 			this.invInertiaWorld = rb.InverseInertiaWorld;
@@ -176,7 +175,6 @@ namespace TrueSync.Physics3D {
             rb.angularDrag = this.angularDrag;
 
             rb.linearVelocity = linearVelocity;
-            CBFrame.Utils.Logger.Debug("line402 this.linearVelocity:" + this.linearVelocity);
             rb.angularVelocity = angularVelocity;
 
             rb.staticFriction = this.staticFriction;

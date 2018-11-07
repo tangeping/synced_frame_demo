@@ -185,16 +185,11 @@ namespace TrueSync.Physics3D {
             dvy = body2.linearVelocity.y - body1.linearVelocity.y;
             dvz = body2.linearVelocity.z - body1.linearVelocity.z;
 
-            CBFrame.Utils.Logger.Debug("line188 body2.linearVelocity:" + body2.linearVelocity + ",body1.linearVelocity:"+ body1.linearVelocity+
-                 ",dvx:" + dvx + ",dvy:" + dvy + ",dvz:" + dvz);
-
             if (!body1IsMassPoint)
             {
                 dvx = dvx - (body1.angularVelocity.y * relativePos1.z) + (body1.angularVelocity.z * relativePos1.y);
                 dvy = dvy - (body1.angularVelocity.z * relativePos1.x) + (body1.angularVelocity.x * relativePos1.z);
                 dvz = dvz - (body1.angularVelocity.x * relativePos1.y) + (body1.angularVelocity.y * relativePos1.x);
-                CBFrame.Utils.Logger.Debug("line196 body1IsMassPoint:" + body1IsMassPoint + ",dvx:" + dvx + ",dvy:" + dvy + ",dvz:" + dvz
-                    + ",body1.angularVelocity:" + body1.angularVelocity + ",body2.angularVelocity:" + body1.angularVelocity + ",relativePos1:" + relativePos1);
             }
 
             if (!body2IsMassPoint)
@@ -202,8 +197,6 @@ namespace TrueSync.Physics3D {
                 dvx = dvx + (body2.angularVelocity.y * relativePos2.z) - (body2.angularVelocity.z * relativePos2.y);
                 dvy = dvy + (body2.angularVelocity.z * relativePos2.x) - (body2.angularVelocity.x * relativePos2.z);
                 dvz = dvz + (body2.angularVelocity.x * relativePos2.y) - (body2.angularVelocity.y * relativePos2.x);
-                CBFrame.Utils.Logger.Debug("line204 body2IsMassPoint:" + body2IsMassPoint + ",dvx:" + dvx + ",dvy:" + dvy + ",dvz:" + dvz
-                    + ",body2.angularVelocity:"+ body2.angularVelocity+ ",body2.angularVelocity:"+ body2.angularVelocity+ ",relativePos2:"+ relativePos2);
             }
 
             // this gets us some performance
@@ -211,18 +204,12 @@ namespace TrueSync.Physics3D {
             { return; }
 
             FP vn = normal.x * dvx + normal.y * dvy + normal.z * dvz;
-            CBFrame.Utils.Logger.Debug("line209 vn:"+ vn +",normal:" + normal + ",dvx:" + dvx + ",dvy:"+ dvy+ ",dvz:"+ dvz);
-
             FP normalImpulse = massNormal * (-vn + restitutionBias + speculativeVelocity);
-            CBFrame.Utils.Logger.Debug("line210 normalImpulse:" + normalImpulse + ",massNormal:" + massNormal
-                + ",vn:" + vn + ",restitutionBias:" + restitutionBias + ",speculativeVelocity:" + speculativeVelocity);
 
             FP oldNormalImpulse = accumulatedNormalImpulse;
             accumulatedNormalImpulse = oldNormalImpulse + normalImpulse;
             if (accumulatedNormalImpulse < FP.Zero) accumulatedNormalImpulse = FP.Zero;
             normalImpulse = accumulatedNormalImpulse - oldNormalImpulse;
-
-            CBFrame.Utils.Logger.Debug("line218 oldNormalImpulse:" + oldNormalImpulse + ",accumulatedNormalImpulse:" + accumulatedNormalImpulse);
 
             FP vt = dvx * tangent.x + dvy * tangent.y + dvz * tangent.z;
             FP maxTangentImpulse = friction * accumulatedNormalImpulse;
@@ -240,7 +227,6 @@ namespace TrueSync.Physics3D {
             impulse.x = normal.x * normalImpulse + tangent.x * tangentImpulse;
             impulse.y = normal.y * normalImpulse + tangent.y * tangentImpulse;
             impulse.z = normal.z * normalImpulse + tangent.z * tangentImpulse;
-            CBFrame.Utils.Logger.Debug("line232 impulse:" + impulse + ",normal:" + normal + ",normalImpulse:"+ normalImpulse+ ",tangent:"+ tangent+ ",tangentImpulse:"+ tangentImpulse);
 
             if (!treatBody1AsStatic)
             {
@@ -273,15 +259,13 @@ namespace TrueSync.Physics3D {
                     body1.angularVelocity.z -= num5;
                 }
             }
-            CBFrame.Utils.Logger.Debug("line264 body2.linearVelocity:" + body2.linearVelocity + ",body1.linearVelocity:" + body1.linearVelocity);
+
             if (!treatBody2AsStatic)
             {
 
                 body2.linearVelocity.x += (impulse.x * body2.inverseMass);
                 body2.linearVelocity.y += (impulse.y * body2.inverseMass);
                 body2.linearVelocity.z += (impulse.z * body2.inverseMass);
-
-                CBFrame.Utils.Logger.Debug("line272 treatBody2AsStatic:" + treatBody2AsStatic + ",impulse:" + impulse + ",body2.inverseMass:" + body2.inverseMass);
 
                 if (!body2IsMassPoint)
                 {
@@ -310,7 +294,7 @@ namespace TrueSync.Physics3D {
 
                 }
             }
-            CBFrame.Utils.Logger.Debug("line299 body2.linearVelocity:" + body2.linearVelocity + ",body1.linearVelocity:" + body1.linearVelocity);
+
         }
 
         public FP AppliedNormalImpulse { get { return accumulatedNormalImpulse; } }
@@ -356,7 +340,6 @@ namespace TrueSync.Physics3D {
             #region INLINE - HighFrequency
             //JVector temp;
 
-            CBFrame.Utils.Logger.Debug("line345 body2.linearVelocity:" + body2.linearVelocity + ",body1.linearVelocity:" + body1.linearVelocity);
             if (!treatBody1AsStatic)
             {
                 body1.linearVelocity.x -= (impulse.x * body1.inverseMass);
@@ -385,7 +368,7 @@ namespace TrueSync.Physics3D {
                 body1.angularVelocity.y -= num4;
                 body1.angularVelocity.z -= num5;
             }
-            CBFrame.Utils.Logger.Debug("line374 body2.linearVelocity:" + body2.linearVelocity + ",body1.linearVelocity:" + body1.linearVelocity);
+
             if (!treatBody2AsStatic)
             {
 
@@ -415,7 +398,7 @@ namespace TrueSync.Physics3D {
                 body2.angularVelocity.y += num4;
                 body2.angularVelocity.z += num5;
             }
-            CBFrame.Utils.Logger.Debug("line404 body2.linearVelocity:" + body2.linearVelocity + ",body1.linearVelocity:" + body1.linearVelocity);
+
 
             #endregion
         }
@@ -424,7 +407,7 @@ namespace TrueSync.Physics3D {
         {
             #region INLINE - HighFrequency
             //JVector temp;
-            CBFrame.Utils.Logger.Debug("line413 body2.linearVelocity:" + body2.linearVelocity + ",body1.linearVelocity:" + body1.linearVelocity);
+
             if (!treatBody1AsStatic)
             {
                 body1.linearVelocity.x -= (impulse.x * body1.inverseMass);
@@ -453,7 +436,7 @@ namespace TrueSync.Physics3D {
                 body1.angularVelocity.y -= num4;
                 body1.angularVelocity.z -= num5;
             }
-            CBFrame.Utils.Logger.Debug("line442 body2.linearVelocity:" + body2.linearVelocity + ",body1.linearVelocity:" + body1.linearVelocity);
+
             if (!treatBody2AsStatic)
             {
 
@@ -483,7 +466,7 @@ namespace TrueSync.Physics3D {
                 body2.angularVelocity.y += num4;
                 body2.angularVelocity.z += num5;
             }
-            CBFrame.Utils.Logger.Debug("line472 body2.linearVelocity:" + body2.linearVelocity + ",body1.linearVelocity:" + body1.linearVelocity);
+
 
             #endregion
         }
@@ -708,7 +691,6 @@ namespace TrueSync.Physics3D {
             impulse.y = normal.y * accumulatedNormalImpulse + tangent.y * accumulatedTangentImpulse;
             impulse.z = normal.z * accumulatedNormalImpulse + tangent.z * accumulatedTangentImpulse;
 
-            CBFrame.Utils.Logger.Debug("line697 body2.linearVelocity:" + body2.linearVelocity + ",body1.linearVelocity:" + body1.linearVelocity);
             if (!treatBody1AsStatic)
             {
                 body1.linearVelocity.x -= (impulse.x * body1.inverseMass);
@@ -741,7 +723,7 @@ namespace TrueSync.Physics3D {
 
                 }
             }
-            CBFrame.Utils.Logger.Debug("line730 body2.linearVelocity:" + body2.linearVelocity + ",body1.linearVelocity:" + body1.linearVelocity);
+
             if (!treatBody2AsStatic)
             {
 
@@ -775,7 +757,7 @@ namespace TrueSync.Physics3D {
                     body2.angularVelocity.z += num5;
                 }
             }
-            CBFrame.Utils.Logger.Debug("line764 body2.linearVelocity:" + body2.linearVelocity + ",body1.linearVelocity:" + body1.linearVelocity);
+
             lastTimeStep = timestep;
 
             newContact = false;
@@ -822,8 +804,6 @@ namespace TrueSync.Physics3D {
             {
                 treatBody1AsStatic = body1.isStatic;
                 treatBody2AsStatic = body2.isStatic;
-
-                CBFrame.Utils.Logger.Debug("line812 body2.isStatic:" + body2.isStatic + ",body1.isStatic:" + body1.isStatic);
 
                 accumulatedNormalImpulse = FP.Zero;
                 accumulatedTangentImpulse = FP.Zero;

@@ -277,12 +277,10 @@ namespace TrueSync.Physics3D {
                 }
                 else if (isActive && !value)
                 {
-                    CBFrame.Utils.Logger.Debug("line280 this.linearVelocity:" + this.linearVelocity);
                     // if active and should be inactive
                     inactiveTime = FP.PositiveInfinity;
                     this.angularVelocity.MakeZero();
                     this.linearVelocity.MakeZero();
-                    CBFrame.Utils.Logger.Debug("line283 this.linearVelocity:" + this.linearVelocity );
                 }
 
                 isActive = value;
@@ -312,18 +310,9 @@ namespace TrueSync.Physics3D {
                 return;
             }
 
-            CBFrame.Utils.Logger.Debug("line314 linearVelocity:" + linearVelocity);
-
             TSVector temp;
             TSVector.Multiply(ref impulse, inverseMass, out temp);
             TSVector.Add(ref linearVelocity, ref temp, out linearVelocity);
-
-            CBFrame.Utils.Logger.Debug("line320  linearVelocity:" + linearVelocity);
-
-            if(linearVelocity.y._serializedValue == 17809140)
-            {
-                UnityEngine.Debug.Log("linearVelocity:" + linearVelocity);
-            }
         }
 
         /// <summary>
@@ -338,7 +327,7 @@ namespace TrueSync.Physics3D {
             if (this.isStatic) {
                 return;
             }
-            CBFrame.Utils.Logger.Debug("line335  linearVelocity:" + linearVelocity);
+
             TSVector temp;
             TSVector.Multiply(ref impulse, inverseMass, out temp);
             TSVector.Add(ref linearVelocity, ref temp, out linearVelocity);
@@ -346,8 +335,6 @@ namespace TrueSync.Physics3D {
             TSVector.Cross(ref relativePosition, ref impulse, out temp);
             TSVector.Transform(ref temp, ref invInertiaWorld, out temp);
             TSVector.Add(ref angularVelocity, ref temp, out angularVelocity);
-
-            CBFrame.Utils.Logger.Debug("line344  linearVelocity:" + linearVelocity);
         }
 
         /// <summary>
@@ -499,9 +486,8 @@ namespace TrueSync.Physics3D {
                 if (this.isStatic) {
                     return;
                 }
-                CBFrame.Utils.Logger.Debug("line496  linearVelocity:" + linearVelocity);
+
                 linearVelocity = value;
-                CBFrame.Utils.Logger.Debug("line498  linearVelocity:" + linearVelocity);
             }
         }
 
@@ -571,10 +557,8 @@ namespace TrueSync.Physics3D {
 
                     this.angularVelocity.MakeZero();
                     this.linearVelocity.MakeZero();
-                    CBFrame.Utils.Logger.Debug("line569  linearVelocity:" + linearVelocity);
                 }
                 isStatic = value;
-                CBFrame.Utils.Logger.Debug("line572  isStatic:" + isStatic);
             }
         }
 

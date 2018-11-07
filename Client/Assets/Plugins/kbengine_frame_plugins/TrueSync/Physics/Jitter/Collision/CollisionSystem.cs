@@ -268,9 +268,6 @@ namespace TrueSync.Physics3D {
             TSVector point, normal;
             FP penetration;
 
-            CBFrame.Utils.Logger.Debug("line271 body2.linearVelocity:" + body2.linearVelocity + ",body1.linearVelocity:" + body1.linearVelocity);
-
-
             if (!b1IsMulti && !b2IsMulti)
             {
                 if (XenoCollide.Detect(body1.Shape, body2.Shape, ref body1.orientation,
@@ -448,9 +445,6 @@ namespace TrueSync.Physics3D {
 
                 ms.ReturnWorkingClone();
             }
-
-            CBFrame.Utils.Logger.Debug("line451 body2.linearVelocity:" + body2.linearVelocity + ",body1.linearVelocity:" + body1.linearVelocity);
-
         }
 
         private void DetectSoftRigid(RigidBody rigidBody, SoftBody softBody)

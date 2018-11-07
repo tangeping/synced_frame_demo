@@ -145,17 +145,15 @@ namespace TrueSync.Physics3D {
 
                     bias = deltaLength * biasFactor * (FP.One / timestep);
 
-                    CBFrame.Utils.Logger.Debug("line148 body2.linearVelocity:" + body2.linearVelocity + ",body1.linearVelocity:" + body1.linearVelocity);
                     if (!body1.isStatic)
                     {
                         body1.linearVelocity += body1.inverseMass * accumulatedImpulse * jacobian[0];
                     }
-                    CBFrame.Utils.Logger.Debug("line153 body2.linearVelocity:" + body2.linearVelocity + ",body1.linearVelocity:" + body1.linearVelocity);
+
                     if (!body2.isStatic)
                     {
                         body2.linearVelocity += body2.inverseMass * accumulatedImpulse * jacobian[1];
                     }
-                    CBFrame.Utils.Logger.Debug("line158 body2.linearVelocity:" + body2.linearVelocity + ",body1.linearVelocity:" + body1.linearVelocity);
                 }
 
             }
@@ -192,19 +190,18 @@ namespace TrueSync.Physics3D {
                 }
 
                 TSVector temp;
-                CBFrame.Utils.Logger.Debug("line195 body2.linearVelocity:" + body2.linearVelocity + ",body1.linearVelocity:" + body1.linearVelocity);
+
                 if (!body1.isStatic)
                 {
                     TSVector.Multiply(ref jacobian[0], lambda * body1.inverseMass, out temp);
                     TSVector.Add(ref temp, ref body1.linearVelocity, out body1.linearVelocity);
                 }
-                CBFrame.Utils.Logger.Debug("line201 body2.linearVelocity:" + body2.linearVelocity + ",body1.linearVelocity:" + body1.linearVelocity);
+
                 if (!body2.isStatic)
                 {
                     TSVector.Multiply(ref jacobian[1], lambda * body2.inverseMass, out temp);
                     TSVector.Add(ref temp, ref body2.linearVelocity, out body2.linearVelocity);
                 }
-                CBFrame.Utils.Logger.Debug("line206 body2.linearVelocity:" + body2.linearVelocity + ",body1.linearVelocity:" + body1.linearVelocity);
             }
 
             public override void DebugDraw(IDebugDrawer drawer)
