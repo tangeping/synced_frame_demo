@@ -19,8 +19,8 @@ public class TestManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        GameObject me = SyncedInstantiate(playerPerfab, new TSVector(-2, 1, 16), new TSQuaternion(0, 0, 0, 1));
-        me.AddComponent<TestControl>().owerId = 3;
+        //GameObject me = SyncedInstantiate(playerPerfab, new TSVector(-2, 1, 16), new TSQuaternion(0, 0, 0, 1));
+        //me.AddComponent<TestControl>().owerId = 3;
 
 //         GameObject other = SyncedInstantiate(playerPerfab, new TSVector(6, 1.0, 16.0), new TSQuaternion(0, 0, 0, 1));
 //         other.AddComponent<TestControl>().owerId = 7;

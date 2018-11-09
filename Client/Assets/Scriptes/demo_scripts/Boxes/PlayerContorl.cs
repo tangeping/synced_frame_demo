@@ -49,6 +49,8 @@ public class PlayerContorl : MonoBehaviour
 
     public KBEngine.Avatar owner;
 
+    public Animator anim;
+
     public UInt32 FrameCount = 0;
 
     public TSVector force = new TSVector();
@@ -66,8 +68,9 @@ public class PlayerContorl : MonoBehaviour
 
         tsTransform = GetComponent<TSTransform>();
 
-  
-        Debug.Log("PlayerContorl::start:" + tsRigidBody + ",tsTransform:" + tsTransform);
+        anim = GetComponent<Animator>();
+
+        Debug.Log("PlayerContorl::start:" + tsRigidBody + ",tsTransform:" + tsTransform + ",anim:"+anim);
 
         // if is first player then changes ball's color to black
     }
@@ -121,7 +124,7 @@ public class PlayerContorl : MonoBehaviour
 
     }
 
-    void simulation()
+    void simulation_Ball()
     {
         if (FrameCount < 1000)
         {
@@ -149,6 +152,40 @@ public class PlayerContorl : MonoBehaviour
         }
     }
 
+    public void SimulationAnimator()
+    {
+        float h = 0.0f, v = 0.0f;
+
+        if (FrameCount < 500)
+        {
+            h = -1.0f;
+        }
+        else if (FrameCount < 1000)
+        {
+            h = 1.0f;
+        }
+        else if (FrameCount < 1500)
+        {
+            v = -1.0f;
+        }
+        else if (FrameCount < 200)
+        {
+            v = 1.0f;
+        }
+        else 
+        {
+            h = 0.0f;
+            v = 0.0f;
+        }
+
+        if (anim)
+        {
+            anim.SetFloat("MyBlend", h);
+            anim.SetFloat("YouBlend", v);
+            //Debug.Log("h:" + h + ",v:" + v);
+        }
+
+    }
     /**
     * @brief Updates ball's movements and instantiates new ball objects when player press space.
     **/
@@ -158,8 +195,14 @@ public class PlayerContorl : MonoBehaviour
 
         //FrameCount = frameMsg.frameid;
         FrameCount++;
+ //       anim.Update(Time.deltaTime);
 
-        simulation();
+        if(anim.speed != 1)
+        {
+            anim.speed = 1;
+        }
+
+        SimulationAnimator();
 
         string Snapshot = "id: " + owner.id
             + ",frameCount: " + FrameCount
@@ -177,7 +220,7 @@ public class PlayerContorl : MonoBehaviour
             + ",force: " + ((TrueSync.Physics3D.RigidBody)tsRigidBody.tsCollider.Body).Force;
         
 
-        CBFrame.Utils.Logger.Debug(owner.id.ToString(),Snapshot);
+        //CBFrame.Utils.Logger.Debug(owner.id.ToString(),Snapshot);
 
         //         TSVector movement = TSVector.zero;
         //         bool space = false;
@@ -208,6 +251,16 @@ public class PlayerContorl : MonoBehaviour
 
     }
 
+    public void OnSyncedGamePause()
+    {
+        if(anim.speed > 0)
+        {
+            anim.speed = 0;
+            
+        }
+
+        Debug.Log("anim.speed:" + anim.speed);
+    }
     /**
     * @brief Tints box's material with gray color when it collides with the ball.
     **/

@@ -172,7 +172,7 @@ public class RoomPanel : PanelBase
     public void RecvFight()
     {
         // 加载战斗场景
-        SceneManager.LoadScene("world");
+        SceneManager.LoadScene("battle");
 
         Close();
     }

@@ -28,6 +28,7 @@ namespace KBEngine
 		public virtual void onWinScoreChanged(Int32 oldValue) {}
 
 		public abstract void onCreateSpaceResult(UInt64 arg1); 
+		public abstract void onGamePause(UInt32 arg1); 
 		public abstract void onLoginOutSpaceResult(Int32 arg1, UInt64 arg2); 
 		public abstract void onLoginSpaceResult(UInt64 arg1); 
 		public abstract void onReqSpaceList(SPACE_LIST arg1); 
@@ -49,6 +50,10 @@ namespace KBEngine
 				case 16:
 					UInt64 onCreateSpaceResult_arg1 = stream.readUint64();
 					onCreateSpaceResult(onCreateSpaceResult_arg1);
+					break;
+				case 19:
+					UInt32 onGamePause_arg1 = stream.readUint32();
+					onGamePause(onGamePause_arg1);
 					break;
 				case 18:
 					Int32 onLoginOutSpaceResult_arg1 = stream.readInt32();

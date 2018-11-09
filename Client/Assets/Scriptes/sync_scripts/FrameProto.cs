@@ -15,6 +15,7 @@ namespace SyncFrame
         USER = 3,
         TEST = 4,
         BOX  = 5,
+        FPS  = 6,
         MAX =255,
     }
 
@@ -198,6 +199,38 @@ namespace SyncFrame
             space = s.readUint8() != 0 ;
         }
     }
+
+    public class FrameFPS : FrameBase
+    {
+        public UInt16 keyValue = 0;
+
+
+        public FrameFPS(CMD cmd, UInt16 k)
+        {
+            e.cmd_type = (Byte)cmd;
+            keyValue = k;
+        }
+
+        public FrameFPS()
+        {
+        }
+
+        public override ENTITY_DATA Serialize()
+        {
+            s.writeUint16(keyValue);
+            e.datas = new byte[s.wpos];
+            Array.Copy(s.data(), e.datas, s.wpos);
+            return e;
+        }
+
+        public override void PareseFrom(ENTITY_DATA e)
+        {
+            this.e = e;
+            s.setBuffer(e.datas);
+            keyValue = s.readUint16();
+        }
+    }
+
     public class FrameProto
     {
         static public ENTITY_DATA encode(FrameBase sendMsg)
@@ -234,6 +267,11 @@ namespace SyncFrame
                 case CMD.BOX:
                     {
                         f = new FrameBox();
+                    }
+                    break;
+                case CMD.FPS:
+                    {
+                        f = new FrameFPS();
                     }
                     break;
                 default:

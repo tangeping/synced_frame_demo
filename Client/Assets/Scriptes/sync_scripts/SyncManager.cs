@@ -52,10 +52,12 @@ namespace SyncFrame
                 {
                     continue;
                 }
-                
+
                 //TSVector bronPosition = new TSVector(-3 + (i - 1) * 4, 1, 16);
- 
-                GameObject perfab =  SyncedInstantiate(playerPerfab, player.position.ToTSVector(), new TSQuaternion(0, 0, 0, 1));
+                TSVector position = new TSVector(0f, 1f, 0f);
+                TSVector direciton = new TSVector(0f, 180f, 0f);
+
+                GameObject perfab =  SyncedInstantiate(playerPerfab, position, TSQuaternion.Euler(direciton));
            
                 Debug.Log("SyncManager::CreatePlayer.player.renderObj:" + (perfab == null? "Null": perfab.name)
                     +",position:" + perfab.transform.position );
@@ -81,6 +83,7 @@ namespace SyncFrame
             if(GUI.Button(new Rect(10, 40, 50, 30), "pause"))
             {
                 KBEngine.Event.fireIn("reqGamePause");
+                PlayerBehaviourStop();
             }
             else if(GUI.Button(new Rect(100, 40, 50, 30), "run"))
             {
@@ -172,6 +175,26 @@ namespace SyncFrame
             }
         }
 
+        void PlayerBehaviourStop()
+        {
+            for (int i = 0; i < GameData.Instance.RoomPlayers.Count; i++)
+            {
+                GameObject player = (GameObject)GameData.Instance.RoomPlayers[i].renderObj;
+
+                if (player == null)
+                {
+                    continue;
+                }
+
+                PlayerContorl playerScript = player.GetComponent<PlayerContorl>();
+
+                if (playerScript != null && playerScript.isActiveAndEnabled)
+                {
+                    playerScript.OnSyncedGamePause();
+                }
+            }
+        }
+
         private void Update()
         {
             if (GameData.Instance.frameList.Count > 0)
@@ -188,6 +211,7 @@ namespace SyncFrame
                     //KBEngine.Event.fireOut("recieveFrameTick", new object[] { framedata });
 
                 }
+ 
             }
         }
 

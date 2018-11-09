@@ -111,5 +111,9 @@
            KBEngine.Event.fireOut("onLoginOutSpaceResult",new object[] { entityId, spacekey });
         }
 
+        public override void onGamePause(uint lastFrameid)
+        {
+            //KBEngine.Event.fireOut("onGamePause", new object[] { lastFrameid });
+        }
     }
 }

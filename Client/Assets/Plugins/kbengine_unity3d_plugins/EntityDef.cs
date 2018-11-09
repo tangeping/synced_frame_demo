@@ -394,6 +394,21 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Operation), method(onCreateSpaceResult / 16).");
 
+			List<DATATYPE_BASE> pOperation_onGamePause_args = new List<DATATYPE_BASE>();
+			pOperation_onGamePause_args.Add(EntityDef.id2datatypes[4]);
+
+			Method pOperation_onGamePause = new Method();
+			pOperation_onGamePause.name = "onGamePause";
+			pOperation_onGamePause.methodUtype = 19;
+			pOperation_onGamePause.aliasID = 2;
+			pOperation_onGamePause.args = pOperation_onGamePause_args;
+
+			pOperationModule.methods["onGamePause"] = pOperation_onGamePause; 
+			pOperationModule.useMethodDescrAlias = true;
+			pOperationModule.idmethods[(UInt16)pOperation_onGamePause.aliasID] = pOperation_onGamePause;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Operation), method(onGamePause / 19).");
+
 			List<DATATYPE_BASE> pOperation_onLoginOutSpaceResult_args = new List<DATATYPE_BASE>();
 			pOperation_onLoginOutSpaceResult_args.Add(EntityDef.id2datatypes[8]);
 			pOperation_onLoginOutSpaceResult_args.Add(EntityDef.id2datatypes[5]);
@@ -401,7 +416,7 @@ namespace KBEngine
 			Method pOperation_onLoginOutSpaceResult = new Method();
 			pOperation_onLoginOutSpaceResult.name = "onLoginOutSpaceResult";
 			pOperation_onLoginOutSpaceResult.methodUtype = 18;
-			pOperation_onLoginOutSpaceResult.aliasID = 2;
+			pOperation_onLoginOutSpaceResult.aliasID = 3;
 			pOperation_onLoginOutSpaceResult.args = pOperation_onLoginOutSpaceResult_args;
 
 			pOperationModule.methods["onLoginOutSpaceResult"] = pOperation_onLoginOutSpaceResult; 
@@ -416,7 +431,7 @@ namespace KBEngine
 			Method pOperation_onLoginSpaceResult = new Method();
 			pOperation_onLoginSpaceResult.name = "onLoginSpaceResult";
 			pOperation_onLoginSpaceResult.methodUtype = 17;
-			pOperation_onLoginSpaceResult.aliasID = 3;
+			pOperation_onLoginSpaceResult.aliasID = 4;
 			pOperation_onLoginSpaceResult.args = pOperation_onLoginSpaceResult_args;
 
 			pOperationModule.methods["onLoginSpaceResult"] = pOperation_onLoginSpaceResult; 
@@ -431,7 +446,7 @@ namespace KBEngine
 			Method pOperation_onReqSpaceList = new Method();
 			pOperation_onReqSpaceList.name = "onReqSpaceList";
 			pOperation_onReqSpaceList.methodUtype = 15;
-			pOperation_onReqSpaceList.aliasID = 4;
+			pOperation_onReqSpaceList.aliasID = 5;
 			pOperation_onReqSpaceList.args = pOperation_onReqSpaceList_args;
 
 			pOperationModule.methods["onReqSpaceList"] = pOperation_onReqSpaceList; 
