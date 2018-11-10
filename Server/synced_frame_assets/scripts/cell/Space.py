@@ -3,6 +3,7 @@ import KBEngine
 from KBEDebug import *
 import GlobalDefine
 import d_spaces
+import d_avatar_init
 from interfaces.GameObject import GameObject
 import SCDefine
 import copy
@@ -65,10 +66,15 @@ class Space(KBEngine.Entity,GameObject):
 		
 		entity = KBEngine.entities.get(entityCall.id,None)
 		if entity:
-			entity.position = (-2.0, 1.0, 16.0) if len(self.avatars) <= 0 else (6, 1.0, 16.0)
-			entity.component1.isWathcher = len(self.avatars) > 0
 			self.avatars[entityCall.id] = entity
-		
+			entity.component1.seatNo = len(self.avatars)
+
+			datas = d_avatar_init.datas.get(entity.component1.seatNo,\
+				{'seat_no': entity.component1.seatNo,  'spawnPos': (10.0+random.random()*10, 0.8, 0.0), 'spawnDir': (0.0, 180.0, 0.0)})
+			entity.position = datas['spawnPos']
+			entity.direction = datas['spawnDir']
+
+					
 	def onLeave(self, entityID):
 		"""
 		defined method.
@@ -166,6 +172,10 @@ class Space(KBEngine.Entity,GameObject):
 	def onBroadFrameBegine(self):
 
 		if self.spaceState != GlobalDefine.SPACE_STATE_PLAYING:
+			for e in self.avatars.values():
+				if e is None or e.component1.client is None:
+					continue
+				e.component1.client.onGamePause(self.spaceFarmeId-1)
 			return
 
 		self.currFrame[0] = self.spaceFarmeId

@@ -1,37 +1,56 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using TrueSync;
 using UnityEngine;
+using TrueSync;
+using KBEngine;
+using SyncFrame;
 
-public class Projectile : MonoBehaviour
+
+public class Projectile : TrueSyncBehaviour
 {
-    public KBEngine.Avatar owner;
-    public FP speed = 15;
-    public TSVector direction;
+
+    //public KBEngine.Avatar owner;
+
+    private FP speed = 5;
 
     private FP destroyTime = 3;
 
-    public void OnSyncedUpdate()
+    public TSVector direction = TSVector.zero;
+
+    private bool OnceForce = true;
+    /**
+     *  @brief Returns the {@link TSTransform} attached.
+     */
+
+
+
+    public override void OnSyncedUpdate()
     {
-//         if (destroyTime <= 0)
-//         {
-//             TrueSyncManager.SyncedDestroy(this.gameObject);
-//         }
-//         tsTransform.Translate(direction * speed * TrueSyncManager.DeltaTime);
-//         destroyTime -= TrueSyncManager.DeltaTime;
+        if (destroyTime <= 0)
+        {
+            //FPS_Manager.SyncedDestroy(this.gameObject);
+        }
+        if(OnceForce)
+        {
+            OnceForce = false;
+            tsRigidBody.AddForce(direction * speed, ForceMode.Impulse);
+        }
+        
+        destroyTime -= FPS_Manager.instance.Config.lockedTimeStep;
+
+        //Debug.Log("Projectile:OnSyncedUpdate");
     }
 
     public void OnSyncedTriggerEnter(TSCollision other)
     {
-//         if (other.gameObject.tag == "Player")
-//         {
-//             PlayerMovement hitPlayer = other.gameObject.GetComponent<PlayerMovement>();
-//             if (hitPlayer.owner != owner)
-//             {
-//                 TrueSyncManager.SyncedDestroy(this.gameObject);
-//                 hitPlayer.Respawn();
-//             }
-//         }
+        if (other.gameObject.tag == "Player")
+        {
+            PlayerBehaviour hitPlayer = other.gameObject.GetComponent<PlayerBehaviour>();
+            //if (hitPlayer.owner.id != owner.id)
+            {
+                //FPS_Manager.SyncedDestroy(this.gameObject);
+                //hitPlayer.Respawn();
+            }
+        }
     }
 }

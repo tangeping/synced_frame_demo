@@ -349,11 +349,26 @@ namespace KBEngine
 
 			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Operation), property(lossScore / 9).");
 
+			Property pOperation_seatNo = new Property();
+			pOperation_seatNo.name = "seatNo";
+			pOperation_seatNo.properUtype = 11;
+			pOperation_seatNo.properFlags = 16;
+			pOperation_seatNo.aliasID = 6;
+			SByte Operation_seatNo_defval;
+			SByte.TryParse("0", out Operation_seatNo_defval);
+			pOperation_seatNo.defaultVal = Operation_seatNo_defval;
+			pOperationModule.propertys["seatNo"] = pOperation_seatNo; 
+
+			pOperationModule.usePropertyDescrAlias = true;
+			pOperationModule.idpropertys[(UInt16)pOperation_seatNo.aliasID] = pOperation_seatNo;
+
+			//Dbg.DEBUG_MSG("EntityDef::initScriptModules: add(Operation), property(seatNo / 11).");
+
 			Property pOperation_state = new Property();
 			pOperation_state.name = "state";
 			pOperation_state.properUtype = 7;
 			pOperation_state.properFlags = 16;
-			pOperation_state.aliasID = 6;
+			pOperation_state.aliasID = 7;
 			SByte Operation_state_defval;
 			SByte.TryParse("", out Operation_state_defval);
 			pOperation_state.defaultVal = Operation_state_defval;
@@ -368,7 +383,7 @@ namespace KBEngine
 			pOperation_winScore.name = "winScore";
 			pOperation_winScore.properUtype = 8;
 			pOperation_winScore.properFlags = 16;
-			pOperation_winScore.aliasID = 7;
+			pOperation_winScore.aliasID = 8;
 			Int32 Operation_winScore_defval;
 			Int32.TryParse("0", out Operation_winScore_defval);
 			pOperation_winScore.defaultVal = Operation_winScore_defval;

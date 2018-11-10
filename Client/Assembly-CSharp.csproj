@@ -53,6 +53,7 @@
   <ItemGroup>
      <Compile Include="Assets\Scriptes\demo_scripts\Boxes\BoxSyncManager.cs" />
      <Compile Include="Assets\Scriptes\demo_scripts\Boxes\PlayerContorl.cs" />
+     <Compile Include="Assets\Scriptes\demo_scripts\Fps\CamerFllown.cs" />
      <Compile Include="Assets\Scriptes\demo_scripts\Fps\FPS_Manager.cs" />
      <Compile Include="Assets\Scriptes\demo_scripts\Fps\PlayerAction.cs" />
      <Compile Include="Assets\Scriptes\demo_scripts\Fps\PlayerBehaviour.cs" />

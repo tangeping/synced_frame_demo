@@ -18,6 +18,8 @@ public class PlayerBehaviour : MonoBehaviour {
 
     public UInt16 KeyValue = 0;
 
+    public int deaths = 0;
+
     public Dictionary<KeyCode, int> keyBit = new Dictionary<KeyCode, int>()
     {
         { KeyCode.W,0},
@@ -46,7 +48,10 @@ public class PlayerBehaviour : MonoBehaviour {
     public GameObject projectilePrefab;
     private FP cooldown = 0;
     //-------------------------------------
+    private FP accellRate = 4;
 
+    private FP steerRate = 200;
+    //---------------------------------------
 
     private void OnGUI()
     {
@@ -88,8 +93,12 @@ public class PlayerBehaviour : MonoBehaviour {
         {
             weapon_list.Add(a.name);
         }
-
-        Debug.Log("PlayerContorl::start:" + tsRigidBody + ",tsTransform:" + tsTransform );
+        if(projectilePrefab == null)
+        {
+            projectilePrefab = (GameObject)Resources.Load("Perfabs/bullet");
+        }
+        
+        Debug.Log("PlayerContorl::start:" + tsRigidBody + ",tsTransform:" + tsTransform + ",projectilePrefab:"+ projectilePrefab);
     }
 
     public void OnSyncedInput()
@@ -102,23 +111,27 @@ public class PlayerBehaviour : MonoBehaviour {
 
         foreach(var item in keyBit)
         {
-            if (Input.GetKey(item.Key) && 
-                (item.Key == KeyCode.W 
-                || item.Key == KeyCode.LeftShift
-                || item.Key == KeyCode.Mouse0
-                || item.Key == KeyCode.Mouse1
-                ))
+            if (Input.GetKey(item.Key)
+//                 && (item.Key == KeyCode.W 
+//                 || item.Key == KeyCode.LeftShift
+//                 //|| item.Key == KeyCode.Mouse0
+//                 || item.Key == KeyCode.Mouse1
+                /*)*/)
             {
                 KeyValue |= (UInt16)(1L << item.Value);
             }
-            else if (Input.GetKeyDown(item.Key))
-            {
-                KeyValue |= (UInt16)(1L << item.Value);
-            }
-             
+//             else if (Input.GetKeyDown(item.Key))
+//             {
+//                 KeyValue |= (UInt16)(1L << item.Value);
+//             }
+
         }
 
-        KBEngine.Event.fireIn("reqFrameChange", FrameProto.encode(new FrameFPS(CMD.FPS, KeyValue)));
+        FP accell = Input.GetAxis("Vertical");
+        FP steer = Input.GetAxis("Horizontal");
+
+
+        KBEngine.Event.fireIn("reqFrameChange", FrameProto.encode(new FrameFPS(CMD.FPS, KeyValue,accell,steer)));
     }
 
     void StateChange(string message)
@@ -133,28 +146,38 @@ public class PlayerBehaviour : MonoBehaviour {
         controller.SetArsenal(name);
     }
 
+    public void Respawn()
+    {       
+        deaths++;
+    }
+
     void FireBullet()
     {
         if(cooldown <= 0)
         {
-            TrueSyncManager.SyncedInstantiate(projectilePrefab, tsTransform.position, TSQuaternion.identity);
+            cooldown = 2;
+            TSVector position = tsTransform.position + tsTransform.forward.normalized + new TSVector(1, 1, 0) ;
+            FPS_Manager.SyncedInstantiate(projectilePrefab, position, TSQuaternion.identity);
+
 
             Projectile projectile = projectilePrefab.GetComponent<Projectile>();
-            projectile.direction = tsTransform.forward;
-            projectile.owner = owner;
 
-            cooldown = 1;
+            projectile.direction = tsTransform.forward;
+            //projectile.owner = owner;
+
+
+            //Debug.Log("FireBullet:projectile.direction:" + projectile.direction);
         }
 
-        cooldown -= FPS_Manager.instance.Config.lockedTimeStep;
+       
     }
-    public void UpdateAnimator(List<KeyCode> keys)
+    public void UpdateAnimator(List<KeyCode> keys,bool walk)
     {
         if (keys.Contains(KeyCode.W) && keys.Contains(KeyCode.LeftShift))
         {
             StateChange("Run");
         }
-        else if (keys.Contains(KeyCode.W))
+        else if (keys.Contains(KeyCode.W)||walk)
         {
             StateChange("Walk");
         }
@@ -165,6 +188,7 @@ public class PlayerBehaviour : MonoBehaviour {
         else if (keys.Contains(KeyCode.Mouse0))
         {
             StateChange("Attack");
+            FireBullet();
 
         }
         else if (keys.Contains(KeyCode.Mouse1))
@@ -193,6 +217,19 @@ public class PlayerBehaviour : MonoBehaviour {
         }
     }
 
+    public void UpdateMovement(FP accell, FP steer)
+    {
+        accell *= accellRate * FPS_Manager.instance.Config.lockedTimeStep;
+        steer *= steerRate * FPS_Manager.instance.Config.lockedTimeStep;
+
+        tsTransform.Translate(0, 0, accell, Space.Self);
+        tsTransform.Rotate(0, steer, 0);
+
+
+        TSRigidBody rb = GetComponent<TSRigidBody>();
+        rb.AddForce(TSVector.forward * FPS_Manager.instance.Config.lockedTimeStep);
+    }
+
     public void OnSyncedUpdate(UInt32 frameid, ENTITY_DATA operation)
     {
         tsFrameId = frameid;
@@ -213,8 +250,12 @@ public class PlayerBehaviour : MonoBehaviour {
                 Debug.Log("key:" + item.Key);
             }
         }
+        bool walk = (data.accell != 0 || data.steer != 0);
+        UpdateAnimator(keyValues,walk);
+        UpdateMovement(data.accell, data.steer);
+        cooldown -= FPS_Manager.instance.Config.lockedTimeStep;
 
-        UpdateAnimator(keyValues);
+
     }
 
     /**

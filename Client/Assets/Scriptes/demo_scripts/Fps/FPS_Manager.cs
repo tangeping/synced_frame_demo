@@ -30,7 +30,17 @@ namespace SyncFrame
 
         public UInt32 currenFrameId = 0;
 
+        public Camera[] cameras;
+
+        public GameObject cameraTransform;
+
         public Dictionary<int, PlayerBehaviour> playerBehaviours = new Dictionary<int, PlayerBehaviour>();
+
+        /**
+         * @brief List of {@link TrueSyncBehaviour} that should be included next update.
+         **/
+        public List<TrueSyncManagedBehaviour> queuedBehaviours = new List<TrueSyncManagedBehaviour>();
+
         private void Awake()
         {
             PhysicsManager.New(Config);
@@ -52,25 +62,25 @@ namespace SyncFrame
             {
                 KBEngine.Avatar player = GameData.Instance.RoomPlayers[i];
 
-
-                if (player.component1.isWathcher > 0)
-                {
-                    continue;
-                }
-
-                TSVector position = new TSVector(0f, 1f, 0f);
-                TSVector direciton = new TSVector(0f, 180f, 0f);
+                 TSVector position = new TSVector(player.position.x, player.position.y, player.position.z);
+                 TSVector direciton = new TSVector(0, 180, 0);
+                //Debug.Log("SyncManager::CreatePlayer.player.position:"+ player.position + ",direciton:"+ player.direction);
 
                 GameObject perfab = SyncedInstantiate(playerPerfab, position, TSQuaternion.Euler(direciton));
 
                 Debug.Log("SyncManager::CreatePlayer.player.renderObj:" + (perfab == null ? "Null" : perfab.name)
-                    + ",position:" + perfab.transform.position);
+                    + ",position:" + perfab.transform.position +",direction:"+perfab.transform.eulerAngles);
 
+                perfab.name = player.className + "_" + player.id;
                 PlayerBehaviour playerScript = perfab.AddComponent<PlayerBehaviour>();
                 playerScript.owner = player;
-                player.renderObj = perfab;
-
+                player.renderObj = perfab;          
                 playerBehaviours.Add(player.id, playerScript);
+
+                if(player.isPlayer())
+                {
+                    cameraTransform.GetComponent<CamerFllown>().AttachTarget(perfab.transform);
+                }
             }
         }
 
@@ -85,6 +95,28 @@ namespace SyncFrame
             else if (GUI.Button(new Rect(100, 40, 50, 30), "run"))
             {
                 KBEngine.Event.fireIn("reqGameRunning");
+            }
+
+            if (GUI.Button(new Rect(200, 40, 80, 30), "camra_A"))
+            {
+                foreach (Camera c in cameras)
+                {
+                    c.gameObject.SetActive(c.name == "A");
+                }
+            }
+            else if (GUI.Button(new Rect(300, 40, 80, 30), "camra_B"))
+            {
+                foreach (Camera c in cameras)
+                {
+                    c.gameObject.SetActive(c.name == "B");
+                }
+            }
+            else if (GUI.Button(new Rect(400, 40, 80, 30), "camra_C"))
+            {
+                foreach (Camera c in cameras)
+                {
+                    c.gameObject.SetActive(c.name == "C");
+                }
             }
         }
 
@@ -150,7 +182,11 @@ namespace SyncFrame
                         }
                         
                     }
-  
+
+                    foreach (var item in instance.queuedBehaviours)
+                    {
+                        item.OnSyncedUpdate();
+                    }
                     PhysicsManager.instance.UpdateStep();                  
                 }
 
@@ -198,8 +234,29 @@ namespace SyncFrame
             }
         }
 
+        private TrueSyncManagedBehaviour NewManagedBehavior(ITrueSyncBehaviour trueSyncBehavior)
+        {
+            TrueSyncManagedBehaviour result = new TrueSyncManagedBehaviour(trueSyncBehavior);
+            //mapBehaviorToManagedBehavior[trueSyncBehavior] = result;
+
+            return result;
+        }
+
         private static void InitializeGameObject(GameObject go, TSVector position, TSQuaternion rotation)
         {
+
+            MonoBehaviour[] monoBehaviours = go.GetComponentsInChildren<MonoBehaviour>();
+            for (int index = 0, length = monoBehaviours.Length; index < length; index++)
+            {
+                MonoBehaviour bh = monoBehaviours[index];
+
+                if (bh is ITrueSyncBehaviour)
+                {
+                    instance.queuedBehaviours.Add(instance.NewManagedBehavior((ITrueSyncBehaviour)bh));
+                }
+            }
+
+
             ICollider[] tsColliders = go.GetComponentsInChildren<ICollider>();
             if (tsColliders != null)
             {

@@ -203,12 +203,15 @@ namespace SyncFrame
     public class FrameFPS : FrameBase
     {
         public UInt16 keyValue = 0;
+        public FP accell = 0;
+        public FP steer = 0;
 
-
-        public FrameFPS(CMD cmd, UInt16 k)
+        public FrameFPS(CMD cmd, UInt16 k,FP a, FP s)
         {
             e.cmd_type = (Byte)cmd;
             keyValue = k;
+            accell = a;
+            steer = s;
         }
 
         public FrameFPS()
@@ -218,6 +221,9 @@ namespace SyncFrame
         public override ENTITY_DATA Serialize()
         {
             s.writeUint16(keyValue);
+            s.writeFP(accell);
+            s.writeFP(steer);
+
             e.datas = new byte[s.wpos];
             Array.Copy(s.data(), e.datas, s.wpos);
             return e;
@@ -228,6 +234,8 @@ namespace SyncFrame
             this.e = e;
             s.setBuffer(e.datas);
             keyValue = s.readUint16();
+            accell = s.readFP();
+            steer = s.readFP();
         }
     }
 

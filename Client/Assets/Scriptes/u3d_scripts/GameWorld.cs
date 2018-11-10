@@ -47,24 +47,11 @@ public class GameWorld : MonoBehaviour
     {
         Debug.Log("WorldEvent:entity." + entity.id + ",claseName:" + entity.className);
 
-        if (entity.isPlayer())
+        if (entity.className == "Avatar")
         {
-            if (GameData.Instance.RoomPlayers.Count <= 0)
-            {
-                GameData.Instance.RoomPlayers.Add((KBEngine.Avatar)entity);
-            }
-            else
-            {
-                GameData.Instance.RoomPlayers[0] = (KBEngine.Avatar)entity;
-            }
-        }
-        else if (entity.className == "Avatar")
-        {
-            if (GameData.Instance.RoomPlayers.Count <= 0)
-            {
-                GameData.Instance.RoomPlayers.Add(new KBEngine.Avatar());
-            }
             GameData.Instance.RoomPlayers.Add((KBEngine.Avatar)entity);
+
+            GameData.Instance.RoomPlayers = GameData.Instance.RoomPlayers.OrderBy(s => s.component1.seatNo).ToList();
         }
 
     }

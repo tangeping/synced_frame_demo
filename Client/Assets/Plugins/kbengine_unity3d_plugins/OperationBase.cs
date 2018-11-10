@@ -22,6 +22,8 @@ namespace KBEngine
 		public virtual void onIsWathcherChanged(SByte oldValue) {}
 		public Int32 lossScore = 0;
 		public virtual void onLossScoreChanged(Int32 oldValue) {}
+		public SByte seatNo = 0;
+		public virtual void onSeatNoChanged(SByte oldValue) {}
 		public SByte state = 0;
 		public virtual void onStateChanged(SByte oldValue) {}
 		public Int32 winScore = 0;
@@ -135,6 +137,22 @@ namespace KBEngine
 						}
 
 						break;
+					case 11:
+						SByte oldval_seatNo = seatNo;
+						seatNo = stream.readInt8();
+
+						if(prop.isBase())
+						{
+							if(owner.inited)
+								onSeatNoChanged(oldval_seatNo);
+						}
+						else
+						{
+							if(owner.inWorld)
+								onSeatNoChanged(oldval_seatNo);
+						}
+
+						break;
 					case 7:
 						SByte oldval_state = state;
 						state = stream.readInt8();
@@ -220,8 +238,29 @@ namespace KBEngine
 				}
 			}
 
+			SByte oldval_seatNo = seatNo;
+			Property prop_seatNo = pdatas[6];
+			if(prop_seatNo.isBase())
+			{
+				if(owner.inited && !owner.inWorld)
+					onSeatNoChanged(oldval_seatNo);
+			}
+			else
+			{
+				if(owner.inWorld)
+				{
+					if(prop_seatNo.isOwnerOnly() && !owner.isPlayer())
+					{
+					}
+					else
+					{
+						onSeatNoChanged(oldval_seatNo);
+					}
+				}
+			}
+
 			SByte oldval_state = state;
-			Property prop_state = pdatas[6];
+			Property prop_state = pdatas[7];
 			if(prop_state.isBase())
 			{
 				if(owner.inited && !owner.inWorld)
@@ -242,7 +281,7 @@ namespace KBEngine
 			}
 
 			Int32 oldval_winScore = winScore;
-			Property prop_winScore = pdatas[7];
+			Property prop_winScore = pdatas[8];
 			if(prop_winScore.isBase())
 			{
 				if(owner.inited && !owner.inWorld)

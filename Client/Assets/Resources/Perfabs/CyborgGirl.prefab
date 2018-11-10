@@ -583,7 +583,7 @@ GameObject:
   - component: {fileID: 114487281589201870}
   m_Layer: 0
   m_Name: CyborgGirl
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1499,7 +1499,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mass:
-    _serializedValue: 4294967296
+    _serializedValue: 858993459200
   _useGravity: 1
   _isKinematic: 0
   _linearDrag:

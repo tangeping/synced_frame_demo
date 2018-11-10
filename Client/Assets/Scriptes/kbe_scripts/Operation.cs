@@ -48,6 +48,11 @@
 
         }
 
+        public override void onSeatNoChanged(SByte oldValue)
+        {
+
+        }
+
         public override void onCreateSpaceResult(ulong spaceKey)
         {
             KBEngine.Event.fireOut("onCreateSpaceResult", new object[] { spaceKey });
