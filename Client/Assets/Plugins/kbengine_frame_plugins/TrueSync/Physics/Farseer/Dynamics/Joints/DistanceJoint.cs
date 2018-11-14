@@ -23,7 +23,7 @@
 
 using System.Diagnostics;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     // 1-D rained system
     // m (v2 - v1) = lambda

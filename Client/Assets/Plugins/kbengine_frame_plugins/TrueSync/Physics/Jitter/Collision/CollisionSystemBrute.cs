@@ -22,7 +22,7 @@ using System;
 using System.Collections.Generic;
 #endregion
 
-namespace TrueSync.Physics3D {
+namespace KBEngine.Physics3D {
     /// <summary>
     /// O(n^2) Broadphase detection. Every body is checked against each other body.
     /// This is pretty fast for scene containing just a few(~30) bodies.

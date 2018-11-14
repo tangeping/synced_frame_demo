@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace TrueSync {
+namespace KBEngine {
 
     /**
      * @brief Manages the collision matrix of physics simulation.

@@ -22,7 +22,7 @@
 
 using System.Diagnostics;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     /// <summary>
     /// This is an internal class.
@@ -271,7 +271,7 @@ namespace TrueSync.Physics2D
                     else
                     {
                         b._sleepTime += h;
-                        minSleepTime = TrueSync.TSMath.Min(minSleepTime, b._sleepTime);
+                        minSleepTime = KBEngine.TSMath.Min(minSleepTime, b._sleepTime);
                     }
                 }
 

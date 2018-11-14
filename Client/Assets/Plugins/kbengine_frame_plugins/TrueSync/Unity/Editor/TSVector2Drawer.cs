@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace TrueSync {
+namespace KBEngine {
 
     [CustomPropertyDrawer(typeof(TSVector2))]
     public class TSVector2Drawer : PropertyDrawer {

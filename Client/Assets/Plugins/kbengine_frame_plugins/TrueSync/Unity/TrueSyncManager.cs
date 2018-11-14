@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace TrueSync {
+namespace KBEngine {
     /**
      * @brief Manages creation of player prefabs and lockstep execution.
      **/

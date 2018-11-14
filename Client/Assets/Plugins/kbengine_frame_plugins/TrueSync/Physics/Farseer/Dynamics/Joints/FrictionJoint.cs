@@ -21,7 +21,7 @@
 */
 #pragma warning disable 0162
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     // Point-to-point constraint
     // Cdot = v2 - v1

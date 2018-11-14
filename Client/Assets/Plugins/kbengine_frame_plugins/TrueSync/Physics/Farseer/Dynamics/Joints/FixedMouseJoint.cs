@@ -23,7 +23,7 @@
 
 using System.Diagnostics;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     // p = attached point, m = mouse point
     // C = p - m

@@ -17,7 +17,7 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     /// <summary>
     /// This is an internal structure.

@@ -37,9 +37,9 @@
 
 using System;
 using System.Text;
-using FP = TrueSync.FP;
+using FP = KBEngine.FP;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     /**
      * @author Thomas Åhlen (thahlen@gmail.com)

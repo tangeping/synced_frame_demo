@@ -23,7 +23,7 @@
 using System;
 using System.Diagnostics;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     /// <summary>
     /// A circle shape.

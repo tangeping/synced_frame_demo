@@ -1,9 +1,9 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.Serialization;
-using TrueSync.Physics3D;
+using KBEngine.Physics3D;
 
-namespace TrueSync {
+namespace KBEngine {
     /**
      *  @brief Abstract collider for 3D shapes. 
      **/

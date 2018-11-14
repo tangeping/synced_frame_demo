@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     // Directed Acyclic graph (DAG)
     // See "Computational Geometry", 3rd edition, by Mark de Berg et al, Chapter 6.2

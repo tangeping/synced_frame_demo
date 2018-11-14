@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TrueSync {
+namespace KBEngine {
 
     /**
      *  @brief Generates random numbers based on a deterministic approach.

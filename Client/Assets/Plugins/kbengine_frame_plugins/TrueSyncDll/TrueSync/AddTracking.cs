@@ -1,6 +1,6 @@
 using System;
 
-namespace TrueSync
+namespace KBEngine
 {
 	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
 	public class AddTracking : Attribute

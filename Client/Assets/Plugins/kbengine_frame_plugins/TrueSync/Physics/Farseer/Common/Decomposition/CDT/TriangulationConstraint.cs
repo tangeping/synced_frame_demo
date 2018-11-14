@@ -36,7 +36,7 @@
  * 
  * @author Thomas Åhlén, thahlen@gmail.com
  */
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     internal class TriangulationConstraint
     {

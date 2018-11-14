@@ -1,4 +1,4 @@
-﻿namespace TrueSync.Physics2D {
+﻿namespace KBEngine.Physics2D {
 
 	public class ConstraintHierarchy2D : IBodyConstraint
 	{

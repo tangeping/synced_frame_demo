@@ -1,4 +1,4 @@
-﻿namespace TrueSync {
+﻿namespace KBEngine {
 
     /**
      *  @brief Manages physics simulation.

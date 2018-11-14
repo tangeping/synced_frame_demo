@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace TrueSync
+namespace KBEngine
 {
 	[Serializable]
 	public abstract class InputDataBase : ResourcePoolItem

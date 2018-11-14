@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     /// <summary>
     /// An easy to use manager for creating paths.

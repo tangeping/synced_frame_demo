@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace TrueSync {
+namespace KBEngine {
 
     [CustomPropertyDrawer(typeof(FP))]
     public class TSFPDrawer : PropertyDrawer {

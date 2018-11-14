@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     public abstract class AbstractForceController : Controller
     {
@@ -69,7 +69,7 @@ namespace TrueSync.Physics2D
         /// Provided for reuse to provide Variation functionality in 
         /// inheriting classes
         /// </summary>
-        protected TrueSync.TSRandom Randomize;
+        protected KBEngine.TSRandom Randomize;
 
         /// <summary>
         /// Curve used by Curve Mode as an animated multiplier for the force 
@@ -96,7 +96,7 @@ namespace TrueSync.Physics2D
             Triggered = false;
             StrengthCurve = new Curve();
             Variation = 0.0f;
-            Randomize = TrueSync.TSRandom.New(1234);
+            Randomize = KBEngine.TSRandom.New(1234);
             DecayMode = DecayModes.None;
             DecayCurve = new Curve();
             DecayStart = 0.0f;

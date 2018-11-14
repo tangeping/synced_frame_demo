@@ -23,7 +23,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 #endregion
 
-namespace TrueSync.Physics3D {
+namespace KBEngine.Physics3D {
 
     /// <summary>
     /// Entity of the Broadphase system. (Either a Softbody or a RigidBody)

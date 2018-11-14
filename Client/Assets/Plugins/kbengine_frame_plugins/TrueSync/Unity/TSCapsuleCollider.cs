@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.Serialization;
-using TrueSync.Physics3D;
+using KBEngine.Physics3D;
 
-namespace TrueSync {
+namespace KBEngine {
     /**
      *  @brief Collider with a capsule shape. 
      **/

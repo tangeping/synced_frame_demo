@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace TrueSync {
+namespace KBEngine {
 
     /**
     * @brief A concrete class based on {@link SerializableDictionary} with 'byte' as key and 'FP' as value.

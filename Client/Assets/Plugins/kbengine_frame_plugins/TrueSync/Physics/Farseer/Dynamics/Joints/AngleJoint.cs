@@ -5,7 +5,7 @@
 
 using System.Diagnostics;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     /// <summary>
     /// Maintains a fixed angle between two bodies
@@ -113,8 +113,8 @@ namespace TrueSync.Physics2D
 
             FP p = (_bias - data.velocities[indexB].w + data.velocities[indexA].w) * _massFactor;
 
-            data.velocities[indexA].w -= BodyA._invI * FP.Sign(p) * TrueSync.TSMath.Min(FP.Abs(p), MaxImpulse);
-            data.velocities[indexB].w += BodyB._invI * FP.Sign(p) * TrueSync.TSMath.Min(FP.Abs(p), MaxImpulse);
+            data.velocities[indexA].w -= BodyA._invI * FP.Sign(p) * KBEngine.TSMath.Min(FP.Abs(p), MaxImpulse);
+            data.velocities[indexB].w += BodyB._invI * FP.Sign(p) * KBEngine.TSMath.Min(FP.Abs(p), MaxImpulse);
         }
 
         internal override bool SolvePositionConstraints(ref SolverData data)

@@ -21,7 +21,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System;
 
-namespace TrueSync.Physics3D {
+namespace KBEngine.Physics3D {
 
     public class ReadOnlyHashset<T> : IEnumerable, IEnumerable<T> where T : IComparable
     {

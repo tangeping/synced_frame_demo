@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     /// <summary>
     /// A type of body that supports multiple fixtures that can break apart.
@@ -62,7 +62,7 @@ namespace TrueSync.Physics2D
 
                     for (int i = 0; i < count; ++i)
                     {
-                        maxImpulse = TrueSync.TSMath.Max(maxImpulse, impulse.points[i].normalImpulse);
+                        maxImpulse = KBEngine.TSMath.Max(maxImpulse, impulse.points[i].normalImpulse);
                     }
 
                     if (maxImpulse > Strength)

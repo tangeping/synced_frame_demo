@@ -29,13 +29,13 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     /// <summary>
     /// The world class manages all physics entities, dynamic simulation,
     /// and asynchronous queries.
     /// </summary>
-    public class World : TrueSync.IWorld
+    public class World : KBEngine.IWorld
     {
         internal FP _invDt0;
         internal Body[] _stack = new Body[64];
@@ -818,7 +818,7 @@ namespace TrueSync.Physics2D
                         FP beta = output.T;
                         if (output.State == TOIOutputState.Touching)
                         {
-                            alpha = TrueSync.TSMath.Min(alpha0 + (1.0f - alpha0) * beta, 1.0f);
+                            alpha = KBEngine.TSMath.Min(alpha0 + (1.0f - alpha0) * beta, 1.0f);
                         }
                         else
                         {
@@ -1466,8 +1466,8 @@ namespace TrueSync.Physics2D
             ProcessChanges();
         }
 
-        public List<TrueSync.IBody> Bodies() {
-            List<TrueSync.IBody> bodies = new List<TrueSync.IBody>();
+        public List<KBEngine.IBody> Bodies() {
+            List<KBEngine.IBody> bodies = new List<KBEngine.IBody>();
             for (int index = 0; index < BodyList.Count; index++) {
                 bodies.Add(BodyList[index]);
             }

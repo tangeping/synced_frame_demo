@@ -17,7 +17,7 @@
 *  3. This notice may not be removed or altered from any source distribution. 
 */
 
-namespace TrueSync.Physics3D {
+namespace KBEngine.Physics3D {
     /// <summary>
     /// Holds a list of bodies which are in contact with each other.
     /// </summary>

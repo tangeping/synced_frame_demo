@@ -1,4 +1,4 @@
-﻿namespace TrueSync.Physics2D {
+﻿namespace KBEngine.Physics2D {
 
     /**
     * @brief A generic 2D shape clone.

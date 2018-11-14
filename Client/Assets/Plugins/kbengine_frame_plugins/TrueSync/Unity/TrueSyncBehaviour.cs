@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace TrueSync {
+namespace KBEngine {
 
     /**
      *  @brief Represents each player's behaviour simulated on every machine connected to the game.

@@ -29,7 +29,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     internal enum TriangulationMode
     {

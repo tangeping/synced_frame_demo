@@ -21,7 +21,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     /// <summary>
     /// Combines a list of triangles into a list of convex polygons.

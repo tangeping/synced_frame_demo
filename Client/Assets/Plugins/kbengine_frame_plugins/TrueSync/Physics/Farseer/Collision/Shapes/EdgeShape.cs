@@ -20,7 +20,7 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     /// <summary>
     /// A line segment (edge) shape. These can be connected in chains or loops

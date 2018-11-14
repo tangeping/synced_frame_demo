@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     public static class PolygonTools
     {

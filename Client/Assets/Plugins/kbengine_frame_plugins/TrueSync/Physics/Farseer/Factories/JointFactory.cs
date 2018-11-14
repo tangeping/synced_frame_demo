@@ -1,5 +1,5 @@
 ﻿
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     /// <summary>
     /// An easy to use factory for using joints.

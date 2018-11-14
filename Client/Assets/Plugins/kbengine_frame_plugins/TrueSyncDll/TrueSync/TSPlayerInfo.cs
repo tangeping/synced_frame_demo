@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace TrueSync
+namespace KBEngine
 {
     // 帧同步玩家信息
 	[Serializable]

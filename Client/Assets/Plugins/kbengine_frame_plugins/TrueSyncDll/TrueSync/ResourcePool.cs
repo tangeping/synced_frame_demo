@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace TrueSync
+namespace KBEngine
 {
     // 资源池(抽象类)
 	public abstract class ResourcePool

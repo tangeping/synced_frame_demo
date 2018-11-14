@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace TrueSync
+namespace KBEngine
 {
     // Ö¡Í¬²½Íæ¼Ò
 	[Serializable]

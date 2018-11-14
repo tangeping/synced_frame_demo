@@ -29,9 +29,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using FP = TrueSync.FP;
+using FP = KBEngine.FP;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     /**
      * @author Thomas Åhlén, thahlen@gmail.com

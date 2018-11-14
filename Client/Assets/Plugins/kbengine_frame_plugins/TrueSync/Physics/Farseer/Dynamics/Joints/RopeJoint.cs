@@ -21,7 +21,7 @@
 */
 #pragma warning disable 0162
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     // Limit:
     // C = norm(pB - pA) - L
@@ -236,7 +236,7 @@ namespace TrueSync.Physics2D
 
             FP impulse = -_mass * Cdot;
             FP oldImpulse = _impulse;
-            _impulse = TrueSync.TSMath.Min(0.0f, _impulse + impulse);
+            _impulse = KBEngine.TSMath.Min(0.0f, _impulse + impulse);
             impulse = _impulse - oldImpulse;
 
             TSVector2 P = impulse * _u;

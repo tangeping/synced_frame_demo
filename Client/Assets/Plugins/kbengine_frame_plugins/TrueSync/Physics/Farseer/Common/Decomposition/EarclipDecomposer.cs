@@ -22,7 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     /// <summary>
     /// Convex decomposition algorithm using ear clipping
@@ -145,7 +145,7 @@ namespace TrueSync.Physics2D
                         cross31 = FP.Abs(cross31);
 
                         //Find the maximum minimum angle
-                        FP minCross = TrueSync.TSMath.Min(cross12, TrueSync.TSMath.Min(cross23, cross31));
+                        FP minCross = KBEngine.TSMath.Min(cross12, KBEngine.TSMath.Min(cross23, cross31));
                         if (minCross > earMaxMinCross)
                         {
                             earIndex = i;

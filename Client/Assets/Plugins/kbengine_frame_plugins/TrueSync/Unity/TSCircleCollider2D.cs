@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace TrueSync {
+namespace KBEngine {
     /**
      *  @brief Collider with a circle shape. 
      **/
@@ -57,8 +57,8 @@ namespace TrueSync {
         /**
          *  @brief Create the internal shape used to represent a TSSphereCollider.
          **/
-        public override TrueSync.Physics2D.Shape CreateShape() {
-            return new TrueSync.Physics2D.CircleShape(radius, 1);
+        public override KBEngine.Physics2D.Shape CreateShape() {
+            return new KBEngine.Physics2D.CircleShape(radius, 1);
         }
 
         protected override void DrawGizmos() {

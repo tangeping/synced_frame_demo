@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     // Node for a Directed Acyclic graph (DAG)
     internal abstract class Node

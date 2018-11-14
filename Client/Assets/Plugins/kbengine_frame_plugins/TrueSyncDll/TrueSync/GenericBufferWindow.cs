@@ -1,6 +1,6 @@
 using System;
 
-namespace TrueSync
+namespace KBEngine
 {
     // 通用缓冲窗口(循环列表结构)
 	public class GenericBufferWindow<T>

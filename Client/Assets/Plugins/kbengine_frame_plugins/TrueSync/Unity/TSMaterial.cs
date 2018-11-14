@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace TrueSync {
+namespace KBEngine {
 
     /**
      *  @brief Simulates physical properties of a body.

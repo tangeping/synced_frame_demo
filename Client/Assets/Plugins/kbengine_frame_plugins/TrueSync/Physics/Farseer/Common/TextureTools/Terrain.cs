@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     /// <summary>
     /// Simple class to maintain a terrain. It can keep track

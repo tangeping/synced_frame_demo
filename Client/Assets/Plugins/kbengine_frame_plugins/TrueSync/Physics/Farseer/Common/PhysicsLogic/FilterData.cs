@@ -1,6 +1,6 @@
-﻿using TrueSync.Physics2D;
+﻿using KBEngine.Physics2D;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     /// <summary>
     /// Contains filter data that can determine whether an object should be processed or not.

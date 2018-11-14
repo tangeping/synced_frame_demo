@@ -23,7 +23,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 #endregion
 
-namespace TrueSync.Physics3D
+namespace KBEngine.Physics3D
 {
 
     /// <summary>

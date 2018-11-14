@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace TrueSync {
+namespace KBEngine {
 
     /**
     *  @brief Represents information about a contact point

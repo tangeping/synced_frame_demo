@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace TrueSync {
+namespace KBEngine {
     /**
      *  @brief Represents a physical 2D rigid body.
      **/

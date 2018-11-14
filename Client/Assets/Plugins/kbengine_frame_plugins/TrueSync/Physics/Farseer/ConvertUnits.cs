@@ -3,9 +3,9 @@
 * Copyright (c) 2012 Ian Qvist
 */
 
-using FP = TrueSync.FP;
+using FP = KBEngine.FP;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     /// <summary>
     /// Convert units between display and simulation units.

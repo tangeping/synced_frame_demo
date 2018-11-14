@@ -5,7 +5,7 @@
 
 using System;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     [Flags]
     public enum DebugViewFlags

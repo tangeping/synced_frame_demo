@@ -1,6 +1,6 @@
 using System;
 
-namespace TrueSync
+namespace KBEngine
 {
 	internal class ResourcePoolStateTrackerState : ResourcePool<StateTracker.State>
 	{

@@ -23,7 +23,7 @@
 
 using System.Diagnostics;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     // Linear constraint (point-to-line)
     // d = p2 - p1 = x2 + r2 - x1 - r1
@@ -589,11 +589,11 @@ namespace TrueSync.Physics2D
 
                 if (_limitState == LimitState.AtLower)
                 {
-                    _impulse.z = TrueSync.TSMath.Max(_impulse.z, 0.0f);
+                    _impulse.z = KBEngine.TSMath.Max(_impulse.z, 0.0f);
                 }
                 else if (_limitState == LimitState.AtUpper)
                 {
-                    _impulse.z = TrueSync.TSMath.Min(_impulse.z, 0.0f);
+                    _impulse.z = KBEngine.TSMath.Min(_impulse.z, 0.0f);
                 }
 
                 // f2(1:2) = invK(1:2,1:2) * (-Cdot(1:2) - K(1:2,3) * (f2(3) - f1(3))) + f1(1:2)
@@ -680,21 +680,21 @@ namespace TrueSync.Physics2D
                 {
                     // Prevent large angular corrections
                     C2 = MathUtils.Clamp(translation, -Settings.MaxLinearCorrection, Settings.MaxLinearCorrection);
-                    linearError = TrueSync.TSMath.Max(linearError, FP.Abs(translation));
+                    linearError = KBEngine.TSMath.Max(linearError, FP.Abs(translation));
                     active = true;
                 }
                 else if (translation <= _lowerTranslation)
                 {
                     // Prevent large linear corrections and allow some slop.
                     C2 = MathUtils.Clamp(translation - _lowerTranslation + Settings.LinearSlop, -Settings.MaxLinearCorrection, 0.0f);
-                    linearError = TrueSync.TSMath.Max(linearError, _lowerTranslation - translation);
+                    linearError = KBEngine.TSMath.Max(linearError, _lowerTranslation - translation);
                     active = true;
                 }
                 else if (translation >= _upperTranslation)
                 {
                     // Prevent large linear corrections and allow some slop.
                     C2 = MathUtils.Clamp(translation - _upperTranslation - Settings.LinearSlop, 0.0f, Settings.MaxLinearCorrection);
-                    linearError = TrueSync.TSMath.Max(linearError, translation - _upperTranslation);
+                    linearError = KBEngine.TSMath.Max(linearError, translation - _upperTranslation);
                     active = true;
                 }
             }

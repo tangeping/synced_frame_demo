@@ -23,7 +23,7 @@ using System.Collections.Generic;
 using System.Collections;
 #endregion
 
-namespace TrueSync.Physics3D {
+namespace KBEngine.Physics3D {
     /// <summary>
     /// For easy access, Arbiters are stored in a Hashtable(ArbiterMap). 
     /// To find the Arbiter fortwo RigidBodies, build an ArbiterKey for the two bodies

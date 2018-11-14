@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     //Contributed by Matthew Bettcher
 

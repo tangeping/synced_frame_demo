@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace TrueSync
+namespace KBEngine
 {
 	public class HashList<T> : ICollection<T>, IEnumerable<T>, IEnumerable
 	{

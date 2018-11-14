@@ -19,7 +19,7 @@
 
 using System;
 
-namespace TrueSync
+namespace KBEngine
 {
 
     /// <summary>

@@ -2,7 +2,7 @@
 using System;
 using System.Reflection;
 
-namespace TrueSync {
+namespace KBEngine {
 
     /**
     *  @brief Provides a few utilities to be used on TrueSync exposed classes.

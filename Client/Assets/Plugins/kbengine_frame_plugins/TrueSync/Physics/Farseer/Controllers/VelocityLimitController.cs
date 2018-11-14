@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using TrueSync.Physics2D;
-using FP = TrueSync.FP;
+using KBEngine.Physics2D;
+using FP = KBEngine.FP;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     /// <summary>
     /// Put a limit on the linear (translation - the movespeed) and angular (rotation) velocity

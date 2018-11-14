@@ -1,4 +1,4 @@
-﻿namespace TrueSync.Physics3D {
+﻿namespace KBEngine.Physics3D {
 
     /**
      *  @brief Represents physical properties of a {@link RigidBody}. 

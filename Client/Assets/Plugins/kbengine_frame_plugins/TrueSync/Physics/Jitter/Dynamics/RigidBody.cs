@@ -23,7 +23,7 @@ using System.Collections.Generic;
 using System.Threading;
 #endregion
 
-namespace TrueSync.Physics3D {
+namespace KBEngine.Physics3D {
 
 
     public enum RigidBodyIndex

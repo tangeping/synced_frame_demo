@@ -1,7 +1,7 @@
 #if SILVERLIGHT
 using System;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     // Source: http://www.wiredprairie.us/blog/index.php/archives/723
 

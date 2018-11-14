@@ -22,7 +22,7 @@ using System;
 using System.Threading;
 #endregion
 
-namespace TrueSync.Physics3D {
+namespace KBEngine.Physics3D {
 
     /// <summary>
     /// A constraints forces a body to behave in a specific way.

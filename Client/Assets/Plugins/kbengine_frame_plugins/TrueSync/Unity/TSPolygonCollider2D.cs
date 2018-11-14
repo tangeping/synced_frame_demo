@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace TrueSync {
+namespace KBEngine {
 
     /**
      *  @brief Collider with a polygon 2D shape. 
@@ -27,22 +27,22 @@ namespace TrueSync {
         /**
          *  @brief Create the internal shape used to represent a PolygonCollider.
          **/
-        public override TrueSync.Physics2D.Shape[] CreateShapes() {
+        public override KBEngine.Physics2D.Shape[] CreateShapes() {
             if (_points == null || _points.Length == 0) {
                 return null;
             }
 
 
             TSVector2 lossy2D = new TSVector2(lossyScale.x, lossyScale.y);
-            TrueSync.Physics2D.Vertices v = new Physics2D.Vertices();
+            KBEngine.Physics2D.Vertices v = new Physics2D.Vertices();
             for (int index = 0, length = _points.Length; index < length; index++) {
                 v.Add(TSVector2.Scale(_points[index], lossy2D));
             }
 
-            List<TrueSync.Physics2D.Vertices> convexShapeVs = TrueSync.Physics2D.BayazitDecomposer.ConvexPartition(v);
-            TrueSync.Physics2D.Shape[] result = new Physics2D.Shape[convexShapeVs.Count];
+            List<KBEngine.Physics2D.Vertices> convexShapeVs = KBEngine.Physics2D.BayazitDecomposer.ConvexPartition(v);
+            KBEngine.Physics2D.Shape[] result = new Physics2D.Shape[convexShapeVs.Count];
             for (int index = 0, length = result.Length; index < length; index++) {
-                result[index] = new TrueSync.Physics2D.PolygonShape(convexShapeVs[index], 1);
+                result[index] = new KBEngine.Physics2D.PolygonShape(convexShapeVs[index], 1);
             }
 
             return result;

@@ -1,4 +1,4 @@
-namespace TrueSync {
+namespace KBEngine {
     partial struct FP {
         public static readonly long[] SinLut = new[] {
             0x0L, 0x8000L, 0x10000L, 0x18000L, 0x20000L, 0x28001L, 0x30001L, 0x38001L, 

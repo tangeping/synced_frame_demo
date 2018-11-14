@@ -1,4 +1,4 @@
-﻿namespace TrueSync {
+﻿namespace KBEngine {
 
     /**
     * @brief Represents an interface to 3D bodies.

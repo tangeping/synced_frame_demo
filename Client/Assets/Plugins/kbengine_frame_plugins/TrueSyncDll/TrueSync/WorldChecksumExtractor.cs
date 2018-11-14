@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace TrueSync
+namespace KBEngine
 {
 	public class WorldChecksumExtractor : ChecksumExtractor
 	{

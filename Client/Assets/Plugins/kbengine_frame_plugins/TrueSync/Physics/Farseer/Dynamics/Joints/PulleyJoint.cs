@@ -23,7 +23,7 @@
 
 using System.Diagnostics;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     // Pulley:
     // length1 = norm(p1 - s1)

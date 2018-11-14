@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace TrueSync {
+namespace KBEngine {
 
     /**
     *  @brief A deterministic version of Unity's Transform component for 2D physics. 

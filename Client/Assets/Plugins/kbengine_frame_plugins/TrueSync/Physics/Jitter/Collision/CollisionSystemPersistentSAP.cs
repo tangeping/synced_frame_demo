@@ -22,7 +22,7 @@ using System;
 using System.Collections.Generic;
 #endregion
 
-namespace TrueSync.Physics3D {
+namespace KBEngine.Physics3D {
 
 	#region private class SweepPoint
 	public class SweepPoint

@@ -22,9 +22,9 @@
 //#define USE_ACTIVE_CONTACT_SET
 
 using System.Collections.Generic;
-using FP = TrueSync.FP;
+using FP = KBEngine.FP;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     public class ContactManager
     {

@@ -30,9 +30,9 @@
  */
 
 using System.Collections.Generic;
-using TrueSync.Physics2D;
+using KBEngine.Physics2D;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     internal interface Triangulatable
     {

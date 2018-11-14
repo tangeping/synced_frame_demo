@@ -33,7 +33,7 @@ SOFTWARE.
 #endregion License
 
 using System;
-using FP = TrueSync.FP;
+using FP = KBEngine.FP;
 
 namespace Microsoft.Xna.Framework
 {

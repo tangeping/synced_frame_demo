@@ -31,7 +31,7 @@
 
 using System.Collections.Generic;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     /*
      * Extends the PointSet by adding some Constraints on how it will be triangulated<br>

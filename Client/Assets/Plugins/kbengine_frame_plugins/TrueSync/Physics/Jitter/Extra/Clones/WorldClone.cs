@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace TrueSync.Physics3D {
+namespace KBEngine.Physics3D {
  
     public class WorldClone : IWorldClone {
 

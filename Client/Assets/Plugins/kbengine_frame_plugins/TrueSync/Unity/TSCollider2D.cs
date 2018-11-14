@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace TrueSync {
+namespace KBEngine {
     /**
      *  @brief Abstract collider for 2D shapes.
      **/
@@ -178,7 +178,7 @@ namespace TrueSync {
                 body.BodyType = Physics2D.BodyType.Static;
             } else {
                 if (tsRigidBody.isKinematic) {
-                    body.BodyType = TrueSync.Physics2D.BodyType.Kinematic;
+                    body.BodyType = KBEngine.Physics2D.BodyType.Kinematic;
                 } else {
                     body.BodyType = Physics2D.BodyType.Dynamic;
                     body.IgnoreGravity = !tsRigidBody.useGravity;

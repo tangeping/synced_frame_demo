@@ -17,7 +17,7 @@
 ///
 /// </summary>
 
-namespace TrueSync {
+namespace KBEngine {
 	public class CoroutineNode {
 		public CoroutineNode listPrevious = null;
 		public CoroutineNode listNext = null;

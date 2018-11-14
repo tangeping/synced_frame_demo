@@ -21,7 +21,7 @@
 */
 #pragma warning disable 0162
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     /// <summary>
     /// A revolute joint constrains to bodies to share a common point while they

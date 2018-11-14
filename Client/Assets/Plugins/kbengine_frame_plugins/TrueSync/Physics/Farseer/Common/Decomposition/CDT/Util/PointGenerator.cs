@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using FP = TrueSync.FP;
-using TSRandom = TrueSync.TSRandom;
+using FP = KBEngine.FP;
+using TSRandom = KBEngine.TSRandom;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     internal class PointGenerator
     {

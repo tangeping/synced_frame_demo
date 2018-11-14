@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System;
-using TrueSync.Physics2D;
+using KBEngine.Physics2D;
 
-namespace TrueSync {
+namespace KBEngine {
 
     /**
      *  @brief Manages the 2D physics simulation.
@@ -48,7 +48,7 @@ namespace TrueSync {
 
             Settings.ContinuousPhysics = SpeculativeContacts;
 
-            world = new TrueSync.Physics2D.World(new TSVector2(Gravity.x, Gravity.y));
+            world = new KBEngine.Physics2D.World(new TSVector2(Gravity.x, Gravity.y));
             ContactManager.physicsManager = this;
 
             world.BodyRemoved += OnRemovedRigidBody;
@@ -115,17 +115,17 @@ namespace TrueSync {
         }
 
         public void RemoveBody(IBody iBody) {
-            world.RemoveBody((TrueSync.Physics2D.Body) iBody);
+            world.RemoveBody((KBEngine.Physics2D.Body) iBody);
             world.ProcessRemovedBodies();
         }
 
         public void OnRemoveBody(Action<IBody> OnRemoveBody) {
-            world.BodyRemoved += delegate (TrueSync.Physics2D.Body body) {
+            world.BodyRemoved += delegate (KBEngine.Physics2D.Body body) {
                 OnRemoveBody(body);
             };
         }
 
-        private void OnRemovedRigidBody(TrueSync.Physics2D.Body body) {
+        private void OnRemovedRigidBody(KBEngine.Physics2D.Body body) {
             GameObject go = gameObjectMap[body];
 
             if (go != null) {
@@ -133,7 +133,7 @@ namespace TrueSync {
             }
         }
 
-        private bool CollisionEnter(TrueSync.Physics2D.Contact contact) {
+        private bool CollisionEnter(KBEngine.Physics2D.Contact contact) {
             if (contact.FixtureA.IsSensor || contact.FixtureB.IsSensor) {
                 TriggerEnter(contact);
 
@@ -144,7 +144,7 @@ namespace TrueSync {
             return true;
         }
 
-        private void CollisionStay(TrueSync.Physics2D.Contact contact) {
+        private void CollisionStay(KBEngine.Physics2D.Contact contact) {
             if (contact.FixtureA.IsSensor || contact.FixtureB.IsSensor) {
                 TriggerStay(contact);
                 return;
@@ -153,7 +153,7 @@ namespace TrueSync {
             CollisionDetected(contact.FixtureA.Body, contact.FixtureB.Body, contact, "OnSyncedCollisionStay");
         }
 
-        private void CollisionExit(TrueSync.Physics2D.Contact contact) {
+        private void CollisionExit(KBEngine.Physics2D.Contact contact) {
             if (contact.FixtureA.IsSensor || contact.FixtureB.IsSensor) {
                 TriggerExit(contact);
                 return;
@@ -162,19 +162,19 @@ namespace TrueSync {
             CollisionDetected(contact.FixtureA.Body, contact.FixtureB.Body, null, "OnSyncedCollisionExit");
         }
 
-        private void TriggerEnter(TrueSync.Physics2D.Contact contact) {
+        private void TriggerEnter(KBEngine.Physics2D.Contact contact) {
             CollisionDetected(contact.FixtureA.Body, contact.FixtureB.Body, contact, "OnSyncedTriggerEnter");
         }
 
-        private void TriggerStay(TrueSync.Physics2D.Contact contact) {
+        private void TriggerStay(KBEngine.Physics2D.Contact contact) {
             CollisionDetected(contact.FixtureA.Body, contact.FixtureB.Body, contact, "OnSyncedTriggerStay");
         }
 
-        private void TriggerExit(TrueSync.Physics2D.Contact contact) {
+        private void TriggerExit(KBEngine.Physics2D.Contact contact) {
             CollisionDetected(contact.FixtureA.Body, contact.FixtureB.Body, null, "OnSyncedTriggerExit");
         }
 
-        private void CollisionDetected(Physics2D.Body body1, Physics2D.Body body2, TrueSync.Physics2D.Contact contact, string callbackName) {
+        private void CollisionDetected(Physics2D.Body body1, Physics2D.Body body2, KBEngine.Physics2D.Contact contact, string callbackName) {
             if (!gameObjectMap.ContainsKey(body1) || !gameObjectMap.ContainsKey(body2)) {
                 return;
             }
@@ -192,7 +192,7 @@ namespace TrueSync {
 			TrueSyncManager.UpdateCoroutines ();
         }
 
-        private TSCollision2D GetCollisionInfo(Physics2D.Body body1, Physics2D.Body body2, TrueSync.Physics2D.Contact c) {
+        private TSCollision2D GetCollisionInfo(Physics2D.Body body1, Physics2D.Body body2, KBEngine.Physics2D.Contact c) {
             if (!collisionInfo.ContainsKey(body1)) {
                 collisionInfo.Add(body1, new Dictionary<Physics2D.Body, TSCollision2D>());
             }
@@ -233,7 +233,7 @@ namespace TrueSync {
         public TSRaycastHit2D Raycast(TSVector2 origin, TSVector2 direction, FP distance) {
             TSRaycastHit2D result = null;
 
-            Func<TrueSync.Physics2D.Fixture, TSVector2, TSVector2, FP, FP> callback = delegate (TrueSync.Physics2D.Fixture fixture, TSVector2 point, TSVector2 normal, FP fraction) {
+            Func<KBEngine.Physics2D.Fixture, TSVector2, TSVector2, FP, FP> callback = delegate (KBEngine.Physics2D.Fixture fixture, TSVector2 point, TSVector2 normal, FP fraction) {
                 result = new TSRaycastHit2D(gameObjectMap[fixture.Body].GetComponent<TSCollider2D>());
                 return 0;
             };
@@ -246,7 +246,7 @@ namespace TrueSync {
         public TSRaycastHit2D[] RaycastAll(TSVector2 origin, TSVector2 direction, FP distance) {
             List<TSRaycastHit2D> result = new List<TSRaycastHit2D>();
 
-            Func<TrueSync.Physics2D.Fixture, TSVector2, TSVector2, FP, FP> callback = delegate (TrueSync.Physics2D.Fixture fixture, TSVector2 point, TSVector2 normal, FP fraction) {
+            Func<KBEngine.Physics2D.Fixture, TSVector2, TSVector2, FP, FP> callback = delegate (KBEngine.Physics2D.Fixture fixture, TSVector2 point, TSVector2 normal, FP fraction) {
                 result.Add(new TSRaycastHit2D(gameObjectMap[fixture.Body].GetComponent<TSCollider2D>()));
                 return -1;
             };

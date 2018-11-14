@@ -2,14 +2,14 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace TrueSync {
+namespace KBEngine {
 
     /**
     * @brief Represents the TrueSync menu context bar.
     **/
     public class MenuContext {
 
-        private static string ASSETS_PREFABS_PATH = "Assets/TrueSync/Unity/Prefabs/{0}.prefab";
+        private static string ASSETS_PREFABS_PATH = "Assets/Plugins/kbengine_frame_plugins/TrueSync/Unity/Prefabs/{0}.prefab";
 
         private static void InstantiatePrefab(string path) {
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(string.Format(ASSETS_PREFABS_PATH, path));

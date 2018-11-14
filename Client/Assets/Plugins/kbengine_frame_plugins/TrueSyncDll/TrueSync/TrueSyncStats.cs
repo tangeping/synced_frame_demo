@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace TrueSync
+namespace KBEngine
 {
     // 帧同步状态 信息显示 
 	[AddComponentMenu("")]

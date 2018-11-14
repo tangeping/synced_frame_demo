@@ -1,6 +1,6 @@
 using System;
 
-namespace TrueSync
+namespace KBEngine
 {
 	[Serializable]
 	public class SerializableDictionaryByteString : SerializableDictionary<byte, string>

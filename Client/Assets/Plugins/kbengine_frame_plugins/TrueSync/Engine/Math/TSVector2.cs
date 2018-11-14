@@ -32,7 +32,7 @@ SOFTWARE.
 
 using System;
 
-namespace TrueSync {
+namespace KBEngine {
 
     [Serializable]
     public struct TSVector2 : IEquatable<TSVector2>

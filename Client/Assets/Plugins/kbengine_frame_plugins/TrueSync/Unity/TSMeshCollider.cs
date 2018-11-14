@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using TrueSync.Physics3D;
+using KBEngine.Physics3D;
 
-namespace TrueSync {
+namespace KBEngine {
 
     /**
      *  @brief Collider with a mesh shape. 

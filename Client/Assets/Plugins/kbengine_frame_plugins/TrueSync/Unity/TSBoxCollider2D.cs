@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace TrueSync {
+namespace KBEngine {
     /**
      *  @brief Collider with a box 2D shape. 
      **/
@@ -34,7 +34,7 @@ namespace TrueSync {
                     TSVector size3 = new TSVector(_size.x, _size.y, 1);
                     TSVector sizeScaled = TSVector.Scale(size3, lossyScale);
 
-                    ((Physics2D.PolygonShape)_body.FixtureList[0].Shape).Vertices = TrueSync.Physics2D.PolygonTools.CreateRectangle(sizeScaled.x * FP.Half, sizeScaled.y * FP.Half);
+                    ((Physics2D.PolygonShape)_body.FixtureList[0].Shape).Vertices = KBEngine.Physics2D.PolygonTools.CreateRectangle(sizeScaled.x * FP.Half, sizeScaled.y * FP.Half);
                 }
 
             }
@@ -62,10 +62,10 @@ namespace TrueSync {
         /**
          *  @brief Create the internal shape used to represent a TSBoxCollider.
          **/
-        public override TrueSync.Physics2D.Shape CreateShape() {
+        public override KBEngine.Physics2D.Shape CreateShape() {
             TSVector size3 = new TSVector(size.x, size.y, 1);
             TSVector sizeScaled = TSVector.Scale(size3, lossyScale);
-            return new TrueSync.Physics2D.PolygonShape(TrueSync.Physics2D.PolygonTools.CreateRectangle(sizeScaled.x * FP.Half, sizeScaled.y * FP.Half), 1);
+            return new KBEngine.Physics2D.PolygonShape(KBEngine.Physics2D.PolygonTools.CreateRectangle(sizeScaled.x * FP.Half, sizeScaled.y * FP.Half), 1);
         }
 
         protected override void DrawGizmos() {

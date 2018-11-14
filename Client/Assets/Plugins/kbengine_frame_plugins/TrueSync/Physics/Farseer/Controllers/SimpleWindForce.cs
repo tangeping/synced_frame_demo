@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     /// <summary>
     /// Reference implementation for forces based on AbstractForceController
@@ -58,7 +58,7 @@ namespace TrueSync.Physics2D
                     // Calculate random Variation
                     if (Variation != 0)
                     {
-                        FP strengthVariation = TrueSync.TSRandom.value * TSMath.Clamp(Variation, 0, 1);
+                        FP strengthVariation = KBEngine.TSRandom.value * TSMath.Clamp(Variation, 0, 1);
                         forceVector.Normalize();
                         body.ApplyForce(forceVector * strength * decayMultiplier * strengthVariation);
                     }

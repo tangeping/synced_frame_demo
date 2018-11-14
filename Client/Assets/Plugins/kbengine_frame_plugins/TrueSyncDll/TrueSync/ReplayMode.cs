@@ -1,6 +1,6 @@
 using System;
 
-namespace TrueSync
+namespace KBEngine
 {
 	public enum ReplayMode // 重放模式
 	{

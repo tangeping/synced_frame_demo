@@ -24,7 +24,7 @@
 using System;
 using System.Diagnostics;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     /// <summary>
     /// Input parameters for CalculateTimeOfImpact
@@ -309,7 +309,7 @@ namespace TrueSync.Physics2D
             FP tMax = input.TMax;
 
             FP totalRadius = input.ProxyA.Radius + input.ProxyB.Radius;
-            FP target = TrueSync.TSMath.Max(Settings.LinearSlop, totalRadius - 3.0f * Settings.LinearSlop);
+            FP target = KBEngine.TSMath.Max(Settings.LinearSlop, totalRadius - 3.0f * Settings.LinearSlop);
             FP tolerance = 0.25f * Settings.LinearSlop;
             Debug.Assert(target > tolerance);
 

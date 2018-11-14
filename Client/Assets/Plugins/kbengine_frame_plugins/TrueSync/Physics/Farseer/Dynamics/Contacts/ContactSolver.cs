@@ -23,7 +23,7 @@
 
 using System.Diagnostics;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     public sealed class ContactPositionConstraint
     {
@@ -407,7 +407,7 @@ namespace TrueSync.Physics2D
                     FP lambda = -vcp.normalMass * (vn - vcp.velocityBias);
 
                     // b2Clamp the accumulated impulse
-                    FP newImpulse = TrueSync.TSMath.Max(vcp.normalImpulse + lambda, 0.0f);
+                    FP newImpulse = KBEngine.TSMath.Max(vcp.normalImpulse + lambda, 0.0f);
                     lambda = newImpulse - vcp.normalImpulse;
                     vcp.normalImpulse = newImpulse;
 
@@ -713,7 +713,7 @@ namespace TrueSync.Physics2D
                     TSVector2 rB = point - cB;
 
                     // Track max constraint error.
-                    minSeparation = TrueSync.TSMath.Min(minSeparation, separation);
+                    minSeparation = KBEngine.TSMath.Min(minSeparation, separation);
 
                     // Prevent large corrections and allow slop.
                     FP C = MathUtils.Clamp(Settings.Baumgarte * (separation + Settings.LinearSlop), -Settings.MaxLinearCorrection, 0.0f);
@@ -804,7 +804,7 @@ namespace TrueSync.Physics2D
                     TSVector2 rB = point - cB;
 
                     // Track max constraint error.
-                    minSeparation = TrueSync.TSMath.Min(minSeparation, separation);
+                    minSeparation = KBEngine.TSMath.Min(minSeparation, separation);
 
                     // Prevent large corrections and allow slop.
                     FP C = MathUtils.Clamp(Settings.Baumgarte * (separation + Settings.LinearSlop), -Settings.MaxLinearCorrection, 0.0f);

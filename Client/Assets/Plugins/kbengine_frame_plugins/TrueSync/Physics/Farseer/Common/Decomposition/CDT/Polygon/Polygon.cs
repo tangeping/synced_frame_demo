@@ -41,9 +41,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TrueSync.Physics2D;
+using KBEngine.Physics2D;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     internal class Polygon : Triangulatable
     {

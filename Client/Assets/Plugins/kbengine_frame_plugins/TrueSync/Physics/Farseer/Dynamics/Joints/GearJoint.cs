@@ -23,7 +23,7 @@
 
 using System.Diagnostics;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     // Gear Joint:
     // C0 = (coordinate1 + ratio * coordinate2)_initial

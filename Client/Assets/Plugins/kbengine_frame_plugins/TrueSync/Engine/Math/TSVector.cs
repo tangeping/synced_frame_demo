@@ -20,7 +20,7 @@
 using System;
 using UnityEngine;
 
-namespace TrueSync
+namespace KBEngine
 {
     /// <summary>
     /// A vector structure.

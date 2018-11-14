@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace TrueSync
+namespace KBEngine
 {
     // ×´Ì¬×·×ÙÀà
 	public class StateTracker

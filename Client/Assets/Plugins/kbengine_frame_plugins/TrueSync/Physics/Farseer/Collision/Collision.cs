@@ -25,7 +25,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     internal enum ContactFeatureType : byte
     {
@@ -514,7 +514,7 @@ namespace TrueSync.Physics2D
                     }
 
                     // Pull the max down
-                    tmax = TrueSync.TSMath.Min(tmax, t2);
+                    tmax = KBEngine.TSMath.Min(tmax, t2);
 
                     if (tmin > tmax)
                     {
@@ -1582,7 +1582,7 @@ namespace TrueSync.Physics2D
 
                     FP s1 = TSVector2.Dot(n, _polygonB.Vertices[i] - _v1);
                     FP s2 = TSVector2.Dot(n, _polygonB.Vertices[i] - _v2);
-                    FP s = TrueSync.TSMath.Min(s1, s2);
+                    FP s = KBEngine.TSMath.Min(s1, s2);
 
                     if (s > _radius)
                     {

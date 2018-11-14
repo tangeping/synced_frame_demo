@@ -1,6 +1,6 @@
 using System;
 
-namespace TrueSync {
+namespace KBEngine {
 
     /// <summary>
     /// Truesync's ICommunicator implementation based on PUN.

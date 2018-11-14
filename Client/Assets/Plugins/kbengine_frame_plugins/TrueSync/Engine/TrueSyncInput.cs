@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace TrueSync {
+namespace KBEngine {
 
     /**
     * @brief Manages player's input information, it is used both to set and get this data.

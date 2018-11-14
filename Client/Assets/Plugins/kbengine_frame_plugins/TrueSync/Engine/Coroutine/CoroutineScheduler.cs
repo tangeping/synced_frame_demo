@@ -40,7 +40,7 @@
 /// </summary>
 /// 
 /// 
-namespace TrueSync {
+namespace KBEngine {
 	public class CoroutineScheduler
 	{
 

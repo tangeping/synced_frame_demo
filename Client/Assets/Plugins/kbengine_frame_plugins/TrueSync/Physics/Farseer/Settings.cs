@@ -21,10 +21,10 @@
 */
 
 using System;
-using TrueSync.Physics2D;
-using FP = TrueSync.FP;
+using KBEngine.Physics2D;
+using FP = KBEngine.FP;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     public static class Settings
     {

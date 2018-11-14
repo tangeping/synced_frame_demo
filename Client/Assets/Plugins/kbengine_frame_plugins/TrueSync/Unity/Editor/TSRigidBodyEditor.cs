@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using UnityEditor;
-using TrueSync.Physics3D;
+using KBEngine.Physics3D;
 
-namespace TrueSync {
+namespace KBEngine {
 
     /**
     *  @brief Custom editor to {@link TSRigidBody}.

@@ -25,7 +25,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     /// <summary>
     /// A contact edge is used to connect bodies and contacts together

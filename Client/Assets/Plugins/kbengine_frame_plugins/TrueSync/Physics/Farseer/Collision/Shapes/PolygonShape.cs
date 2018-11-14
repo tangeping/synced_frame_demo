@@ -22,7 +22,7 @@
 
 using System.Diagnostics;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     /// <summary>
     /// Represents a simple non-selfintersecting convex polygon.

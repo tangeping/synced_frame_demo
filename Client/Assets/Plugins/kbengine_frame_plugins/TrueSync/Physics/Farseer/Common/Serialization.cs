@@ -6,7 +6,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     /// <summary>
     /// Serialize the world into an XML file
@@ -1150,7 +1150,7 @@ namespace TrueSync.Physics2D
             XmlSerializerNamespaces xmlnsEmpty = new XmlSerializerNamespaces();
             xmlnsEmpty.Add("", "");
 
-            using (MemoryStream stream = new MemoryStream())
+            using (System.IO.MemoryStream stream = new System.IO.MemoryStream())
             {
                 StreamWriter writer = new StreamWriter(stream);
                 {

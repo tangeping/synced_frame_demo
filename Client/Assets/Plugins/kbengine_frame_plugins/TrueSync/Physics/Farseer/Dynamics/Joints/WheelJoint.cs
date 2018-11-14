@@ -21,7 +21,7 @@
 */
 #pragma warning disable 0162
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     // Linear constraint (point-to-line)
     // d = pB - pA = xB + rB - xA - rA

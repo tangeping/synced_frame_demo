@@ -1,4 +1,4 @@
-﻿namespace TrueSync.Physics3D {
+﻿namespace KBEngine.Physics3D {
 
     /**
     *  @brief Constraints options that can be applied to a {@link TSRigidBody} .

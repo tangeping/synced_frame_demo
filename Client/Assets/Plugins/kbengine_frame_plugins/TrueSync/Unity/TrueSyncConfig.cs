@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace TrueSync {
+namespace KBEngine {
 
     /**
     * @brief Represents a set of configurations for TrueSync.

@@ -2,7 +2,7 @@
 using System.IO;
 using UnityEngine;
 
-namespace TrueSync {
+namespace KBEngine {
 
     /// <summary>
     /// Represents a Q31.32 fixed-point number.
@@ -814,7 +814,7 @@ namespace TrueSync {
         internal static void GenerateAcosLut() {
             using (var writer = new StreamWriter("Fix64AcosLut.cs")) {
                 writer.Write(
-@"namespace TrueSync {
+@"namespace KBEngine {
     partial struct FP {
         public static readonly long[] AcosLut = new[] {");
                 int lineCounter = 0;

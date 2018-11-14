@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     // Original Code by Steven Lu - see http://www.box2d.org/forum/viewtopic.php?f=3&t=1688
     // Ported to Farseer 3.0 by Nicolás Hormazábal
@@ -361,7 +361,7 @@ namespace TrueSync.Physics2D
 
                         // the force that is to be applied for this particular ray.
                         // offset is angular coverage. lambda*length of segment is distance.
-                        FP impulse = (arclen / (MinRays + insertedRays)) * maxForce * 180.0f / FP.Pi * (1.0f - TrueSync.TSMath.Min(FP.One, minlambda));
+                        FP impulse = (arclen / (MinRays + insertedRays)) * maxForce * 180.0f / FP.Pi * (1.0f - KBEngine.TSMath.Min(FP.One, minlambda));
 
                         // We Apply the impulse!!!
                         TSVector2 vectImp = TSVector2.Dot(impulse * new TSVector2(FP.Cos(j), FP.Sin(j)), -ro.Normal) * new TSVector2(FP.Cos(j), FP.Sin(j));

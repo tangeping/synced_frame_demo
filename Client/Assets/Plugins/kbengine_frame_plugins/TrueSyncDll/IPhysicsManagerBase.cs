@@ -1,5 +1,5 @@
 using System;
-using TrueSync;
+using KBEngine;
 
 public interface IPhysicsManagerBase
 {

@@ -31,7 +31,7 @@
 
 using System;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     internal class PointOnEdgeException : NotImplementedException
     {

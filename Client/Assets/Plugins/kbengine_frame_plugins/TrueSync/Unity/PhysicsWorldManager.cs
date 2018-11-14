@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System;
-using TrueSync.Physics3D;
+using KBEngine.Physics3D;
 
-namespace TrueSync {
+namespace KBEngine {
 
     /**
      *  @brief Manages the 3D physics simulation.

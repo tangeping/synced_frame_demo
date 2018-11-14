@@ -22,7 +22,7 @@
 
 using System;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     public struct FixedArray2<T>
     {

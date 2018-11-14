@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace TrueSync
+namespace KBEngine
 {
     // 帧同步托管行为类
 	public class TrueSyncManagedBehaviour : ITrueSyncBehaviourGamePlay, ITrueSyncBehaviour, ITrueSyncBehaviourCallbacks

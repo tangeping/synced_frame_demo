@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using FP = TrueSync.FP;
+using FP = KBEngine.FP;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     internal class Triangulator
     {
@@ -182,7 +182,7 @@ namespace TrueSync.Physics2D
 
         private static void Shuffle<T>(IList<T> list)
         {
-            TrueSync.TSRandom rng = TrueSync.TSRandom.New(0);
+            KBEngine.TSRandom rng = KBEngine.TSRandom.New(0);
             int n = list.Count;
             while (n > 1)
             {

@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace TrueSync
+namespace KBEngine
 {
 	public class Utils
 	{

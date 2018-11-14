@@ -1,6 +1,6 @@
 using System;
 
-namespace TrueSync
+namespace KBEngine
 {
 	public delegate void TrueSyncInputCallback(InputDataBase playerInputData);
 }

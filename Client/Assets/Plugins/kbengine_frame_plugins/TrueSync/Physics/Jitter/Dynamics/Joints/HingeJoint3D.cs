@@ -17,7 +17,7 @@
 *  3. This notice may not be removed or altered from any source distribution. 
 */
 
-namespace TrueSync.Physics3D {
+namespace KBEngine.Physics3D {
 
     /// <summary>
     /// Connects to bodies with a hinge joint.

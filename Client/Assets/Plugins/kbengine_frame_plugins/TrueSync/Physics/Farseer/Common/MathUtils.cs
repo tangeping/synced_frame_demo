@@ -24,7 +24,7 @@ using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     public static class MathUtils
     {
@@ -266,7 +266,7 @@ namespace TrueSync.Physics2D
 
         public static FP Clamp(FP a, FP low, FP high)
         {
-            return TrueSync.TSMath.Max(low, TrueSync.TSMath.Min(a, high));
+            return KBEngine.TSMath.Max(low, KBEngine.TSMath.Min(a, high));
         }
 
         public static TSVector2 Clamp(TSVector2 a, TSVector2 low, TSVector2 high)

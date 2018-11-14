@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace TrueSync
+namespace KBEngine
 {
 	internal class RollbackLockstep : AbstractLockstep
 	{

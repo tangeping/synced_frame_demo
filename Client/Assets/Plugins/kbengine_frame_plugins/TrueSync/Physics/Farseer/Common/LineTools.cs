@@ -1,5 +1,5 @@
 ﻿
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     /// <summary>
     /// Collection of helper methods for misc collisions.
@@ -52,10 +52,10 @@ namespace TrueSync.Physics2D
             FP y4 = b1.y;
 
             //AABB early exit
-            if (TrueSync.TSMath.Max(x1, x2) < TrueSync.TSMath.Min(x3, x4) || TrueSync.TSMath.Max(x3, x4) < TrueSync.TSMath.Min(x1, x2))
+            if (KBEngine.TSMath.Max(x1, x2) < KBEngine.TSMath.Min(x3, x4) || KBEngine.TSMath.Max(x3, x4) < KBEngine.TSMath.Min(x1, x2))
                 return false;
 
-            if (TrueSync.TSMath.Max(y1, y2) < TrueSync.TSMath.Min(y3, y4) || TrueSync.TSMath.Max(y3, y4) < TrueSync.TSMath.Min(y1, y2))
+            if (KBEngine.TSMath.Max(y1, y2) < KBEngine.TSMath.Min(y3, y4) || KBEngine.TSMath.Max(y3, y4) < KBEngine.TSMath.Min(y1, y2))
                 return false;
 
             FP ua = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3));

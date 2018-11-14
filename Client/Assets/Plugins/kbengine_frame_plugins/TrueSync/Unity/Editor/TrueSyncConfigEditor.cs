@@ -2,7 +2,7 @@
 using UnityEditor;
 using System.Collections.Generic;
 
-namespace TrueSync {
+namespace KBEngine {
 
     /**
     *  @brief Custom editor to {@link TrueSyncConfig}.

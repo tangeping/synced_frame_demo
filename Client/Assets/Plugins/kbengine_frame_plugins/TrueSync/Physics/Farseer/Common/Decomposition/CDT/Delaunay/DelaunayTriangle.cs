@@ -41,9 +41,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using FP = TrueSync.FP;
+using FP = KBEngine.FP;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     internal class DelaunayTriangle
     {

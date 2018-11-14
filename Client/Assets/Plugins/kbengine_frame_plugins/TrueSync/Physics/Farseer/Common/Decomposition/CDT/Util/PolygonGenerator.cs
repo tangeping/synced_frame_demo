@@ -30,11 +30,11 @@
  */
 
 using System;
-using TrueSync.Physics2D;
-using FP = TrueSync.FP;
-using TSRandom = TrueSync.TSRandom;
+using KBEngine.Physics2D;
+using FP = KBEngine.FP;
+using TSRandom = KBEngine.TSRandom;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     internal class PolygonGenerator
     {

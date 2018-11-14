@@ -1,7 +1,7 @@
 using System;
-using TrueSync.Physics2D;
+using KBEngine.Physics2D;
 
-namespace TrueSync.Physics2D
+namespace KBEngine.Physics2D
 {
     [Flags]
     public enum PhysicsLogicType

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace TrueSync.Physics3D {
+namespace KBEngine.Physics3D {
 
 
     /// <summary>
