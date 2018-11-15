@@ -1,12 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TrueSync;
+using KBEngine;
 using KBEngine;
 using SyncFrame;
 
 
-public class Projectile : TrueSyncBehaviour
+public class Projectile : FrameSyncBehaviour
 {
 
     //public KBEngine.Avatar owner;
@@ -19,7 +19,7 @@ public class Projectile : TrueSyncBehaviour
 
     private bool OnceForce = true;
     /**
-     *  @brief Returns the {@link TSTransform} attached.
+     *  @brief Returns the {@link FPTransform} attached.
      */
 
 
@@ -33,7 +33,7 @@ public class Projectile : TrueSyncBehaviour
         if(OnceForce)
         {
             OnceForce = false;
-            tsRigidBody.AddForce(direction * speed, ForceMode.Impulse);
+            FPRigidBody.AddForce(direction * speed, ForceMode.Impulse);
         }
         
         destroyTime -= FPS_Manager.instance.Config.lockedTimeStep;
@@ -41,7 +41,7 @@ public class Projectile : TrueSyncBehaviour
         //Debug.Log("Projectile:OnSyncedUpdate");
     }
 
-    public void OnSyncedTriggerEnter(TSCollision other)
+    public void OnSyncedTriggerEnter(FPCollision other)
     {
         if (other.gameObject.tag == "Player")
         {

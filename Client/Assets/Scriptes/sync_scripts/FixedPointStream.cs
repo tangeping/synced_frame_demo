@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using KBEngine;
-using TrueSync;
+using KBEngine;
 
 namespace SyncFrame
 {

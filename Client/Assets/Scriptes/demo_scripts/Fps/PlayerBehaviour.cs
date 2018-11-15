@@ -3,14 +3,13 @@ using SyncFrame;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using TrueSync;
 using UnityEngine;
 
 public class PlayerBehaviour : MonoBehaviour {
 
-    public TSRigidBody tsRigidBody;
+    public FPRigidBody FPRigidBody;
 
-    public TSTransform tsTransform;
+    public FPTransform FPTransform;
 
     public KBEngine.Avatar owner;
 
@@ -56,34 +55,34 @@ public class PlayerBehaviour : MonoBehaviour {
     private void OnGUI()
     {
 
-        if (owner.isPlayer())
-        {
-            GUI.contentColor = Color.green;
-            GUI.Label(new Rect(0, Screen.height - 20, 400, 100), "id: " + owner.id);
-            GUI.Label(new Rect(0, Screen.height - 35, 400, 100), "frameCount: " + tsFrameId);
-            GUI.Label(new Rect(0, Screen.height - 50, 400, 100), "position: " + tsRigidBody.position);
-            GUI.Label(new Rect(0, Screen.height - 65, 400, 100), "velocity: " + tsRigidBody.velocity);
-            GUI.Label(new Rect(0, Screen.height - 80, 400, 100), "angularVelocity: " + tsRigidBody.angularVelocity);
-            GUI.Label(new Rect(0, Screen.height - 95, 400, 100), "KeyValue: " + KeyValue);
-        }
-        else
-        {
-            GUI.contentColor = Color.yellow;
-            GUI.Label(new Rect(Screen.width - 200, Screen.height - 20, 400, 100), "id: " + owner.id);
-            GUI.Label(new Rect(Screen.width - 200, Screen.height - 35, 400, 100), "frameCount: " + tsFrameId);
-            GUI.Label(new Rect(Screen.width - 200, Screen.height - 50, 400, 100), "position: " + tsRigidBody.position);
-            GUI.Label(new Rect(Screen.width - 200, Screen.height - 65, 400, 100), "velocity: " + tsRigidBody.velocity);
-            GUI.Label(new Rect(Screen.width - 200, Screen.height - 80, 400, 100), "angularVelocity: " + tsRigidBody.angularVelocity);
-            GUI.Label(new Rect(Screen.width - 200, Screen.height - 95, 400, 100), "KeyValue: " + KeyValue);
-        }
+//         if (owner.isPlayer())
+//         {
+//             GUI.contentColor = Color.green;
+//             GUI.Label(new Rect(0, Screen.height - 20, 400, 100), "id: " + owner.id);
+//             GUI.Label(new Rect(0, Screen.height - 35, 400, 100), "frameCount: " + tsFrameId);
+//             GUI.Label(new Rect(0, Screen.height - 50, 400, 100), "position: " + FPRigidBody.position);
+//             GUI.Label(new Rect(0, Screen.height - 65, 400, 100), "velocity: " + FPRigidBody.velocity);
+//             GUI.Label(new Rect(0, Screen.height - 80, 400, 100), "angularVelocity: " + FPRigidBody.angularVelocity);
+//             GUI.Label(new Rect(0, Screen.height - 95, 400, 100), "KeyValue: " + KeyValue);
+//         }
+//         else
+//         {
+//             GUI.contentColor = Color.yellow;
+//             GUI.Label(new Rect(Screen.width - 200, Screen.height - 20, 400, 100), "id: " + owner.id);
+//             GUI.Label(new Rect(Screen.width - 200, Screen.height - 35, 400, 100), "frameCount: " + tsFrameId);
+//             GUI.Label(new Rect(Screen.width - 200, Screen.height - 50, 400, 100), "position: " + FPRigidBody.position);
+//             GUI.Label(new Rect(Screen.width - 200, Screen.height - 65, 400, 100), "velocity: " + FPRigidBody.velocity);
+//             GUI.Label(new Rect(Screen.width - 200, Screen.height - 80, 400, 100), "angularVelocity: " + FPRigidBody.angularVelocity);
+//             GUI.Label(new Rect(Screen.width - 200, Screen.height - 95, 400, 100), "KeyValue: " + KeyValue);
+//         }
 
     }
 
     public void OnSyncedStart()
     {
-        tsRigidBody = GetComponent<TSRigidBody>();
+        FPRigidBody = GetComponent<FPRigidBody>();
 
-        tsTransform = GetComponent<TSTransform>();
+        FPTransform = GetComponent<FPTransform>();
 
         actions = GetComponent<Actions>();
 
@@ -98,7 +97,7 @@ public class PlayerBehaviour : MonoBehaviour {
             projectilePrefab = (GameObject)Resources.Load("Perfabs/bullet");
         }
         
-        Debug.Log("PlayerContorl::start:" + tsRigidBody + ",tsTransform:" + tsTransform + ",projectilePrefab:"+ projectilePrefab);
+        Debug.LogError("PlayerContorl::start:" + FPRigidBody + ",FPTransform:" + FPTransform + ",projectilePrefab:"+ projectilePrefab+"action:"+actions);
     }
 
     public void OnSyncedInput()
@@ -130,13 +129,20 @@ public class PlayerBehaviour : MonoBehaviour {
         FP accell = Input.GetAxis("Vertical");
         FP steer = Input.GetAxis("Horizontal");
 
-
+        Debug.Log("KeyValue:" + KeyValue);
         KBEngine.Event.fireIn("reqFrameChange", FrameProto.encode(new FrameFPS(CMD.FPS, KeyValue,accell,steer)));
     }
 
     void StateChange(string message)
     {
-        actions.SendMessage(message, SendMessageOptions.DontRequireReceiver);
+        if (actions)
+        {
+            actions.SendMessage(message, SendMessageOptions.DontRequireReceiver);
+        }
+        else
+        {
+            Debug.LogError("actions not found!!!");
+        }
     }
 
     void ChangeWeapon()
@@ -156,13 +162,13 @@ public class PlayerBehaviour : MonoBehaviour {
         if(cooldown <= 0)
         {
             cooldown = 2;
-            TSVector position = tsTransform.position + tsTransform.forward.normalized + new TSVector(1, 1, 0) ;
+            TSVector position = FPTransform.position + FPTransform.forward.normalized + new TSVector(1, 1, 0) ;
             FPS_Manager.SyncedInstantiate(projectilePrefab, position, TSQuaternion.identity);
 
 
             Projectile projectile = projectilePrefab.GetComponent<Projectile>();
 
-            projectile.direction = tsTransform.forward;
+            projectile.direction = FPTransform.forward;
             //projectile.owner = owner;
 
 
@@ -222,12 +228,11 @@ public class PlayerBehaviour : MonoBehaviour {
         accell *= accellRate * FPS_Manager.instance.Config.lockedTimeStep;
         steer *= steerRate * FPS_Manager.instance.Config.lockedTimeStep;
 
-        tsTransform.Translate(0, 0, accell, Space.Self);
-        tsTransform.Rotate(0, steer, 0);
+        //FPTransform.Translate(0, 0, accell, Space.Self);
+        FPTransform.Rotate(0, steer, 0);
 
-
-        TSRigidBody rb = GetComponent<TSRigidBody>();
-        rb.AddForce(TSVector.forward * FPS_Manager.instance.Config.lockedTimeStep);
+        FPRigidBody.AddForce(FPTransform.forward* accell*10, ForceMode.Impulse);
+        //FPRigidBody.AddForce(TSVector.forward * FPS_Manager.instance.Config.lockedTimeStep);
     }
 
     public void OnSyncedUpdate(UInt32 frameid, ENTITY_DATA operation)
@@ -236,7 +241,7 @@ public class PlayerBehaviour : MonoBehaviour {
 
         FrameFPS data = new FrameFPS();
         data.PareseFrom(operation);
-        if(data.e.entityid != owner.id)
+        if(operation.cmd_type != (Byte)SyncFrame.CMD.EMPTY && data.e.entityid != owner.id)
         {
             return;
         }
@@ -255,13 +260,12 @@ public class PlayerBehaviour : MonoBehaviour {
         UpdateMovement(data.accell, data.steer);
         cooldown -= FPS_Manager.instance.Config.lockedTimeStep;
 
-
     }
 
     /**
 * @brief Tints box's material with gray color when it collides with the ball.
 **/
-    public void OnSyncedCollisionEnter(TSCollision other)
+    public void OnSyncedCollisionEnter(FPCollision other)
     {
 
         if (other.gameObject.name == "Box(Clone)")
@@ -274,7 +278,7 @@ public class PlayerBehaviour : MonoBehaviour {
     /**
     * @brief Increases box's local scale by 1% while collision with a ball remains active.
     **/
-    public void OnSyncedCollisionStay(TSCollision other)
+    public void OnSyncedCollisionStay(FPCollision other)
     {
 
         if (other.gameObject.name == "Box(Clone)")
@@ -287,7 +291,7 @@ public class PlayerBehaviour : MonoBehaviour {
     /**
     * @brief Resets changes in box's properties when there is no more collision with the ball.
     **/
-    public void OnSyncedCollisionExit(TSCollision other)
+    public void OnSyncedCollisionExit(FPCollision other)
     {
 
         if (other.gameObject.name == "Box(Clone)")

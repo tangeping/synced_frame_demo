@@ -21,9 +21,9 @@ GameObject:
   - component: {fileID: 4430403046800092}
   - component: {fileID: 33082150471609098}
   - component: {fileID: 23634029752189822}
-  - component: {fileID: 114028362967315614}
-  - component: {fileID: 114888790859214456}
-  - component: {fileID: 114107674413716358}
+  - component: {fileID: 114180356716488556}
+  - component: {fileID: 114630712361488690}
+  - component: {fileID: 114792589202939716}
   m_Layer: 0
   m_Name: SmallBox
   m_TagString: Untagged
@@ -85,7 +85,7 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1508049258050598}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &114028362967315614
+--- !u!114 &114180356716488556
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -93,16 +93,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 1508049258050598}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df3e4ecc2c78eaa409dad488c230d65d, type: 3}
+  m_Script: {fileID: 11500000, guid: f0c6e0a53b09dd740a1745174c7ce999, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _position:
     x:
-      _serializedValue: 1262720384
+      _serializedValue: 0
     y:
-      _serializedValue: 3843995648
+      _serializedValue: 0
     z:
-      _serializedValue: -3238405376
+      _serializedValue: 0
   _rotation:
     x:
       _serializedValue: 0
@@ -111,18 +111,18 @@ MonoBehaviour:
     z:
       _serializedValue: 0
     w:
-      _serializedValue: 4294967296
+      _serializedValue: 0
   _scale:
     x:
-      _serializedValue: 858993472
+      _serializedValue: 0
     y:
-      _serializedValue: 858993472
+      _serializedValue: 0
     z:
-      _serializedValue: 858993472
-  _serialized: 1
+      _serializedValue: 0
+  _serialized: 0
   tsCollider: {fileID: 0}
   tsParent: {fileID: 0}
---- !u!114 &114107674413716358
+--- !u!114 &114630712361488690
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -130,28 +130,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1508049258050598}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8561a4124465f743903b76d8cf232a9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _mass:
-    _serializedValue: 4294967296
-  _useGravity: 1
-  _isKinematic: 0
-  _linearDrag:
-    _serializedValue: 0
-  _angularDrag:
-    _serializedValue: 214748368
-  interpolation: 0
-  _constraints: 0
---- !u!114 &114888790859214456
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1508049258050598}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2761f79677a73b84cbeba46eda8c3766, type: 3}
+  m_Script: {fileID: 11500000, guid: 9f1a27d7697f2064cae3fdea07e7aeb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _isTrigger: 0
@@ -165,10 +144,31 @@ MonoBehaviour:
       _serializedValue: 0
   lossyScale:
     x:
-      _serializedValue: 858993472
+      _serializedValue: 4294967296
     y:
-      _serializedValue: 858993472
+      _serializedValue: 4294967296
     z:
-      _serializedValue: 858993472
-  tsTransform: {fileID: 114028362967315614}
+      _serializedValue: 4294967296
+  FPTransform: {fileID: 0}
   _size: {x: 1, y: 1, z: 1}
+--- !u!114 &114792589202939716
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1508049258050598}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e66722e7cc9da146b525275cda3ed1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _mass:
+    _serializedValue: 4294967296
+  _useGravity: 1
+  _isKinematic: 0
+  _linearDrag:
+    _serializedValue: 429496736
+  _angularDrag:
+    _serializedValue: 429496736
+  interpolation: 0
+  _constraints: 0

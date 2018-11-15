@@ -5,7 +5,7 @@ using CBFrame.Core;
 using CBFrame.Sys;
 using KBEngine;
 using System;
-using TrueSync;
+
 
 
 namespace SyncFrame
@@ -16,7 +16,7 @@ namespace SyncFrame
         /**
          *  @brief Represents the simulated gravity.
          **/
-        public TrueSyncConfig Config;
+        public FrameSyncConfig Config;
         /**
          * @brief Instance of the lockstep engine.
          **/
@@ -37,9 +37,9 @@ namespace SyncFrame
         public Dictionary<int, PlayerBehaviour> playerBehaviours = new Dictionary<int, PlayerBehaviour>();
 
         /**
-         * @brief List of {@link TrueSyncBehaviour} that should be included next update.
+         * @brief List of {@link FrameSyncBehaviour} that should be included next update.
          **/
-        public List<TrueSyncManagedBehaviour> queuedBehaviours = new List<TrueSyncManagedBehaviour>();
+        public List<FrameSyncManagedBehaviour> queuedBehaviours = new List<FrameSyncManagedBehaviour>();
 
         private void Awake()
         {
@@ -80,6 +80,7 @@ namespace SyncFrame
                 if(player.isPlayer())
                 {
                     cameraTransform.GetComponent<CamerFllown>().AttachTarget(perfab.transform);
+                    cameraTransform.transform.parent = perfab.transform;
                 }
             }
         }
@@ -156,7 +157,7 @@ namespace SyncFrame
             }
         }
 
-        void FixedUpdate()
+        void Update()
         {
             tsDeltaTime += Time.deltaTime;
 
@@ -172,25 +173,38 @@ namespace SyncFrame
                     FRAME_DATA framedata = GameData.Instance.frameList.Dequeue();
 
                     currenFrameId = framedata.frameid;
-                    for (int i = 0; i < framedata.operation.Count; i++)
-                    {
-                        ENTITY_DATA oper = framedata.operation[i];
 
-                        if(playerBehaviours.ContainsKey(oper.entityid))
+                    if(framedata.operation.Count == 1 && framedata.operation[0].cmd_type == (Byte)SyncFrame.CMD.EMPTY)
+                    {
+                        for (int i = 0; i < GameData.Instance.RoomPlayers.Count; i++)
                         {
-                            playerBehaviours[oper.entityid].OnSyncedUpdate(currenFrameId, oper);
+                            int entityId = GameData.Instance.RoomPlayers[i].id;
+                            playerBehaviours[entityId].OnSyncedUpdate(currenFrameId, (new FrameFPS()).Serialize());
+                        }                   
+                    }
+                    else
+                    {
+                        for (int i = 0; i < framedata.operation.Count; i++)
+                        {
+                            ENTITY_DATA oper = framedata.operation[i];
+                            if (playerBehaviours.ContainsKey(oper.entityid))
+                            {
+                                playerBehaviours[oper.entityid].OnSyncedUpdate(currenFrameId, oper);
+                            }
+
                         }
-                        
                     }
 
                     foreach (var item in instance.queuedBehaviours)
                     {
                         item.OnSyncedUpdate();
                     }
-                    PhysicsManager.instance.UpdateStep();                  
+                    PhysicsManager.instance.UpdateStep();
+                    
+                    OnSyncedPlayerInput();
                 }
 
-                OnSyncedPlayerInput();
+                
             }
         }
 
@@ -234,10 +248,10 @@ namespace SyncFrame
             }
         }
 
-        private TrueSyncManagedBehaviour NewManagedBehavior(ITrueSyncBehaviour trueSyncBehavior)
+        private FrameSyncManagedBehaviour NewManagedBehavior(IFrameSyncBehaviour FrameSyncBehavior)
         {
-            TrueSyncManagedBehaviour result = new TrueSyncManagedBehaviour(trueSyncBehavior);
-            //mapBehaviorToManagedBehavior[trueSyncBehavior] = result;
+            FrameSyncManagedBehaviour result = new FrameSyncManagedBehaviour(FrameSyncBehavior);
+            //mapBehaviorToManagedBehavior[FrameSyncBehavior] = result;
 
             return result;
         }
@@ -250,9 +264,9 @@ namespace SyncFrame
             {
                 MonoBehaviour bh = monoBehaviours[index];
 
-                if (bh is ITrueSyncBehaviour)
+                if (bh is IFrameSyncBehaviour)
                 {
-                    instance.queuedBehaviours.Add(instance.NewManagedBehavior((ITrueSyncBehaviour)bh));
+                    instance.queuedBehaviours.Add(instance.NewManagedBehavior((IFrameSyncBehaviour)bh));
                 }
             }
 
@@ -266,48 +280,48 @@ namespace SyncFrame
                 }
             }
 
-            TSTransform rootTSTransform = go.GetComponent<TSTransform>();
-            if (rootTSTransform != null)
+            FPTransform rootFPTransform = go.GetComponent<FPTransform>();
+            if (rootFPTransform != null)
             {
-                rootTSTransform.Initialize();
+                rootFPTransform.Initialize();
 
-                rootTSTransform.position = position;
-                rootTSTransform.rotation = rotation;
+                rootFPTransform.position = position;
+                rootFPTransform.rotation = rotation;
             }
 
-            TSTransform[] tsTransforms = go.GetComponentsInChildren<TSTransform>();
-            if (tsTransforms != null)
+            FPTransform[] FPTransforms = go.GetComponentsInChildren<FPTransform>();
+            if (FPTransforms != null)
             {
-                for (int index = 0, length = tsTransforms.Length; index < length; index++)
+                for (int index = 0, length = FPTransforms.Length; index < length; index++)
                 {
-                    TSTransform tsTransform = tsTransforms[index];
+                    FPTransform FPTransform = FPTransforms[index];
 
-                    if (tsTransform != rootTSTransform)
+                    if (FPTransform != rootFPTransform)
                     {
-                        tsTransform.Initialize();
+                        FPTransform.Initialize();
                     }
                 }
             }
 
-            TSTransform2D rootTSTransform2D = go.GetComponent<TSTransform2D>();
-            if (rootTSTransform2D != null)
+            FPTransform2D rootFPTransform2D = go.GetComponent<FPTransform2D>();
+            if (rootFPTransform2D != null)
             {
-                rootTSTransform2D.Initialize();
+                rootFPTransform2D.Initialize();
 
-                rootTSTransform2D.position = new TSVector2(position.x, position.y);
-                rootTSTransform2D.rotation = rotation.ToQuaternion().eulerAngles.z;
+                rootFPTransform2D.position = new TSVector2(position.x, position.y);
+                rootFPTransform2D.rotation = rotation.ToQuaternion().eulerAngles.z;
             }
 
-            TSTransform2D[] tsTransforms2D = go.GetComponentsInChildren<TSTransform2D>();
-            if (tsTransforms2D != null)
+            FPTransform2D[] FPTransforms2D = go.GetComponentsInChildren<FPTransform2D>();
+            if (FPTransforms2D != null)
             {
-                for (int index = 0, length = tsTransforms2D.Length; index < length; index++)
+                for (int index = 0, length = FPTransforms2D.Length; index < length; index++)
                 {
-                    TSTransform2D tsTransform2D = tsTransforms2D[index];
+                    FPTransform2D FPTransform2D = FPTransforms2D[index];
 
-                    if (tsTransform2D != rootTSTransform2D)
+                    if (FPTransform2D != rootFPTransform2D)
                     {
-                        tsTransform2D.Initialize();
+                        FPTransform2D.Initialize();
                     }
                 }
             }

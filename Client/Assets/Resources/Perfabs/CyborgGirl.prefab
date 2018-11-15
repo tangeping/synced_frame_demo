@@ -578,16 +578,16 @@ GameObject:
   - component: {fileID: 95721964478433080}
   - component: {fileID: 114398749100726716}
   - component: {fileID: 114911360842874896}
-  - component: {fileID: 114101250287974034}
-  - component: {fileID: 114174908965600076}
-  - component: {fileID: 114487281589201870}
+  - component: {fileID: 114045962197185356}
+  - component: {fileID: 114235138979642232}
+  - component: {fileID: 114251624350076684}
   m_Layer: 0
   m_Name: CyborgGirl
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1785640869810186
 GameObject:
   m_ObjectHideFlags: 1
@@ -1193,8 +1193,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1765567665789126}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalPosition: {x: 0, y: 0.52, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4967594303162428}
@@ -1202,7 +1202,7 @@ Transform:
   - {fileID: 4273763830803312}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!4 &4685262270949314
 Transform:
   m_ObjectHideFlags: 1
@@ -1487,7 +1487,7 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &114101250287974034
+--- !u!114 &114045962197185356
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -1495,20 +1495,36 @@ MonoBehaviour:
   m_GameObject: {fileID: 1765567665789126}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8561a4124465f743903b76d8cf232a9, type: 3}
+  m_Script: {fileID: 11500000, guid: f0c6e0a53b09dd740a1745174c7ce999, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mass:
-    _serializedValue: 858993459200
-  _useGravity: 1
-  _isKinematic: 0
-  _linearDrag:
-    _serializedValue: 0
-  _angularDrag:
-    _serializedValue: 214748368
-  interpolation: 0
-  _constraints: 0
---- !u!114 &114174908965600076
+  _position:
+    x:
+      _serializedValue: 0
+    y:
+      _serializedValue: 2233382912
+    z:
+      _serializedValue: 0
+  _rotation:
+    x:
+      _serializedValue: 0
+    y:
+      _serializedValue: 4294967296
+    z:
+      _serializedValue: 0
+    w:
+      _serializedValue: 0
+  _scale:
+    x:
+      _serializedValue: 4294967296
+    y:
+      _serializedValue: 4294967296
+    z:
+      _serializedValue: 4294967296
+  _serialized: 1
+  tsCollider: {fileID: 0}
+  tsParent: {fileID: 0}
+--- !u!114 &114235138979642232
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -1516,7 +1532,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1765567665789126}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2761f79677a73b84cbeba46eda8c3766, type: 3}
+  m_Script: {fileID: 11500000, guid: 9f1a27d7697f2064cae3fdea07e7aeb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _isTrigger: 0
@@ -1525,9 +1541,9 @@ MonoBehaviour:
     x:
       _serializedValue: 0
     y:
-      _serializedValue: 2147483648
+      _serializedValue: 2061584256
     z:
-      _serializedValue: -128849016
+      _serializedValue: 0
   lossyScale:
     x:
       _serializedValue: 4294967296
@@ -1535,8 +1551,29 @@ MonoBehaviour:
       _serializedValue: 4294967296
     z:
       _serializedValue: 4294967296
-  tsTransform: {fileID: 114487281589201870}
-  _size: {x: 0.57, y: 1, z: 0.2}
+  FPTransform: {fileID: 114045962197185356}
+  _size: {x: 0.54, y: 0.94, z: 0.34}
+--- !u!114 &114251624350076684
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1765567665789126}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e66722e7cc9da146b525275cda3ed1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _mass:
+    _serializedValue: 429496729600
+  _useGravity: 1
+  _isKinematic: 0
+  _linearDrag:
+    _serializedValue: 42949672960
+  _angularDrag:
+    _serializedValue: 42949672960
+  interpolation: 0
+  _constraints: 36
 --- !u!114 &114398749100726716
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1548,43 +1585,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a85c5e349cb17df4b85883ea088c2f95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114487281589201870
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1765567665789126}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df3e4ecc2c78eaa409dad488c230d65d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _position:
-    x:
-      _serializedValue: 0
-    y:
-      _serializedValue: 2147483648
-    z:
-      _serializedValue: 0
-  _rotation:
-    x:
-      _serializedValue: 0
-    y:
-      _serializedValue: 0
-    z:
-      _serializedValue: 0
-    w:
-      _serializedValue: 4294967296
-  _scale:
-    x:
-      _serializedValue: 4294967296
-    y:
-      _serializedValue: 4294967296
-    z:
-      _serializedValue: 4294967296
-  _serialized: 1
-  tsCollider: {fileID: 0}
-  tsParent: {fileID: 0}
 --- !u!114 &114911360842874896
 MonoBehaviour:
   m_ObjectHideFlags: 1
