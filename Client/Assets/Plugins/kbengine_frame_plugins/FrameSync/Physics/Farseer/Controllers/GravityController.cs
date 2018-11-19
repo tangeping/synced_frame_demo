@@ -16,7 +16,7 @@ namespace KBEngine.Physics2D
             Strength = strength;
             MaxRadius = FP.MaxValue;
             GravityType = GravityType.DistanceSquared;
-            Points = new List<TSVector2>();
+            Points = new List<FPVector2>();
             Bodies = new List<Body>();
         }
 
@@ -27,7 +27,7 @@ namespace KBEngine.Physics2D
             MaxRadius = maxRadius;
             Strength = strength;
             GravityType = GravityType.DistanceSquared;
-            Points = new List<TSVector2>();
+            Points = new List<FPVector2>();
             Bodies = new List<Body>();
         }
 
@@ -36,11 +36,11 @@ namespace KBEngine.Physics2D
         public FP Strength { get; set; }
         public GravityType GravityType { get; set; }
         public List<Body> Bodies { get; set; }
-        public List<TSVector2> Points { get; set; }
+        public List<FPVector2> Points { get; set; }
 
         public override void Update(FP dt)
         {
-            TSVector2 f = TSVector2.zero;
+            FPVector2 f = FPVector2.zero;
 
             foreach (Body worldBody in World.BodyList)
             {
@@ -52,7 +52,7 @@ namespace KBEngine.Physics2D
                     if (worldBody == controllerBody || (worldBody.IsStatic && controllerBody.IsStatic) || !controllerBody.Enabled)
                         continue;
 
-                    TSVector2 d = controllerBody.Position - worldBody.Position;
+                    FPVector2 d = controllerBody.Position - worldBody.Position;
                     FP r2 = d.LengthSquared();
 
                     if (r2 <= Settings.Epsilon || r2 > MaxRadius * MaxRadius || r2 < MinRadius * MinRadius)
@@ -71,9 +71,9 @@ namespace KBEngine.Physics2D
                     worldBody.ApplyForce(ref f);
                 }
 
-                foreach (TSVector2 point in Points)
+                foreach (FPVector2 point in Points)
                 {
-                    TSVector2 d = point - worldBody.Position;
+                    FPVector2 d = point - worldBody.Position;
                     FP r2 = d.LengthSquared();
 
                     if (r2 <= Settings.Epsilon || r2 > MaxRadius * MaxRadius || r2 < MinRadius * MinRadius)
@@ -99,7 +99,7 @@ namespace KBEngine.Physics2D
             Bodies.Add(body);
         }
 
-        public void AddPoint(TSVector2 point)
+        public void AddPoint(FPVector2 point)
         {
             Points.Add(point);
         }

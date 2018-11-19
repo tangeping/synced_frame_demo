@@ -33,7 +33,7 @@ namespace KBEngine.Physics3D {
         private static ResourcePool<VoronoiSimplexSolver> simplexSolverPool = new ResourcePool<VoronoiSimplexSolver>();
 
         #region private static void SupportMapTransformed(ISupportMappable support, ref JMatrix orientation, ref JVector position, ref JVector direction, out JVector result)
-        private static void SupportMapTransformed(ISupportMappable support, ref TSMatrix orientation, ref TSVector position, ref TSVector direction, out TSVector result) {
+        private static void SupportMapTransformed(ISupportMappable support, ref FPMatrix orientation, ref FPVector position, ref FPVector direction, out FPVector result) {
             //JVector.Transform(ref direction, ref invOrientation, out result);
             //support.SupportMapping(ref result, out result);
             //JVector.Transform(ref result, ref orientation, out result);
@@ -64,22 +64,22 @@ namespace KBEngine.Physics3D {
         /// <param name="position">The position of the shape.</param>
         /// <param name="point">The point to check.</param>
         /// <returns>Returns true if the point is within the shape, otherwise false.</returns>
-        public static bool Pointcast(ISupportMappable support, ref TSMatrix orientation, ref TSVector position, ref TSVector point) {
-            TSVector arbitraryPoint;
+        public static bool Pointcast(ISupportMappable support, ref FPMatrix orientation, ref FPVector position, ref FPVector point) {
+            FPVector arbitraryPoint;
 
             SupportMapTransformed(support, ref orientation, ref position, ref point, out arbitraryPoint);
-            TSVector.Subtract(ref point, ref arbitraryPoint, out arbitraryPoint);
+            FPVector.Subtract(ref point, ref arbitraryPoint, out arbitraryPoint);
 
-            TSVector r; support.SupportCenter(out r);
-            TSVector.Transform(ref r, ref orientation, out r);
-            TSVector.Add(ref position, ref r, out r);
-            TSVector.Subtract(ref point, ref r, out r);
+            FPVector r; support.SupportCenter(out r);
+            FPVector.Transform(ref r, ref orientation, out r);
+            FPVector.Add(ref position, ref r, out r);
+            FPVector.Subtract(ref point, ref r, out r);
 
-            TSVector x = point;
-            TSVector w, p;
+            FPVector x = point;
+            FPVector w, p;
             FP VdotR;
 
-            TSVector v; TSVector.Subtract(ref x, ref arbitraryPoint, out v);
+            FPVector v; FPVector.Subtract(ref x, ref arbitraryPoint, out v);
             FP dist = v.sqrMagnitude;
             FP epsilon = FP.EN4;
 
@@ -91,14 +91,14 @@ namespace KBEngine.Physics3D {
 
             while ((dist > epsilon) && (maxIter-- != 0)) {
                 SupportMapTransformed(support, ref orientation, ref position, ref v, out p);
-                TSVector.Subtract(ref x, ref p, out w);
+                FPVector.Subtract(ref x, ref p, out w);
 
-                FP VdotW = TSVector.Dot(ref v, ref w);
+                FP VdotW = FPVector.Dot(ref v, ref w);
 
                 if (VdotW > FP.Zero) {
-                    VdotR = TSVector.Dot(ref v, ref r);
+                    VdotR = FPVector.Dot(ref v, ref r);
 
-                    if (VdotR >= -(TSMath.Epsilon * TSMath.Epsilon)) { simplexSolverPool.GiveBack(simplexSolver); return false; } else simplexSolver.Reset();
+                    if (VdotR >= -(FPMath.Epsilon * FPMath.Epsilon)) { simplexSolverPool.GiveBack(simplexSolver); return false; } else simplexSolver.Reset();
                 }
                 if (!simplexSolver.InSimplex(w)) simplexSolver.AddVertex(w, x, p);
 
@@ -112,31 +112,31 @@ namespace KBEngine.Physics3D {
         }
 
 
-        public static bool ClosestPoints(ISupportMappable support1, ISupportMappable support2, ref TSMatrix orientation1,
-            ref TSMatrix orientation2, ref TSVector position1, ref TSVector position2,
-            out TSVector p1, out TSVector p2, out TSVector normal) {
+        public static bool ClosestPoints(ISupportMappable support1, ISupportMappable support2, ref FPMatrix orientation1,
+            ref FPMatrix orientation2, ref FPVector position1, ref FPVector position2,
+            out FPVector p1, out FPVector p2, out FPVector normal) {
 
             VoronoiSimplexSolver simplexSolver = simplexSolverPool.GetNew();
             simplexSolver.Reset();
 
-            p1 = p2 = TSVector.zero;
+            p1 = p2 = FPVector.zero;
 
-            TSVector r = position1 - position2;
-            TSVector w, v;
+            FPVector r = position1 - position2;
+            FPVector w, v;
 
-            TSVector supVertexA;
-            TSVector rn, vn;
+            FPVector supVertexA;
+            FPVector rn, vn;
 
-            rn = TSVector.Negate(r);
+            rn = FPVector.Negate(r);
 
             SupportMapTransformed(support1, ref orientation1, ref position1, ref rn, out supVertexA);
 
-            TSVector supVertexB;
+            FPVector supVertexB;
             SupportMapTransformed(support2, ref orientation2, ref position2, ref r, out supVertexB);
 
             v = supVertexA - supVertexB;
 
-            normal = TSVector.zero;
+            normal = FPVector.zero;
 
             int maxIter = 15;
 
@@ -144,7 +144,7 @@ namespace KBEngine.Physics3D {
             FP epsilon = FP.EN5;
 
             while ((distSq > epsilon) && (maxIter-- != 0)) {
-                vn = TSVector.Negate(v);
+                vn = FPVector.Negate(v);
                 SupportMapTransformed(support1, ref orientation1, ref position1, ref vn, out supVertexA);
                 SupportMapTransformed(support2, ref orientation2, ref position2, ref v, out supVertexB);
                 w = supVertexA - supVertexB;
@@ -159,7 +159,7 @@ namespace KBEngine.Physics3D {
 
             simplexSolver.ComputePoints(out p1, out p2);
 
-            if (normal.sqrMagnitude > TSMath.Epsilon * TSMath.Epsilon)
+            if (normal.sqrMagnitude > FPMath.Epsilon * FPMath.Epsilon)
                 normal.Normalize();
 
             simplexSolverPool.GiveBack(simplexSolver);
@@ -286,23 +286,23 @@ namespace KBEngine.Physics3D {
         /// ray the collision occured. The hitPoint is calculated by: origin+friction*direction.</param>
         /// <param name="normal">The normal from the ray collision.</param>
         /// <returns>Returns true if the ray hit the shape, false otherwise.</returns>
-        public static bool Raycast(ISupportMappable support, ref TSMatrix orientation, ref TSMatrix invOrientation,
-            ref TSVector position, ref TSVector origin, ref TSVector direction, out FP fraction, out TSVector normal) {
+        public static bool Raycast(ISupportMappable support, ref FPMatrix orientation, ref FPMatrix invOrientation,
+            ref FPVector position, ref FPVector origin, ref FPVector direction, out FP fraction, out FPVector normal) {
             VoronoiSimplexSolver simplexSolver = simplexSolverPool.GetNew();
             simplexSolver.Reset();
 
-            normal = TSVector.zero;
+            normal = FPVector.zero;
             fraction = FP.MaxValue;
 
             FP lambda = FP.Zero;
 
-            TSVector r = direction;
-            TSVector x = origin;
-            TSVector w, p, v;
+            FPVector r = direction;
+            FPVector x = origin;
+            FPVector w, p, v;
 
-            TSVector arbitraryPoint;
+            FPVector arbitraryPoint;
             SupportMapTransformed(support, ref orientation, ref position, ref r, out arbitraryPoint);
-            TSVector.Subtract(ref x, ref arbitraryPoint, out v);
+            FPVector.Subtract(ref x, ref arbitraryPoint, out v);
 
             int maxIter = MaxIterations;
 
@@ -313,21 +313,21 @@ namespace KBEngine.Physics3D {
 
             while ((distSq > epsilon) && (maxIter-- != 0)) {
                 SupportMapTransformed(support, ref orientation, ref position, ref v, out p);
-                TSVector.Subtract(ref x, ref p, out w);
+                FPVector.Subtract(ref x, ref p, out w);
 
-                FP VdotW = TSVector.Dot(ref v, ref w);
+                FP VdotW = FPVector.Dot(ref v, ref w);
 
                 if (VdotW > FP.Zero) {
-                    VdotR = TSVector.Dot(ref v, ref r);
+                    VdotR = FPVector.Dot(ref v, ref r);
 
-                    if (VdotR >= -TSMath.Epsilon) {
+                    if (VdotR >= -FPMath.Epsilon) {
                         simplexSolverPool.GiveBack(simplexSolver);
                         return false;
                     } else {
                         lambda = lambda - VdotW / VdotR;
-                        TSVector.Multiply(ref r, lambda, out x);
-                        TSVector.Add(ref origin, ref x, out x);
-                        TSVector.Subtract(ref x, ref p, out w);
+                        FPVector.Multiply(ref r, lambda, out x);
+                        FPVector.Add(ref origin, ref x, out x);
+                        FPVector.Subtract(ref x, ref p, out w);
                         normal = v;
                     }
                 }
@@ -341,7 +341,7 @@ namespace KBEngine.Physics3D {
             // but is inaccurate against large objects:
             // fraction = lambda;
 
-            TSVector p1, p2;
+            FPVector p1, p2;
             simplexSolver.ComputePoints(out p1, out p2);
 
             p2 = p2 - origin;
@@ -349,7 +349,7 @@ namespace KBEngine.Physics3D {
 
             #endregion
 
-            if (normal.sqrMagnitude > TSMath.Epsilon * TSMath.Epsilon)
+            if (normal.sqrMagnitude > FPMath.Epsilon * FPMath.Epsilon)
                 normal.Normalize();
 
             simplexSolverPool.GiveBack(simplexSolver);
@@ -397,14 +397,14 @@ namespace KBEngine.Physics3D {
 
         private int _numVertices;
 
-        private TSVector[] _simplexVectorW = new TSVector[VoronoiSimplexMaxVerts];
-        private TSVector[] _simplexPointsP = new TSVector[VoronoiSimplexMaxVerts];
-        private TSVector[] _simplexPointsQ = new TSVector[VoronoiSimplexMaxVerts];
+        private FPVector[] _simplexVectorW = new FPVector[VoronoiSimplexMaxVerts];
+        private FPVector[] _simplexPointsP = new FPVector[VoronoiSimplexMaxVerts];
+        private FPVector[] _simplexPointsQ = new FPVector[VoronoiSimplexMaxVerts];
 
-        private TSVector _cachedPA;
-        private TSVector _cachedPB;
-        private TSVector _cachedV;
-        private TSVector _lastW;
+        private FPVector _cachedPA;
+        private FPVector _cachedPB;
+        private FPVector _cachedV;
+        private FPVector _lastW;
         private bool _cachedValidClosest;
 
         private SubSimplexClosestResult _cachedBC = new SubSimplexClosestResult();
@@ -434,11 +434,11 @@ namespace KBEngine.Physics3D {
             _cachedValidClosest = false;
             _numVertices = 0;
             _needsUpdate = true;
-            _lastW = new TSVector(FP.MaxValue, FP.MaxValue, FP.MaxValue);
+            _lastW = new FPVector(FP.MaxValue, FP.MaxValue, FP.MaxValue);
             _cachedBC.Reset();
         }
 
-        public void AddVertex(TSVector w, TSVector p, TSVector q) {
+        public void AddVertex(FPVector w, FPVector p, FPVector q) {
             _lastW = w;
             _needsUpdate = true;
 
@@ -450,7 +450,7 @@ namespace KBEngine.Physics3D {
         }
 
         //return/calculate the closest vertex
-        public bool Closest(out TSVector v) {
+        public bool Closest(out FPVector v) {
             bool succes = UpdateClosestVectorAndPoints();
             v = _cachedV;
             return succes;
@@ -469,11 +469,11 @@ namespace KBEngine.Physics3D {
         }
 
         //return the current simplex
-        public int GetSimplex(out TSVector[] pBuf, out TSVector[] qBuf, out TSVector[] yBuf) {
+        public int GetSimplex(out FPVector[] pBuf, out FPVector[] qBuf, out FPVector[] yBuf) {
             int numverts = NumVertices;
-            pBuf = new TSVector[numverts];
-            qBuf = new TSVector[numverts];
-            yBuf = new TSVector[numverts];
+            pBuf = new FPVector[numverts];
+            qBuf = new FPVector[numverts];
+            yBuf = new FPVector[numverts];
             for (int i = 0; i < numverts; i++) {
                 yBuf[i] = _simplexVectorW[i];
                 pBuf[i] = _simplexPointsP[i];
@@ -482,7 +482,7 @@ namespace KBEngine.Physics3D {
             return numverts;
         }
 
-        public bool InSimplex(TSVector w) {
+        public bool InSimplex(FPVector w) {
             //check in case lastW is already removed
             if (w == _lastW) return true;
 
@@ -494,7 +494,7 @@ namespace KBEngine.Physics3D {
             return false;
         }
 
-        public void BackupClosest(out TSVector v) {
+        public void BackupClosest(out FPVector v) {
             v = _cachedV;
         }
 
@@ -504,7 +504,7 @@ namespace KBEngine.Physics3D {
             }
         }
 
-        public void ComputePoints(out TSVector p1, out TSVector p2) {
+        public void ComputePoints(out FPVector p1, out FPVector p2) {
             UpdateClosestVectorAndPoints();
             p1 = _cachedPA;
             p2 = _cachedPB;
@@ -531,7 +531,7 @@ namespace KBEngine.Physics3D {
                 _cachedBC.Reset();
                 _needsUpdate = false;
 
-                TSVector p, a, b, c, d;
+                FPVector p, a, b, c, d;
                 switch (NumVertices) {
                     case 0:
                         _cachedValidClosest = false;
@@ -546,13 +546,13 @@ namespace KBEngine.Physics3D {
                         break;
                     case 2:
                         //closest point origin from line segment
-                        TSVector from = _simplexVectorW[0];
-                        TSVector to = _simplexVectorW[1];
-                        //TSVector nearest;
+                        FPVector from = _simplexVectorW[0];
+                        FPVector to = _simplexVectorW[1];
+                        //FPVector nearest;
 
-                        TSVector diff = from * (-1);
-                        TSVector v = to - from;
-                        FP t = TSVector.Dot(v, diff);
+                        FPVector diff = from * (-1);
+                        FPVector v = to - from;
+                        FP t = FPVector.Dot(v, diff);
 
                         if (t > 0) {
                             FP dotVV = v.sqrMagnitude;
@@ -586,7 +586,7 @@ namespace KBEngine.Physics3D {
                         break;
                     case 3:
                         //closest point origin from triangle
-                        p = new TSVector();
+                        p = new FPVector();
                         a = _simplexVectorW[0];
                         b = _simplexVectorW[1];
                         c = _simplexVectorW[2];
@@ -608,7 +608,7 @@ namespace KBEngine.Physics3D {
                         _cachedValidClosest = _cachedBC.IsValid;
                         break;
                     case 4:
-                        p = new TSVector();
+                        p = new FPVector();
                         a = _simplexVectorW[0];
                         b = _simplexVectorW[1];
                         c = _simplexVectorW[2];
@@ -653,18 +653,18 @@ namespace KBEngine.Physics3D {
             return _cachedValidClosest;
         }
 
-        public bool ClosestPtPointTriangle(TSVector p, TSVector a, TSVector b, TSVector c,
+        public bool ClosestPtPointTriangle(FPVector p, FPVector a, FPVector b, FPVector c,
             ref SubSimplexClosestResult result) {
             result.UsedVertices.Reset();
 
             FP v, w;
 
             // Check if P in vertex region outside A
-            TSVector ab = b - a;
-            TSVector ac = c - a;
-            TSVector ap = p - a;
-            FP d1 = TSVector.Dot(ab, ap);
-            FP d2 = TSVector.Dot(ac, ap);
+            FPVector ab = b - a;
+            FPVector ac = c - a;
+            FPVector ap = p - a;
+            FP d1 = FPVector.Dot(ab, ap);
+            FP d2 = FPVector.Dot(ac, ap);
             if (d1 <= FP.Zero && d2 <= FP.Zero) {
                 result.ClosestPointOnSimplex = a;
                 result.UsedVertices.UsedVertexA = true;
@@ -673,9 +673,9 @@ namespace KBEngine.Physics3D {
             }
 
             // Check if P in vertex region outside B
-            TSVector bp = p - b;
-            FP d3 = TSVector.Dot(ab, bp);
-            FP d4 = TSVector.Dot(ac, bp);
+            FPVector bp = p - b;
+            FP d3 = FPVector.Dot(ab, bp);
+            FP d4 = FPVector.Dot(ac, bp);
             if (d3 >= FP.Zero && d4 <= d3) {
                 result.ClosestPointOnSimplex = b;
                 result.UsedVertices.UsedVertexB = true;
@@ -696,9 +696,9 @@ namespace KBEngine.Physics3D {
             }
 
             // Check if P in vertex region outside C
-            TSVector cp = p - c;
-            FP d5 = TSVector.Dot(ab, cp);
-            FP d6 = TSVector.Dot(ac, cp);
+            FPVector cp = p - c;
+            FP d5 = FPVector.Dot(ab, cp);
+            FP d6 = FPVector.Dot(ac, cp);
             if (d6 >= FP.Zero && d5 <= d6) {
                 result.ClosestPointOnSimplex = c;
                 result.UsedVertices.UsedVertexC = true;
@@ -746,11 +746,11 @@ namespace KBEngine.Physics3D {
         }
 
         /// Test if point p and d lie on opposite sides of plane through abc
-        public int PointOutsideOfPlane(TSVector p, TSVector a, TSVector b, TSVector c, TSVector d) {
-            TSVector normal = TSVector.Cross(b - a, c - a);
+        public int PointOutsideOfPlane(FPVector p, FPVector a, FPVector b, FPVector c, FPVector d) {
+            FPVector normal = FPVector.Cross(b - a, c - a);
 
-            FP signp = TSVector.Dot(p - a, normal); // [AP AB AC]
-            FP signd = TSVector.Dot(d - a, normal); // [AD AB AC]
+            FP signp = FPVector.Dot(p - a, normal); // [AP AB AC]
+            FP signd = FPVector.Dot(d - a, normal); // [AD AB AC]
 
             //if (CatchDegenerateTetrahedron)
             if (signd * signd < (FP.EN8)) return -1;
@@ -759,7 +759,7 @@ namespace KBEngine.Physics3D {
             return signp * signd < FP.Zero ? 1 : 0;
         }
 
-        public bool ClosestPtPointTetrahedron(TSVector p, TSVector a, TSVector b, TSVector c, TSVector d,
+        public bool ClosestPtPointTetrahedron(FPVector p, FPVector a, FPVector b, FPVector c, FPVector d,
             ref SubSimplexClosestResult finalResult) {
             tempResult.Reset();
 
@@ -788,9 +788,9 @@ namespace KBEngine.Physics3D {
             // If point outside face abc then compute closest point on abc
             if (pointOutsideABC != 0) {
                 ClosestPtPointTriangle(p, a, b, c, ref tempResult);
-                TSVector q = tempResult.ClosestPointOnSimplex;
+                FPVector q = tempResult.ClosestPointOnSimplex;
 
-                FP sqDist = ((TSVector)(q - p)).sqrMagnitude;
+                FP sqDist = ((FPVector)(q - p)).sqrMagnitude;
                 // Update best closest point if (squared) distance is less than current best
                 if (sqDist < bestSqDist) {
                     bestSqDist = sqDist;
@@ -811,10 +811,10 @@ namespace KBEngine.Physics3D {
             // Repeat test for face acd
             if (pointOutsideACD != 0) {
                 ClosestPtPointTriangle(p, a, c, d, ref tempResult);
-                TSVector q = tempResult.ClosestPointOnSimplex;
+                FPVector q = tempResult.ClosestPointOnSimplex;
                 //convert result bitmask!
 
-                FP sqDist = ((TSVector)(q - p)).sqrMagnitude;
+                FP sqDist = ((FPVector)(q - p)).sqrMagnitude;
                 if (sqDist < bestSqDist) {
                     bestSqDist = sqDist;
                     finalResult.ClosestPointOnSimplex = q;
@@ -833,10 +833,10 @@ namespace KBEngine.Physics3D {
 
             if (pointOutsideADB != 0) {
                 ClosestPtPointTriangle(p, a, d, b, ref tempResult);
-                TSVector q = tempResult.ClosestPointOnSimplex;
+                FPVector q = tempResult.ClosestPointOnSimplex;
                 //convert result bitmask!
 
-                FP sqDist = ((TSVector)(q - p)).sqrMagnitude;
+                FP sqDist = ((FPVector)(q - p)).sqrMagnitude;
                 if (sqDist < bestSqDist) {
                     bestSqDist = sqDist;
                     finalResult.ClosestPointOnSimplex = q;
@@ -856,9 +856,9 @@ namespace KBEngine.Physics3D {
 
             if (pointOutsideBDC != 0) {
                 ClosestPtPointTriangle(p, b, d, c, ref tempResult);
-                TSVector q = tempResult.ClosestPointOnSimplex;
+                FPVector q = tempResult.ClosestPointOnSimplex;
                 //convert result bitmask!
-                FP sqDist = ((TSVector)(q - p)).sqrMagnitude;
+                FP sqDist = ((FPVector)(q - p)).sqrMagnitude;
                 if (sqDist < bestSqDist) {
                     bestSqDist = sqDist;
                     finalResult.ClosestPointOnSimplex = q;
@@ -904,7 +904,7 @@ namespace KBEngine.Physics3D {
     }
 
     public class SubSimplexClosestResult {
-        private TSVector _closestPointOnSimplex;
+        private FPVector _closestPointOnSimplex;
 
         //MASK for m_usedVertices
         //stores the simplex vertex-usage, using the MASK, 
@@ -913,7 +913,7 @@ namespace KBEngine.Physics3D {
         private FP[] _barycentricCoords = new FP[4];
         private bool _degenerate;
 
-        public TSVector ClosestPointOnSimplex { get { return _closestPointOnSimplex; } set { _closestPointOnSimplex = value; } }
+        public FPVector ClosestPointOnSimplex { get { return _closestPointOnSimplex; } set { _closestPointOnSimplex = value; } }
         public UsageBitfield UsedVertices { get { return _usedVertices; } set { _usedVertices = value; } }
         public FP[] BarycentricCoords { get { return _barycentricCoords; } set { _barycentricCoords = value; } }
         public bool Degenerate { get { return _degenerate; } set { _degenerate = value; } }

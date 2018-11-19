@@ -45,7 +45,7 @@ namespace KBEngine.Physics2D
 
             List<Point> compatList = new List<Point>(vertices.Count);
 
-            foreach (TSVector2 vertex in vertices)
+            foreach (FPVector2 vertex in vertices)
             {
                 compatList.Add(new Point(vertex.x, vertex.y));
             }
@@ -60,7 +60,7 @@ namespace KBEngine.Physics2D
 
                 foreach (Point outTriangle in triangle)
                 {
-                    outTriangles.Add(new TSVector2(outTriangle.X, outTriangle.Y));
+                    outTriangles.Add(new FPVector2(outTriangle.X, outTriangle.Y));
                 }
 
                 list.Add(outTriangles);
@@ -80,7 +80,7 @@ namespace KBEngine.Physics2D
         {
             List<Point> compatList = new List<Point>(vertices.Count);
 
-            foreach (TSVector2 vertex in vertices)
+            foreach (FPVector2 vertex in vertices)
             {
                 compatList.Add(new Point(vertex.x, vertex.y));
             }
@@ -96,7 +96,7 @@ namespace KBEngine.Physics2D
                 List<Point> points = trapezoid.GetVertices();
                 foreach (Point point in points)
                 {
-                    verts.Add(new TSVector2(point.X, point.Y));
+                    verts.Add(new FPVector2(point.X, point.Y));
                 }
 
                 list.Add(verts);

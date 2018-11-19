@@ -52,13 +52,13 @@ namespace KBEngine.Physics2D
 #if !(XBOX360)
     [DebuggerDisplay("Count = {Count} Vertices = {ToString()}")]
 #endif
-    public class Vertices : List<TSVector2>
+    public class Vertices : List<FPVector2>
     {
         public Vertices() { }
 
         public Vertices(int capacity) : base(capacity) { }
 
-        public Vertices(IEnumerable<TSVector2> vertices)
+        public Vertices(IEnumerable<FPVector2> vertices)
         {
             AddRange(vertices);
         }
@@ -84,7 +84,7 @@ namespace KBEngine.Physics2D
         /// Gets the next vertex. Used for iterating all the edges with wrap-around.
         /// </summary>
         /// <param name="index">The current index</param>
-        public TSVector2 NextVertex(int index)
+        public FPVector2 NextVertex(int index)
         {
             return this[NextIndex(index)];
         }
@@ -102,7 +102,7 @@ namespace KBEngine.Physics2D
         /// Gets the previous vertex. Used for iterating all the edges with wrap-around.
         /// </summary>
         /// <param name="index">The current index</param>
-        public TSVector2 PreviousVertex(int index)
+        public FPVector2 PreviousVertex(int index)
         {
             return this[PreviousIndex(index)];
         }
@@ -125,8 +125,8 @@ namespace KBEngine.Physics2D
             {
                 int j = (i + 1) % Count;
 
-                TSVector2 vi = this[i];
-                TSVector2 vj = this[j];
+                FPVector2 vi = this[i];
+                FPVector2 vj = this[j];
 
                 area += vi.x * vj.y;
                 area -= vi.y * vj.x;
@@ -149,22 +149,22 @@ namespace KBEngine.Physics2D
         /// Gets the centroid.
         /// </summary>
         /// <returns></returns>
-        public TSVector2 GetCentroid()
+        public FPVector2 GetCentroid()
         {
             //The simplest polygon which can exist in the Euclidean plane has 3 sides.
             if (Count < 3)
-                return new TSVector2(FP.NaN, FP.NaN);
+                return new FPVector2(FP.NaN, FP.NaN);
 
             // Same algorithm is used by Box2D
-            TSVector2 c = TSVector2.zero;
+            FPVector2 c = FPVector2.zero;
             FP area = 0.0f;
             FP inv3 = 1.0f / 3.0f;
 
             for (int i = 0; i < Count; ++i)
             {
                 // Triangle vertices.
-                TSVector2 current = this[i];
-                TSVector2 next = (i + 1 < Count ? this[i + 1] : this[0]);
+                FPVector2 current = this[i];
+                FPVector2 next = (i + 1 < Count ? this[i + 1] : this[0]);
 
                 FP triangleArea = 0.5f * (current.x * next.y - current.y * next.x);
                 area += triangleArea;
@@ -184,8 +184,8 @@ namespace KBEngine.Physics2D
         public AABB GetAABB()
         {
             AABB aabb;
-            TSVector2 lowerBound = new TSVector2(FP.MaxValue, FP.MaxValue);
-            TSVector2 upperBound = new TSVector2(FP.MinValue, FP.MinValue);
+            FPVector2 lowerBound = new FPVector2(FP.MaxValue, FP.MaxValue);
+            FPVector2 upperBound = new FPVector2(FP.MinValue, FP.MinValue);
 
             for (int i = 0; i < Count; ++i)
             {
@@ -218,7 +218,7 @@ namespace KBEngine.Physics2D
         /// Translates the vertices with the specified vector.
         /// </summary>
         /// <param name="value">The value.</param>
-        public void Translate(TSVector2 value)
+        public void Translate(FPVector2 value)
         {
             Translate(ref value);
         }
@@ -227,12 +227,12 @@ namespace KBEngine.Physics2D
         /// Translates the vertices with the specified vector.
         /// </summary>
         /// <param name="value">The vector.</param>
-        public void Translate(ref TSVector2 value)
+        public void Translate(ref FPVector2 value)
         {
             Debug.Assert(!AttachedToBody, "Translating vertices that are used by a Body can result in unstable behavior. Use Body.Position instead.");
 
             for (int i = 0; i < Count; i++)
-                this[i] = TSVector2.Add(this[i], value);
+                this[i] = FPVector2.Add(this[i], value);
 
             if (Holes != null && Holes.Count > 0)
             {
@@ -247,7 +247,7 @@ namespace KBEngine.Physics2D
         /// Scales the vertices with the specified vector.
         /// </summary>
         /// <param name="value">The Value.</param>
-        public void Scale(TSVector2 value)
+        public void Scale(FPVector2 value)
         {
             Scale(ref value);
         }
@@ -256,12 +256,12 @@ namespace KBEngine.Physics2D
         /// Scales the vertices with the specified vector.
         /// </summary>
         /// <param name="value">The Value.</param>
-        public void Scale(ref TSVector2 value)
+        public void Scale(ref FPVector2 value)
         {
             Debug.Assert(!AttachedToBody, "Scaling vertices that are used by a Body can result in unstable behavior.");
 
             for (int i = 0; i < Count; i++)
-                this[i] = TSVector2.Multiply(this[i], value);
+                this[i] = FPVector2.Multiply(this[i], value);
 
             if (Holes != null && Holes.Count > 0)
             {
@@ -288,8 +288,8 @@ namespace KBEngine.Physics2D
 
             for (int i = 0; i < Count; i++)
             {
-                TSVector2 position = this[i];
-                this[i] = new TSVector2((position.x * num1 + position.y * -num2), (position.x * num2 + position.y * num1));
+                FPVector2 position = this[i];
+                this[i] = new FPVector2((position.x * num1 + position.y * -num2), (position.x * num2 + position.y * num1));
             }
 
             if (Holes != null && Holes.Count > 0)
@@ -326,7 +326,7 @@ namespace KBEngine.Physics2D
             for (int i = 0; i < Count; ++i)
             {
                 int next = i + 1 < Count ? i + 1 : 0;
-                TSVector2 edge = this[next] - this[i];
+                FPVector2 edge = this[next] - this[i];
 
                 for (int j = 0; j < Count; ++j)
                 {
@@ -334,7 +334,7 @@ namespace KBEngine.Physics2D
                     if (j == i || j == next)
                         continue;
 
-                    TSVector2 r = this[j] - this[i];
+                    FPVector2 r = this[j] - this[i];
 
                     FP s = edge.x * r.y - edge.y * r.x;
 
@@ -382,14 +382,14 @@ namespace KBEngine.Physics2D
 
             for (int i = 0; i < Count; ++i)
             {
-                TSVector2 a1 = this[i];
-                TSVector2 a2 = NextVertex(i);
+                FPVector2 a1 = this[i];
+                FPVector2 a2 = NextVertex(i);
                 for (int j = i + 1; j < Count; ++j)
                 {
-                    TSVector2 b1 = this[j];
-                    TSVector2 b2 = NextVertex(j);
+                    FPVector2 b1 = this[j];
+                    FPVector2 b2 = NextVertex(j);
 
-                    TSVector2 temp;
+                    FPVector2 temp;
 
                     if (LineTools.LineIntersect2(ref a1, ref a2, ref b1, ref b2, out temp))
                         return false;
@@ -425,7 +425,7 @@ namespace KBEngine.Physics2D
             for (int i = 0; i < Count; ++i)
             {
                 int next = i + 1 < Count ? i + 1 : 0;
-                TSVector2 edge = this[next] - this[i];
+                FPVector2 edge = this[next] - this[i];
                 if (edge.LengthSquared() <= Settings.EpsilonSqr)
                 {
                     return PolygonError.SideTooSmall;
@@ -444,16 +444,16 @@ namespace KBEngine.Physics2D
         /// <param name="axis">The axis.</param>
         /// <param name="min">The min.</param>
         /// <param name="max">The max.</param>
-        public void ProjectToAxis(ref TSVector2 axis, out FP min, out FP max)
+        public void ProjectToAxis(ref FPVector2 axis, out FP min, out FP max)
         {
             // To project a point on an axis use the dot product
-            FP dotProduct = TSVector2.Dot(axis, this[0]);
+            FP dotProduct = FPVector2.Dot(axis, this[0]);
             min = dotProduct;
             max = dotProduct;
 
             for (int i = 0; i < Count; i++)
             {
-                dotProduct = TSVector2.Dot(this[i], axis);
+                dotProduct = FPVector2.Dot(this[i], axis);
                 if (dotProduct < min)
                 {
                     min = dotProduct;
@@ -476,7 +476,7 @@ namespace KBEngine.Physics2D
         /// <returns>-1 if the winding number is zero and the point is outside
         /// the polygon, 1 if the point is inside the polygon, and 0 if the point
         /// is on the polygons edge.</returns>
-        public int PointInPolygon(ref TSVector2 point)
+        public int PointInPolygon(ref FPVector2 point)
         {
             // Winding number
             int wn = 0;
@@ -485,13 +485,13 @@ namespace KBEngine.Physics2D
             for (int i = 0; i < Count; i++)
             {
                 // Get points
-                TSVector2 p1 = this[i];
-                TSVector2 p2 = this[NextIndex(i)];
+                FPVector2 p1 = this[i];
+                FPVector2 p2 = this[NextIndex(i)];
 
                 // Test if a point is directly on the edge
-                TSVector2 edge = p2 - p1;
+                FPVector2 edge = p2 - p1;
                 FP area = MathUtils.Area(ref p1, ref p2, ref point);
-                if (area == 0f && TSVector2.Dot(point - p1, edge) >= 0f && TSVector2.Dot(point - p2, edge) <= 0f)
+                if (area == 0f && FPVector2.Dot(point - p1, edge) >= 0f && FPVector2.Dot(point - p2, edge) <= 0f)
                 {
                     return 0;
                 }
@@ -519,7 +519,7 @@ namespace KBEngine.Physics2D
         /// If this sum is 2pi then the point is an interior point, if 0 then the point is an exterior point. 
         /// ref: http://ozviz.wasp.uwa.edu.au/~pbourke/geometry/insidepoly/  - Solution 2 
         /// </summary>
-        public bool PointInPolygonAngle(ref TSVector2 point)
+        public bool PointInPolygonAngle(ref FPVector2 point)
         {
             FP angle = 0;
 
@@ -527,8 +527,8 @@ namespace KBEngine.Physics2D
             for (int i = 0; i < Count; i++)
             {
                 // Get points
-                TSVector2 p1 = this[i] - point;
-                TSVector2 p2 = this[NextIndex(i)] - point;
+                FPVector2 p1 = this[i] - point;
+                FPVector2 p2 = this[NextIndex(i)] - point;
 
                 angle += MathUtils.VectorAngle(ref p1, ref p2);
             }
@@ -555,10 +555,10 @@ namespace KBEngine.Physics2D
         #region Vertex
 
         struct Vertex {
-            public readonly TSVector2 Position;
+            public readonly FPVector2 Position;
             public readonly short Index;
 
-            public Vertex(TSVector2 position, short index) {
+            public Vertex(FPVector2 position, short index) {
                 Position = position;
                 Index = index;
             }
@@ -596,20 +596,20 @@ namespace KBEngine.Physics2D
                 B = b;
             }
 
-            public FP? IntersectsWithRay(TSVector2 origin, TSVector2 direction) {
-                FP largestDistance = TSMath.Max(A.Position.x - origin.x, B.Position.x - origin.x) * 2f;
+            public FP? IntersectsWithRay(FPVector2 origin, FPVector2 direction) {
+                FP largestDistance = FPMath.Max(A.Position.x - origin.x, B.Position.x - origin.x) * 2f;
                 LineSegment raySegment = new LineSegment(new Vertex(origin, 0), new Vertex(origin + (direction * largestDistance), 0));
 
-                TSVector2? intersection = FindIntersection(this, raySegment);
+                FPVector2? intersection = FindIntersection(this, raySegment);
                 FP? value = null;
 
                 if (intersection != null)
-                    value = TSVector2.Distance(origin, intersection.Value);
+                    value = FPVector2.Distance(origin, intersection.Value);
 
                 return value;
             }
 
-            public static TSVector2? FindIntersection(LineSegment a, LineSegment b) {
+            public static FPVector2? FindIntersection(LineSegment a, LineSegment b) {
                 FP x1 = a.A.Position.x;
                 FP y1 = a.A.Position.y;
                 FP x2 = a.B.Position.x;
@@ -627,7 +627,7 @@ namespace KBEngine.Physics2D
                 FP ua = uaNum / denom;
                 FP ub = ubNum / denom;
 
-                if (TSMath.Clamp(ua, 0f, 1f) != ua || TSMath.Clamp(ub, 0f, 1f) != ub)
+                if (FPMath.Clamp(ua, 0f, 1f) != ua || FPMath.Clamp(ub, 0f, 1f) != ub)
                     return null;
 
                 return a.A.Position + (a.B.Position - a.A.Position) * ua;
@@ -794,9 +794,9 @@ namespace KBEngine.Physics2D
         /// <param name="outputVertices">The resulting vertices that include any reversals of winding order and holes.</param>
         /// <param name="indices">The resulting indices for rendering the shape as a triangle list.</param>
         public static void Triangulate(
-            TSVector2[] inputVertices,
+            FPVector2[] inputVertices,
             WindingOrder desiredWindingOrder,
-            out TSVector2[] outputVertices,
+            out FPVector2[] outputVertices,
             out short[] indices) {
             //Log("\nBeginning triangulation...");
 
@@ -806,7 +806,7 @@ namespace KBEngine.Physics2D
             if (DetermineWindingOrder(inputVertices) == WindingOrder.Clockwise)
                 outputVertices = ReverseWindingOrder(inputVertices);
             else
-                outputVertices = (TSVector2[])inputVertices.Clone();
+                outputVertices = (FPVector2[])inputVertices.Clone();
 
             //clear all of the lists
             polygonVertices.Clear();
@@ -863,7 +863,7 @@ namespace KBEngine.Physics2D
         /// <param name="shapeVerts">An array of vertices for the primary shape.</param>
         /// <param name="holeVerts">An array of vertices for the hole to be cut. It is assumed that these vertices lie completely within the shape verts.</param>
         /// <returns>The new array of vertices that can be passed to Triangulate to properly triangulate the shape with the hole.</returns>
-        public static TSVector2[] CutHoleInShape(TSVector2[] shapeVerts, TSVector2[] holeVerts) {
+        public static FPVector2[] CutHoleInShape(FPVector2[] shapeVerts, FPVector2[] holeVerts) {
             Log("\nCutting hole into shape...");
 
             //make sure the shape vertices are wound counter clockwise and the hole vertices clockwise
@@ -924,7 +924,7 @@ namespace KBEngine.Physics2D
             FP? closestPoint = null;
             LineSegment closestSegment = new LineSegment();
             foreach (LineSegment segment in segmentsToTest) {
-                FP? intersection = segment.IntersectsWithRay(rightMostHoleVertex.Position, TSVector2.right);
+                FP? intersection = segment.IntersectsWithRay(rightMostHoleVertex.Position, FPVector2.right);
                 if (intersection != null) {
                     if (closestPoint == null || closestPoint.Value > intersection.Value) {
                         closestPoint = intersection;
@@ -939,7 +939,7 @@ namespace KBEngine.Physics2D
                 return shapeVerts;
 
             //otherwise we can find our mutually visible vertex to split the polygon
-            TSVector2 I = rightMostHoleVertex.Position + TSVector2.right * closestPoint.Value;
+            FPVector2 I = rightMostHoleVertex.Position + FPVector2.right * closestPoint.Value;
             Vertex P = (closestSegment.A.Position.x > closestSegment.B.Position.x)
                 ? closestSegment.A
                 : closestSegment.B;
@@ -959,8 +959,8 @@ namespace KBEngine.Physics2D
                 FP closestDot = -1f;
                 foreach (Vertex v in interiorReflexVertices) {
                     //compute the dot product of the vector against the UnitX
-                    TSVector2 d = TSVector2.Normalize(v.Position - rightMostHoleVertex.Position);
-                    FP dot = TSVector2.Dot(TSVector2.right, d);
+                    FPVector2 d = FPVector2.Normalize(v.Position - rightMostHoleVertex.Position);
+                    FP dot = FPVector2.Dot(FPVector2.right, d);
 
                     //if this line is the closest we've found
                     if (dot > closestDot) {
@@ -994,7 +994,7 @@ namespace KBEngine.Physics2D
 #endif
 
             //finally we write out the new polygon vertices and return them out
-            TSVector2[] newShapeVerts = new TSVector2[polygonVertices.Count];
+            FPVector2[] newShapeVerts = new FPVector2[polygonVertices.Count];
             for (int i = 0; i < polygonVertices.Count; i++)
                 newShapeVerts[i] = polygonVertices[i].Value.Position;
 
@@ -1011,7 +1011,7 @@ namespace KBEngine.Physics2D
         /// <param name="vertices">The vertices of the polygon.</param>
         /// <param name="windingOrder">The desired winding order.</param>
         /// <returns>A new set of vertices if the winding order didn't match; otherwise the original set.</returns>
-        public static TSVector2[] EnsureWindingOrder(TSVector2[] vertices, WindingOrder windingOrder) {
+        public static FPVector2[] EnsureWindingOrder(FPVector2[] vertices, WindingOrder windingOrder) {
             //Log("\nEnsuring winding order of {0}...", windingOrder);
             if (DetermineWindingOrder(vertices) != windingOrder) {
                 //Log("Reversing vertices...");
@@ -1031,9 +1031,9 @@ namespace KBEngine.Physics2D
         /// </summary>
         /// <param name="vertices">The vertices of the polygon.</param>
         /// <returns>The new vertices for the polygon with the opposite winding order.</returns>
-        public static TSVector2[] ReverseWindingOrder(TSVector2[] vertices) {
+        public static FPVector2[] ReverseWindingOrder(FPVector2[] vertices) {
             //Log("\nReversing winding order...");
-            TSVector2[] newVerts = new TSVector2[vertices.Length];
+            FPVector2[] newVerts = new FPVector2[vertices.Length];
 
 #if DEBUG
             //StringBuilder vString = new StringBuilder();
@@ -1065,17 +1065,17 @@ namespace KBEngine.Physics2D
         /// </summary>
         /// <param name="vertices">The vertices of the polygon.</param>
         /// <returns>The calculated winding order of the polygon.</returns>
-        public static WindingOrder DetermineWindingOrder(TSVector2[] vertices) {
+        public static WindingOrder DetermineWindingOrder(FPVector2[] vertices) {
             int clockWiseCount = 0;
             int counterClockWiseCount = 0;
-            TSVector2 p1 = vertices[0];
+            FPVector2 p1 = vertices[0];
 
             for (int i = 1; i < vertices.Length; i++) {
-                TSVector2 p2 = vertices[i];
-                TSVector2 p3 = vertices[(i + 1) % vertices.Length];
+                FPVector2 p2 = vertices[i];
+                FPVector2 p3 = vertices[(i + 1) % vertices.Length];
 
-                TSVector2 e1 = p1 - p2;
-                TSVector2 e2 = p3 - p2;
+                FPVector2 e1 = p1 - p2;
+                FPVector2 e2 = p3 - p2;
 
                 if (e1.x * e2.y - e1.y * e2.x >= 0)
                     clockWiseCount++;
@@ -1228,11 +1228,11 @@ namespace KBEngine.Physics2D
             Vertex p = polygonVertices[polygonVertices.IndexOf(c) - 1].Value;
             Vertex n = polygonVertices[polygonVertices.IndexOf(c) + 1].Value;
 
-            TSVector2 d1 = TSVector2.Normalize(c.Position - p.Position);
-            TSVector2 d2 = TSVector2.Normalize(n.Position - c.Position);
-            TSVector2 n2 = new TSVector2(-d2.y, d2.x);
+            FPVector2 d1 = FPVector2.Normalize(c.Position - p.Position);
+            FPVector2 d2 = FPVector2.Normalize(n.Position - c.Position);
+            FPVector2 n2 = new FPVector2(-d2.y, d2.x);
 
-            return (TSVector2.Dot(d1, n2) <= 0f);
+            return (FPVector2.Dot(d1, n2) <= 0f);
         }
 
         #endregion

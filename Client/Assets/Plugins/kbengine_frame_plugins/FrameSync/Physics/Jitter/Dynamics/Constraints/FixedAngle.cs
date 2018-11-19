@@ -60,9 +60,9 @@ namespace KBEngine.Physics3D {
         private FP biasFactor = 5 * FP.EN2;
         private FP softness = FP.Zero;
 
-        private TSVector accumulatedImpulse;
+        private FPVector accumulatedImpulse;
 
-        private TSMatrix initialOrientation1, initialOrientation2;
+        private FPMatrix initialOrientation1, initialOrientation2;
 
         /// <summary>
         /// Constraints two bodies to always have the same relative
@@ -78,10 +78,10 @@ namespace KBEngine.Physics3D {
             //orientationDifference = JMatrix.Transpose(orientationDifference);
         }
 
-        public TSVector AppliedImpulse { get { return accumulatedImpulse; } }
+        public FPVector AppliedImpulse { get { return accumulatedImpulse; } }
 
-        public TSMatrix InitialOrientationBody1 { get { return initialOrientation1; } set { initialOrientation1 = value; } }
-        public TSMatrix InitialOrientationBody2 { get { return initialOrientation2; } set { initialOrientation2 = value; } }
+        public FPMatrix InitialOrientationBody1 { get { return initialOrientation1; } set { initialOrientation1 = value; } }
+        public FPMatrix InitialOrientationBody2 { get { return initialOrientation2; } set { initialOrientation2 = value; } }
 
         /// <summary>
         /// Defines how big the applied impulses can get.
@@ -93,8 +93,8 @@ namespace KBEngine.Physics3D {
         /// </summary>
         public FP BiasFactor { get { return biasFactor; } set { biasFactor = value; } }
 
-        TSMatrix effectiveMass;
-        TSVector bias;
+        FPMatrix effectiveMass;
+        FPVector bias;
         FP softnessOverDt;
         
         /// <summary>
@@ -111,32 +111,32 @@ namespace KBEngine.Physics3D {
             effectiveMass.M22 += softnessOverDt;
             effectiveMass.M33 += softnessOverDt;
 
-            TSMatrix.Inverse(ref effectiveMass, out effectiveMass);
+            FPMatrix.Inverse(ref effectiveMass, out effectiveMass);
 
-            TSMatrix orientationDifference;
-            TSMatrix.Multiply(ref initialOrientation1, ref initialOrientation2, out orientationDifference);
-            TSMatrix.Transpose(ref orientationDifference, out orientationDifference);
+            FPMatrix orientationDifference;
+            FPMatrix.Multiply(ref initialOrientation1, ref initialOrientation2, out orientationDifference);
+            FPMatrix.Transpose(ref orientationDifference, out orientationDifference);
 
-            TSMatrix q = orientationDifference * body2.invOrientation * body1.orientation;
-            TSVector axis;
+            FPMatrix q = orientationDifference * body2.invOrientation * body1.orientation;
+            FPVector axis;
 
             FP x = q.M32 - q.M23;
             FP y = q.M13 - q.M31;
             FP z = q.M21 - q.M12;
 
-            FP r = TSMath.Sqrt(x * x + y * y + z * z);
+            FP r = FPMath.Sqrt(x * x + y * y + z * z);
             FP t = q.M11 + q.M22 + q.M33;
 
             FP angle = FP.Atan2(r, t - 1);
-            axis = new TSVector(x, y, z) * angle;
+            axis = new FPVector(x, y, z) * angle;
 
             if (r != FP.Zero) axis = axis * (FP.One / r);
 
             bias = axis * biasFactor * (-FP.One / timestep);
 
             // Apply previous frame solution as initial guess for satisfying the constraint.
-            if (!body1.IsStatic) body1.angularVelocity += TSVector.Transform(accumulatedImpulse, body1.invInertiaWorld);
-            if (!body2.IsStatic) body2.angularVelocity += TSVector.Transform(-FP.One * accumulatedImpulse, body2.invInertiaWorld);
+            if (!body1.IsStatic) body1.angularVelocity += FPVector.Transform(accumulatedImpulse, body1.invInertiaWorld);
+            if (!body2.IsStatic) body2.angularVelocity += FPVector.Transform(-FP.One * accumulatedImpulse, body2.invInertiaWorld);
         }
 
         /// <summary>
@@ -144,16 +144,16 @@ namespace KBEngine.Physics3D {
         /// </summary>
         public override void Iterate()
         {
-            TSVector jv = body1.angularVelocity - body2.angularVelocity;
+            FPVector jv = body1.angularVelocity - body2.angularVelocity;
 
-            TSVector softnessVector = accumulatedImpulse * softnessOverDt;
+            FPVector softnessVector = accumulatedImpulse * softnessOverDt;
 
-            TSVector lambda = -FP.One * TSVector.Transform(jv+bias+softnessVector, effectiveMass);
+            FPVector lambda = -FP.One * FPVector.Transform(jv+bias+softnessVector, effectiveMass);
 
             accumulatedImpulse += lambda;
 
-            if(!body1.IsStatic) body1.angularVelocity += TSVector.Transform(lambda, body1.invInertiaWorld);
-            if(!body2.IsStatic) body2.angularVelocity += TSVector.Transform(-FP.One * lambda, body2.invInertiaWorld);
+            if(!body1.IsStatic) body1.angularVelocity += FPVector.Transform(lambda, body1.invInertiaWorld);
+            if(!body2.IsStatic) body2.angularVelocity += FPVector.Transform(-FP.One * lambda, body2.invInertiaWorld);
         }
 
     }

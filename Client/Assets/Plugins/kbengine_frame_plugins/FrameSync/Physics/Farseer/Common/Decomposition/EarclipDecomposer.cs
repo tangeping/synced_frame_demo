@@ -125,9 +125,9 @@ namespace KBEngine.Physics2D
                     {
                         int lower = Remainder(i - 1, vNum);
                         int upper = Remainder(i + 1, vNum);
-                        TSVector2 d1 = new TSVector2(xrem[upper] - xrem[i], yrem[upper] - yrem[i]);
-                        TSVector2 d2 = new TSVector2(xrem[i] - xrem[lower], yrem[i] - yrem[lower]);
-                        TSVector2 d3 = new TSVector2(xrem[lower] - xrem[upper], yrem[lower] - yrem[upper]);
+                        FPVector2 d1 = new FPVector2(xrem[upper] - xrem[i], yrem[upper] - yrem[i]);
+                        FPVector2 d2 = new FPVector2(xrem[i] - xrem[lower], yrem[i] - yrem[lower]);
+                        FPVector2 d3 = new FPVector2(xrem[lower] - xrem[upper], yrem[lower] - yrem[upper]);
 
                         d1.Normalize();
                         d2.Normalize();
@@ -145,7 +145,7 @@ namespace KBEngine.Physics2D
                         cross31 = FP.Abs(cross31);
 
                         //Find the maximum minimum angle
-                        FP minCross = KBEngine.TSMath.Min(cross12, KBEngine.TSMath.Min(cross23, cross31));
+                        FP minCross = KBEngine.FPMath.Min(cross12, KBEngine.FPMath.Min(cross23, cross31));
                         if (minCross > earMaxMinCross)
                         {
                             earIndex = i;
@@ -357,23 +357,23 @@ namespace KBEngine.Physics2D
                 FP cross = (x2 - x1) * (y3 - y1) - (x3 - x1) * (y2 - y1);
                 if (cross > 0)
                 {
-                    Add(new TSVector2(x1, y1));
-                    Add(new TSVector2(x2, y2));
-                    Add(new TSVector2(x3, y3));
+                    Add(new FPVector2(x1, y1));
+                    Add(new FPVector2(x2, y2));
+                    Add(new FPVector2(x3, y3));
                 }
                 else
                 {
-                    Add(new TSVector2(x1, y1));
-                    Add(new TSVector2(x3, y3));
-                    Add(new TSVector2(x2, y2));
+                    Add(new FPVector2(x1, y1));
+                    Add(new FPVector2(x3, y3));
+                    Add(new FPVector2(x2, y2));
                 }
             }
 
             public bool IsInside(FP x, FP y)
             {
-                TSVector2 a = this[0];
-                TSVector2 b = this[1];
-                TSVector2 c = this[2];
+                FPVector2 a = this[0];
+                FPVector2 b = this[1];
+                FPVector2 c = this[2];
 
                 if (x < a.x && x < b.x && x < c.x) return false;
                 if (x > a.x && x > b.x && x > c.x) return false;

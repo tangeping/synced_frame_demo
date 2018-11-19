@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using FP = KBEngine.FP;
-using TSRandom = KBEngine.TSRandom;
+using TSRandom = KBEngine.FPRandom;
 
 namespace KBEngine.Physics2D
 {

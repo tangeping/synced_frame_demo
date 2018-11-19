@@ -58,7 +58,7 @@ namespace KBEngine {
         public FPMaterial tsMaterial;
 
         [SerializeField]
-        private TSVector2 center;
+        private FPVector2 center;
 
         private Vector3 scaledCenter;
 
@@ -80,7 +80,7 @@ namespace KBEngine {
         /**
          *  @brief Center of the collider shape.
          **/
-        public TSVector2 Center {
+        public FPVector2 Center {
             get {
                 return center;
             }
@@ -92,9 +92,9 @@ namespace KBEngine {
         /**
          *  @brief Returns a version of collider's center scaled by parent's transform.
          */
-        public TSVector2 ScaledCenter {
+        public FPVector2 ScaledCenter {
 			get {
-                return TSVector2.Scale(center, new TSVector2(lossyScale.x, lossyScale.y));
+                return FPVector2.Scale(center, new FPVector2(lossyScale.x, lossyScale.y));
 			}
 		}
 
@@ -128,7 +128,7 @@ namespace KBEngine {
          **/
         [SerializeField]
         [HideInInspector]
-        protected TSVector lossyScale = TSVector.one;
+        protected FPVector lossyScale = FPVector.one;
 
         /**
          *  @brief Creates a new {@link FPRigidBody} when there is no one attached to this GameObject.
@@ -137,14 +137,14 @@ namespace KBEngine {
             FPTransform = this.GetComponent<FPTransform2D>();
             FPRigidBody = this.GetComponent<FPRigidBody2D>();
 
-            if (lossyScale == TSVector.one) {
-                lossyScale = TSVector.Abs(transform.localScale.ToTSVector());
+            if (lossyScale == FPVector.one) {
+                lossyScale = FPVector.Abs(transform.localScale.ToFPVector());
             }
         }
 
         public void Update() {
             if (!Application.isPlaying) {
-                lossyScale = TSVector.Abs(transform.lossyScale.ToTSVector());
+                lossyScale = FPVector.Abs(transform.lossyScale.ToFPVector());
             }
         }
 

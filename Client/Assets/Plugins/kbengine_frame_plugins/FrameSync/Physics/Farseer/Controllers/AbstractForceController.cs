@@ -69,7 +69,7 @@ namespace KBEngine.Physics2D
         /// Provided for reuse to provide Variation functionality in 
         /// inheriting classes
         /// </summary>
-        protected KBEngine.TSRandom Randomize;
+        protected KBEngine.FPRandom Randomize;
 
         /// <summary>
         /// Curve used by Curve Mode as an animated multiplier for the force 
@@ -88,7 +88,7 @@ namespace KBEngine.Physics2D
             Enabled = true;
 
             Strength = 1.0f;
-            Position = new TSVector2(0, 0);
+            Position = new FPVector2(0, 0);
             MaximumSpeed = 100.0f;
             TimingMode = TimingModes.Switched;
             ImpulseTime = 0.0f;
@@ -96,7 +96,7 @@ namespace KBEngine.Physics2D
             Triggered = false;
             StrengthCurve = new Curve();
             Variation = 0.0f;
-            Randomize = KBEngine.TSRandom.New(1234);
+            Randomize = KBEngine.FPRandom.New(1234);
             DecayMode = DecayModes.None;
             DecayCurve = new Curve();
             DecayStart = 0.0f;
@@ -139,7 +139,7 @@ namespace KBEngine.Physics2D
         /// Position of the Force. Can be ignored (left at (0,0) for forces
         /// that are not position-dependent
         /// </summary>
-        public TSVector2 Position { get; set; }
+        public FPVector2 Position { get; set; }
 
         /// <summary>
         /// Maximum speed of the bodies. Bodies that are travelling faster are

@@ -101,7 +101,7 @@ namespace KBEngine.Physics2D
         /// <summary>
         /// Usage depends on manifold type
         /// </summary>
-        public TSVector2 LocalPoint;
+        public FPVector2 LocalPoint;
 
         /// <summary>
         /// The non-penetration impulse
@@ -144,12 +144,12 @@ namespace KBEngine.Physics2D
         /// <summary>
         /// Not use for Type.SeparationFunction.Points
         /// </summary>
-        public TSVector2 LocalNormal;
+        public FPVector2 LocalNormal;
 
         /// <summary>
         /// Usage depends on manifold type
         /// </summary>
-        public TSVector2 LocalPoint;
+        public FPVector2 LocalPoint;
 
         /// <summary>
         /// The number of manifold points
@@ -196,7 +196,7 @@ namespace KBEngine.Physics2D
     public struct ClipVertex
     {
         public ContactID ID;
-        public TSVector2 V;
+        public FPVector2 V;
     }
 
     /// <summary>
@@ -214,12 +214,12 @@ namespace KBEngine.Physics2D
         /// <summary>
         /// The starting point of the ray.
         /// </summary>
-        public TSVector2 Point1;
+        public FPVector2 Point1;
 
         /// <summary>
         /// The ending point of the ray.
         /// </summary>
-        public TSVector2 Point2;
+        public FPVector2 Point2;
     }
 
     /// <summary>
@@ -236,7 +236,7 @@ namespace KBEngine.Physics2D
         /// <summary>
         /// The normal of the face of the shape the ray has hit.
         /// </summary>
-        public TSVector2 Normal;
+        public FPVector2 Normal;
     }
 
     /// <summary>
@@ -247,28 +247,28 @@ namespace KBEngine.Physics2D
         /// <summary>
         /// The lower vertex
         /// </summary>
-        public TSVector2 LowerBound;
+        public FPVector2 LowerBound;
 
         /// <summary>
         /// The upper vertex
         /// </summary>
-        public TSVector2 UpperBound;
+        public FPVector2 UpperBound;
 
-        public AABB(TSVector2 min, TSVector2 max)
+        public AABB(FPVector2 min, FPVector2 max)
             : this(ref min, ref max)
         {
         }
 
-        public AABB(ref TSVector2 min, ref TSVector2 max)
+        public AABB(ref FPVector2 min, ref FPVector2 max)
         {
             LowerBound = min;
             UpperBound = max;
         }
 
-        public AABB(TSVector2 center, FP width, FP height)
+        public AABB(FPVector2 center, FP width, FP height)
         {
-            LowerBound = center - new TSVector2(width / 2, height / 2);
-            UpperBound = center + new TSVector2(width / 2, height / 2);
+            LowerBound = center - new FPVector2(width / 2, height / 2);
+            UpperBound = center + new FPVector2(width / 2, height / 2);
         }
 
         public FP Width
@@ -284,7 +284,7 @@ namespace KBEngine.Physics2D
         /// <summary>
         /// Get the center of the AABB.
         /// </summary>
-        public TSVector2 Center
+        public FPVector2 Center
         {
             get { return 0.5f * (LowerBound + UpperBound); }
         }
@@ -292,7 +292,7 @@ namespace KBEngine.Physics2D
         /// <summary>
         /// Get the extents of the AABB (half-widths).
         /// </summary>
-        public TSVector2 Extents
+        public FPVector2 Extents
         {
             get { return 0.5f * (UpperBound - LowerBound); }
         }
@@ -320,9 +320,9 @@ namespace KBEngine.Physics2D
             {
                 Vertices vertices = new Vertices(4);
                 vertices.Add(UpperBound);
-                vertices.Add(new TSVector2(UpperBound.x, LowerBound.y));
+                vertices.Add(new FPVector2(UpperBound.x, LowerBound.y));
                 vertices.Add(LowerBound);
-                vertices.Add(new TSVector2(LowerBound.x, UpperBound.y));
+                vertices.Add(new FPVector2(LowerBound.x, UpperBound.y));
                 return vertices;
             }
         }
@@ -340,7 +340,7 @@ namespace KBEngine.Physics2D
         /// </summary>
         public AABB Q2
         {
-            get { return new AABB(new TSVector2(LowerBound.x, Center.y), new TSVector2(Center.x, UpperBound.y)); }
+            get { return new AABB(new FPVector2(LowerBound.x, Center.y), new FPVector2(Center.x, UpperBound.y)); }
         }
 
         /// <summary>
@@ -356,7 +356,7 @@ namespace KBEngine.Physics2D
         /// </summary>
         public AABB Q4
         {
-            get { return new AABB(new TSVector2(Center.x, LowerBound.y), new TSVector2(UpperBound.x, Center.y)); }
+            get { return new AABB(new FPVector2(Center.x, LowerBound.y), new FPVector2(UpperBound.x, Center.y)); }
         }
 
         /// <summary>
@@ -367,7 +367,7 @@ namespace KBEngine.Physics2D
         /// </returns>
         public bool IsValid()
         {
-            TSVector2 d = UpperBound - LowerBound;
+            FPVector2 d = UpperBound - LowerBound;
             bool valid = d.x >= 0.0f && d.y >= 0.0f;
             valid = valid && LowerBound.IsValid() && UpperBound.IsValid();
             return valid;
@@ -379,8 +379,8 @@ namespace KBEngine.Physics2D
         /// <param name="aabb">The aabb.</param>
         public void Combine(ref AABB aabb)
         {
-            TSVector2.Min(ref LowerBound, ref aabb.LowerBound, out LowerBound);
-            TSVector2.Max(ref UpperBound, ref aabb.UpperBound, out UpperBound);
+            FPVector2.Min(ref LowerBound, ref aabb.LowerBound, out LowerBound);
+            FPVector2.Max(ref UpperBound, ref aabb.UpperBound, out UpperBound);
         }
 
         /// <summary>
@@ -390,8 +390,8 @@ namespace KBEngine.Physics2D
         /// <param name="aabb2">The aabb2.</param>
         public void Combine(ref AABB aabb1, ref AABB aabb2)
         {
-            TSVector2.Min(ref aabb1.LowerBound, ref aabb2.LowerBound, out LowerBound);
-            TSVector2.Max(ref aabb1.UpperBound, ref aabb2.UpperBound, out UpperBound);
+            FPVector2.Min(ref aabb1.LowerBound, ref aabb2.LowerBound, out LowerBound);
+            FPVector2.Max(ref aabb1.UpperBound, ref aabb2.UpperBound, out UpperBound);
         }
 
         /// <summary>
@@ -418,7 +418,7 @@ namespace KBEngine.Physics2D
         /// <returns>
         /// 	<c>true</c> if it contains the specified point; otherwise, <c>false</c>.
         /// </returns>
-        public bool Contains(ref TSVector2 point)
+        public bool Contains(ref FPVector2 point)
         {
             //using epsilon to try and gaurd against FP rounding errors.
             return (point.x > (LowerBound.x + Settings.Epsilon) && point.x < (UpperBound.x - Settings.Epsilon) &&
@@ -433,8 +433,8 @@ namespace KBEngine.Physics2D
         /// <returns>True if they are overlapping.</returns>
         public static bool TestOverlap(ref AABB a, ref AABB b)
         {
-            TSVector2 d1 = b.LowerBound - a.UpperBound;
-            TSVector2 d2 = a.LowerBound - b.UpperBound;
+            FPVector2 d1 = b.LowerBound - a.UpperBound;
+            FPVector2 d2 = a.LowerBound - b.UpperBound;
 
             if (d1.x > 0.0f || d1.y > 0.0f)
                 return false;
@@ -460,11 +460,11 @@ namespace KBEngine.Physics2D
             FP tmin = -Settings.MaxFP;
             FP tmax = Settings.MaxFP;
 
-            TSVector2 p = input.Point1;
-            TSVector2 d = input.Point2 - input.Point1;
-            TSVector2 absD = MathUtils.Abs(d);
+            FPVector2 p = input.Point1;
+            FPVector2 d = input.Point2 - input.Point1;
+            FPVector2 absD = MathUtils.Abs(d);
 
-            TSVector2 normal = TSVector2.zero;
+            FPVector2 normal = FPVector2.zero;
 
             for (int i = 0; i < 2; ++i)
             {
@@ -514,7 +514,7 @@ namespace KBEngine.Physics2D
                     }
 
                     // Pull the max down
-                    tmax = KBEngine.TSMath.Min(tmax, t2);
+                    tmax = KBEngine.FPMath.Min(tmax, t2);
 
                     if (tmin > tmax)
                     {
@@ -542,8 +542,8 @@ namespace KBEngine.Physics2D
     /// </summary>
     public class TempPolygon
     {
-        public TSVector2[] Vertices = new TSVector2[Settings.MaxPolygonVertices];
-        public TSVector2[] Normals = new TSVector2[Settings.MaxPolygonVertices];
+        public FPVector2[] Vertices = new FPVector2[Settings.MaxPolygonVertices];
+        public FPVector2[] Normals = new FPVector2[Settings.MaxPolygonVertices];
         public int Count;
     }
 
@@ -564,14 +564,14 @@ namespace KBEngine.Physics2D
     {
         public int i1, i2;
 
-        public TSVector2 v1, v2;
+        public FPVector2 v1, v2;
 
-        public TSVector2 normal;
+        public FPVector2 normal;
 
-        public TSVector2 sideNormal1;
+        public FPVector2 sideNormal1;
         public FP sideOffset1;
 
-        public TSVector2 sideNormal2;
+        public FPVector2 sideNormal2;
         public FP sideOffset2;
     }
 
@@ -663,11 +663,11 @@ namespace KBEngine.Physics2D
         {
             manifold.PointCount = 0;
 
-            TSVector2 pA = MathUtils.Mul(ref xfA, circleA.Position);
-            TSVector2 pB = MathUtils.Mul(ref xfB, circleB.Position);
+            FPVector2 pA = MathUtils.Mul(ref xfA, circleA.Position);
+            FPVector2 pB = MathUtils.Mul(ref xfB, circleB.Position);
 
-            TSVector2 d = pB - pA;
-            FP distSqr = TSVector2.Dot(d, d);
+            FPVector2 d = pB - pA;
+            FP distSqr = FPVector2.Dot(d, d);
             FP radius = circleA.Radius + circleB.Radius;
             if (distSqr > radius * radius)
             {
@@ -676,7 +676,7 @@ namespace KBEngine.Physics2D
 
             manifold.Type = ManifoldType.Circles;
             manifold.LocalPoint = circleA.Position;
-            manifold.LocalNormal = TSVector2.zero;
+            manifold.LocalNormal = FPVector2.zero;
             manifold.PointCount = 1;
 
             ManifoldPoint p0 = manifold.Points[0];
@@ -700,8 +700,8 @@ namespace KBEngine.Physics2D
             manifold.PointCount = 0;
 
             // Compute circle position in the frame of the polygon.
-            TSVector2 c = MathUtils.Mul(ref xfB, circleB.Position);
-            TSVector2 cLocal = MathUtils.MulT(ref xfA, c);
+            FPVector2 c = MathUtils.Mul(ref xfB, circleB.Position);
+            FPVector2 cLocal = MathUtils.MulT(ref xfA, c);
 
             // Find the min separating edge.
             int normalIndex = 0;
@@ -711,8 +711,8 @@ namespace KBEngine.Physics2D
 
             for (int i = 0; i < vertexCount; ++i)
             {
-                TSVector2 value1 = polygonA.Normals[i];
-                TSVector2 value2 = cLocal - polygonA.Vertices[i];
+                FPVector2 value1 = polygonA.Normals[i];
+                FPVector2 value2 = cLocal - polygonA.Vertices[i];
                 FP s = value1.x * value2.x + value1.y * value2.y;
 
                 if (s > radius)
@@ -731,8 +731,8 @@ namespace KBEngine.Physics2D
             // Vertices that subtend the incident face.
             int vertIndex1 = normalIndex;
             int vertIndex2 = vertIndex1 + 1 < vertexCount ? vertIndex1 + 1 : 0;
-            TSVector2 v1 = polygonA.Vertices[vertIndex1];
-            TSVector2 v2 = polygonA.Vertices[vertIndex2];
+            FPVector2 v1 = polygonA.Vertices[vertIndex1];
+            FPVector2 v2 = polygonA.Vertices[vertIndex2];
 
             // If the center is inside the polygon ...
             if (separation < Settings.Epsilon)
@@ -810,9 +810,9 @@ namespace KBEngine.Physics2D
             }
             else
             {
-                TSVector2 faceCenter = 0.5f * (v1 + v2);
-                TSVector2 value1 = cLocal - faceCenter;
-                TSVector2 value2 = polygonA.Normals[vertIndex1];
+                FPVector2 faceCenter = 0.5f * (v1 + v2);
+                FPVector2 value1 = cLocal - faceCenter;
+                FPVector2 value2 = polygonA.Normals[vertIndex1];
                 FP separation2 = value1.x * value2.x + value1.y * value2.y;
                 if (separation2 > radius)
                 {
@@ -893,16 +893,16 @@ namespace KBEngine.Physics2D
             int iv1 = edge1;
             int iv2 = edge1 + 1 < count1 ? edge1 + 1 : 0;
 
-            TSVector2 v11 = poly1.Vertices[iv1];
-            TSVector2 v12 = poly1.Vertices[iv2];
+            FPVector2 v11 = poly1.Vertices[iv1];
+            FPVector2 v12 = poly1.Vertices[iv2];
 
-            TSVector2 localTangent = v12 - v11;
+            FPVector2 localTangent = v12 - v11;
             localTangent.Normalize();
 
-            TSVector2 localNormal = new TSVector2(localTangent.y, -localTangent.x);
-            TSVector2 planePoint = 0.5f * (v11 + v12);
+            FPVector2 localNormal = new FPVector2(localTangent.y, -localTangent.x);
+            FPVector2 planePoint = 0.5f * (v11 + v12);
 
-            TSVector2 tangent = MathUtils.Mul(xf1.q, localTangent);
+            FPVector2 tangent = MathUtils.Mul(xf1.q, localTangent);
 
             FP normalx = tangent.y;
             FP normaly = -tangent.x;
@@ -942,7 +942,7 @@ namespace KBEngine.Physics2D
             int pointCount = 0;
             for (int i = 0; i < Settings.MaxManifoldPoints; ++i)
             {
-                TSVector2 value = clipPoints2[i].V;
+                FPVector2 value = clipPoints2[i].V;
                 FP separation = normalx * value.x + normaly * value.y - frontOffset;
 
                 if (separation <= totalRadius)
@@ -984,14 +984,14 @@ namespace KBEngine.Physics2D
             manifold.PointCount = 0;
 
             // Compute circle in frame of edge
-            TSVector2 Q = MathUtils.MulT(ref transformA, MathUtils.Mul(ref transformB, ref circleB._position));
+            FPVector2 Q = MathUtils.MulT(ref transformA, MathUtils.Mul(ref transformB, ref circleB._position));
 
-            TSVector2 A = edgeA.Vertex1, B = edgeA.Vertex2;
-            TSVector2 e = B - A;
+            FPVector2 A = edgeA.Vertex1, B = edgeA.Vertex2;
+            FPVector2 e = B - A;
 
             // Barycentric coordinates
-            FP u = TSVector2.Dot(e, B - Q);
-            FP v = TSVector2.Dot(e, Q - A);
+            FP u = FPVector2.Dot(e, B - Q);
+            FP v = FPVector2.Dot(e, Q - A);
 
             FP radius = edgeA.Radius + circleB.Radius;
 
@@ -999,7 +999,7 @@ namespace KBEngine.Physics2D
             cf.IndexB = 0;
             cf.TypeB = (byte)ContactFeatureType.Vertex;
 
-            TSVector2 P, d;
+            FPVector2 P, d;
 
             // Region A
             if (v <= 0.0f)
@@ -1007,7 +1007,7 @@ namespace KBEngine.Physics2D
                 P = A;
                 d = Q - P;
                 FP dd;
-                TSVector2.Dot(ref d, ref d, out dd);
+                FPVector2.Dot(ref d, ref d, out dd);
                 if (dd > radius * radius)
                 {
                     return;
@@ -1016,10 +1016,10 @@ namespace KBEngine.Physics2D
                 // Is there an edge connected to A?
                 if (edgeA.HasVertex0)
                 {
-                    TSVector2 A1 = edgeA.Vertex0;
-                    TSVector2 B1 = A;
-                    TSVector2 e1 = B1 - A1;
-                    FP u1 = TSVector2.Dot(e1, B1 - Q);
+                    FPVector2 A1 = edgeA.Vertex0;
+                    FPVector2 B1 = A;
+                    FPVector2 e1 = B1 - A1;
+                    FP u1 = FPVector2.Dot(e1, B1 - Q);
 
                     // Is the circle in Region AB of the previous edge?
                     if (u1 > 0.0f)
@@ -1032,7 +1032,7 @@ namespace KBEngine.Physics2D
                 cf.TypeA = (byte)ContactFeatureType.Vertex;
                 manifold.PointCount = 1;
                 manifold.Type = ManifoldType.Circles;
-                manifold.LocalNormal = TSVector2.zero;
+                manifold.LocalNormal = FPVector2.zero;
                 manifold.LocalPoint = P;
                 ManifoldPoint mp = new ManifoldPoint();
                 mp.Id.Key = 0;
@@ -1048,7 +1048,7 @@ namespace KBEngine.Physics2D
                 P = B;
                 d = Q - P;
                 FP dd;
-                TSVector2.Dot(ref d, ref d, out dd);
+                FPVector2.Dot(ref d, ref d, out dd);
                 if (dd > radius * radius)
                 {
                     return;
@@ -1057,10 +1057,10 @@ namespace KBEngine.Physics2D
                 // Is there an edge connected to B?
                 if (edgeA.HasVertex3)
                 {
-                    TSVector2 B2 = edgeA.Vertex3;
-                    TSVector2 A2 = B;
-                    TSVector2 e2 = B2 - A2;
-                    FP v2 = TSVector2.Dot(e2, Q - A2);
+                    FPVector2 B2 = edgeA.Vertex3;
+                    FPVector2 A2 = B;
+                    FPVector2 e2 = B2 - A2;
+                    FP v2 = FPVector2.Dot(e2, Q - A2);
 
                     // Is the circle in Region AB of the next edge?
                     if (v2 > 0.0f)
@@ -1073,7 +1073,7 @@ namespace KBEngine.Physics2D
                 cf.TypeA = (byte)ContactFeatureType.Vertex;
                 manifold.PointCount = 1;
                 manifold.Type = ManifoldType.Circles;
-                manifold.LocalNormal = TSVector2.zero;
+                manifold.LocalNormal = FPVector2.zero;
                 manifold.LocalPoint = P;
                 ManifoldPoint mp = new ManifoldPoint();
                 mp.Id.Key = 0;
@@ -1085,21 +1085,21 @@ namespace KBEngine.Physics2D
 
             // Region AB
             FP den;
-            TSVector2.Dot(ref e, ref e, out den);
+            FPVector2.Dot(ref e, ref e, out den);
             Debug.Assert(den > 0.0f);
             P = (1.0f / den) * (u * A + v * B);
             d = Q - P;
             FP dd2;
-            TSVector2.Dot(ref d, ref d, out dd2);
+            FPVector2.Dot(ref d, ref d, out dd2);
             if (dd2 > radius * radius)
             {
                 return;
             }
 
-            TSVector2 n = new TSVector2(-e.y, e.x);
-            if (TSVector2.Dot(n, Q - A) < 0.0f)
+            FPVector2 n = new FPVector2(-e.y, e.x);
+            if (FPVector2.Dot(n, Q - A) < 0.0f)
             {
-                n = new TSVector2(-n.x, -n.y);
+                n = new FPVector2(-n.x, -n.y);
             }
             n.Normalize();
 
@@ -1135,11 +1135,11 @@ namespace KBEngine.Physics2D
             private TempPolygon _polygonB = new TempPolygon();
 
             Transform _xf;
-            TSVector2 _centroidB;
-            TSVector2 _v0, _v1, _v2, _v3;
-            TSVector2 _normal0, _normal1, _normal2;
-            TSVector2 _normal;
-            TSVector2 _lowerLimit, _upperLimit;
+            FPVector2 _centroidB;
+            FPVector2 _v0, _v1, _v2, _v3;
+            FPVector2 _normal0, _normal1, _normal2;
+            FPVector2 _normal;
+            FPVector2 _lowerLimit, _upperLimit;
             FP _radius;
             bool _front;
 
@@ -1167,31 +1167,31 @@ namespace KBEngine.Physics2D
                 bool hasVertex0 = edgeA.HasVertex0;
                 bool hasVertex3 = edgeA.HasVertex3;
 
-                TSVector2 edge1 = _v2 - _v1;
+                FPVector2 edge1 = _v2 - _v1;
                 edge1.Normalize();
-                _normal1 = new TSVector2(edge1.y, -edge1.x);
-                FP offset1 = TSVector2.Dot(_normal1, _centroidB - _v1);
+                _normal1 = new FPVector2(edge1.y, -edge1.x);
+                FP offset1 = FPVector2.Dot(_normal1, _centroidB - _v1);
                 FP offset0 = 0.0f, offset2 = 0.0f;
                 bool convex1 = false, convex2 = false;
 
                 // Is there a preceding edge?
                 if (hasVertex0)
                 {
-                    TSVector2 edge0 = _v1 - _v0;
+                    FPVector2 edge0 = _v1 - _v0;
                     edge0.Normalize();
-                    _normal0 = new TSVector2(edge0.y, -edge0.x);
+                    _normal0 = new FPVector2(edge0.y, -edge0.x);
                     convex1 = MathUtils.Cross(edge0, edge1) >= 0.0f;
-                    offset0 = TSVector2.Dot(_normal0, _centroidB - _v0);
+                    offset0 = FPVector2.Dot(_normal0, _centroidB - _v0);
                 }
 
                 // Is there a following edge?
                 if (hasVertex3)
                 {
-                    TSVector2 edge2 = _v3 - _v2;
+                    FPVector2 edge2 = _v3 - _v2;
                     edge2.Normalize();
-                    _normal2 = new TSVector2(edge2.y, -edge2.x);
+                    _normal2 = new FPVector2(edge2.y, -edge2.x);
                     convex2 = MathUtils.Cross(edge1, edge2) > 0.0f;
-                    offset2 = TSVector2.Dot(_normal2, _centroidB - _v2);
+                    offset2 = FPVector2.Dot(_normal2, _centroidB - _v2);
                 }
 
                 // Determine front or back collision. Determine collision normal limits.
@@ -1406,10 +1406,10 @@ namespace KBEngine.Physics2D
 
                     // Search for the polygon normal that is most anti-parallel to the edge normal.
                     int bestIndex = 0;
-                    FP bestValue = TSVector2.Dot(_normal, _polygonB.Normals[0]);
+                    FP bestValue = FPVector2.Dot(_normal, _polygonB.Normals[0]);
                     for (int i = 1; i < _polygonB.Count; ++i)
                     {
-                        FP value = TSVector2.Dot(_normal, _polygonB.Normals[i]);
+                        FP value = FPVector2.Dot(_normal, _polygonB.Normals[i]);
                         if (value < bestValue)
                         {
                             bestValue = value;
@@ -1479,10 +1479,10 @@ namespace KBEngine.Physics2D
                     rf.normal = _polygonB.Normals[rf.i1];
                 }
 
-                rf.sideNormal1 = new TSVector2(rf.normal.y, -rf.normal.x);
+                rf.sideNormal1 = new FPVector2(rf.normal.y, -rf.normal.x);
                 rf.sideNormal2 = -rf.sideNormal1;
-                rf.sideOffset1 = TSVector2.Dot(rf.sideNormal1, rf.v1);
-                rf.sideOffset2 = TSVector2.Dot(rf.sideNormal2, rf.v2);
+                rf.sideOffset1 = FPVector2.Dot(rf.sideNormal1, rf.v1);
+                rf.sideOffset2 = FPVector2.Dot(rf.sideNormal2, rf.v2);
 
                 // Clip incident edge against extruded edge1 side edges.
                 FixedArray2<ClipVertex> clipPoints1;
@@ -1520,7 +1520,7 @@ namespace KBEngine.Physics2D
                 int pointCount = 0;
                 for (int i = 0; i < Settings.MaxManifoldPoints; ++i)
                 {
-                    FP separation = TSVector2.Dot(rf.normal, clipPoints2[i].V - rf.v1);
+                    FP separation = FPVector2.Dot(rf.normal, clipPoints2[i].V - rf.v1);
 
                     if (separation <= _radius)
                     {
@@ -1557,7 +1557,7 @@ namespace KBEngine.Physics2D
 
                 for (int i = 0; i < _polygonB.Count; ++i)
                 {
-                    FP s = TSVector2.Dot(_normal, _polygonB.Vertices[i] - _v1);
+                    FP s = FPVector2.Dot(_normal, _polygonB.Vertices[i] - _v1);
                     if (s < axis.Separation)
                     {
                         axis.Separation = s;
@@ -1574,15 +1574,15 @@ namespace KBEngine.Physics2D
                 axis.Index = -1;
                 axis.Separation = -Settings.MaxFP;
 
-                TSVector2 perp = new TSVector2(-_normal.y, _normal.x);
+                FPVector2 perp = new FPVector2(-_normal.y, _normal.x);
 
                 for (int i = 0; i < _polygonB.Count; ++i)
                 {
-                    TSVector2 n = -_polygonB.Normals[i];
+                    FPVector2 n = -_polygonB.Normals[i];
 
-                    FP s1 = TSVector2.Dot(n, _polygonB.Vertices[i] - _v1);
-                    FP s2 = TSVector2.Dot(n, _polygonB.Vertices[i] - _v2);
-                    FP s = KBEngine.TSMath.Min(s1, s2);
+                    FP s1 = FPVector2.Dot(n, _polygonB.Vertices[i] - _v1);
+                    FP s2 = FPVector2.Dot(n, _polygonB.Vertices[i] - _v2);
+                    FP s = KBEngine.FPMath.Min(s1, s2);
 
                     if (s > _radius)
                     {
@@ -1594,16 +1594,16 @@ namespace KBEngine.Physics2D
                     }
 
                     // Adjacency
-                    if (TSVector2.Dot(n, perp) >= 0.0f)
+                    if (FPVector2.Dot(n, perp) >= 0.0f)
                     {
-                        if (TSVector2.Dot(n - _upperLimit, _normal) < -Settings.AngularSlop)
+                        if (FPVector2.Dot(n - _upperLimit, _normal) < -Settings.AngularSlop)
                         {
                             continue;
                         }
                     }
                     else
                     {
-                        if (TSVector2.Dot(n - _lowerLimit, _normal) < -Settings.AngularSlop)
+                        if (FPVector2.Dot(n - _lowerLimit, _normal) < -Settings.AngularSlop)
                         {
                             continue;
                         }
@@ -1630,7 +1630,7 @@ namespace KBEngine.Physics2D
         /// <param name="offset">The offset.</param>
         /// <param name="vertexIndexA">The vertex index A.</param>
         /// <returns></returns>
-        private static int ClipSegmentToLine(out FixedArray2<ClipVertex> vOut, ref FixedArray2<ClipVertex> vIn, TSVector2 normal, FP offset, int vertexIndexA)
+        private static int ClipSegmentToLine(out FixedArray2<ClipVertex> vOut, ref FixedArray2<ClipVertex> vIn, FPVector2 normal, FP offset, int vertexIndexA)
         {
             vOut = new FixedArray2<ClipVertex>();
 
@@ -1684,17 +1684,17 @@ namespace KBEngine.Physics2D
         /// <returns></returns>
         private static FP EdgeSeparation(PolygonShape poly1, ref Transform xf1, int edge1, PolygonShape poly2, ref Transform xf2)
         {
-            List<TSVector2> vertices1 = poly1.Vertices;
-            List<TSVector2> normals1 = poly1.Normals;
+            List<FPVector2> vertices1 = poly1.Vertices;
+            List<FPVector2> normals1 = poly1.Normals;
 
             int count2 = poly2.Vertices.Count;
-            List<TSVector2> vertices2 = poly2.Vertices;
+            List<FPVector2> vertices2 = poly2.Vertices;
 
             Debug.Assert(0 <= edge1 && edge1 < poly1.Vertices.Count);
 
             // Convert normal from poly1's frame into poly2's frame.
-            TSVector2 normal1World = MathUtils.Mul(xf1.q, normals1[edge1]);
-            TSVector2 normal1 = MathUtils.MulT(xf2.q, normal1World);
+            FPVector2 normal1World = MathUtils.Mul(xf1.q, normals1[edge1]);
+            FPVector2 normal1 = MathUtils.MulT(xf2.q, normal1World);
 
             // Find support vertex on poly2 for -normal.
             int index = 0;
@@ -1702,7 +1702,7 @@ namespace KBEngine.Physics2D
 
             for (int i = 0; i < count2; ++i)
             {
-                FP dot = TSVector2.Dot(vertices2[i], normal1);
+                FP dot = FPVector2.Dot(vertices2[i], normal1);
                 if (dot < minDot)
                 {
                     minDot = dot;
@@ -1710,9 +1710,9 @@ namespace KBEngine.Physics2D
                 }
             }
 
-            TSVector2 v1 = MathUtils.Mul(ref xf1, vertices1[edge1]);
-            TSVector2 v2 = MathUtils.Mul(ref xf2, vertices2[index]);
-            FP separation = TSVector2.Dot(v2 - v1, normal1World);
+            FPVector2 v1 = MathUtils.Mul(ref xf1, vertices1[edge1]);
+            FPVector2 v2 = MathUtils.Mul(ref xf2, vertices2[index]);
+            FP separation = FPVector2.Dot(v2 - v1, normal1World);
             return separation;
         }
 
@@ -1728,18 +1728,18 @@ namespace KBEngine.Physics2D
         private static FP FindMaxSeparation(out int edgeIndex, PolygonShape poly1, ref Transform xf1, PolygonShape poly2, ref Transform xf2)
         {
             int count1 = poly1.Vertices.Count;
-            List<TSVector2> normals1 = poly1.Normals;
+            List<FPVector2> normals1 = poly1.Normals;
 
             // Vector pointing from the centroid of poly1 to the centroid of poly2.
-            TSVector2 d = MathUtils.Mul(ref xf2, poly2.MassData.Centroid) - MathUtils.Mul(ref xf1, poly1.MassData.Centroid);
-            TSVector2 dLocal1 = MathUtils.MulT(xf1.q, d);
+            FPVector2 d = MathUtils.Mul(ref xf2, poly2.MassData.Centroid) - MathUtils.Mul(ref xf1, poly1.MassData.Centroid);
+            FPVector2 dLocal1 = MathUtils.MulT(xf1.q, d);
 
             // Find edge normal on poly1 that has the largest projection onto d.
             int edge = 0;
             FP maxDot = -Settings.MaxFP;
             for (int i = 0; i < count1; ++i)
             {
-                FP dot = TSVector2.Dot(normals1[i], dLocal1);
+                FP dot = FPVector2.Dot(normals1[i], dLocal1);
                 if (dot > maxDot)
                 {
                     maxDot = dot;
@@ -1817,7 +1817,7 @@ namespace KBEngine.Physics2D
             Debug.Assert(0 <= edge1 && edge1 < poly1.Vertices.Count);
 
             // Get the normal of the reference edge in poly2's frame.
-            TSVector2 normal1 = MathUtils.MulT(xf2.q, MathUtils.Mul(xf1.q, normals1[edge1]));
+            FPVector2 normal1 = MathUtils.MulT(xf2.q, MathUtils.Mul(xf1.q, normals1[edge1]));
 
 
             // Find the incident edge on poly2.
@@ -1825,7 +1825,7 @@ namespace KBEngine.Physics2D
             FP minDot = Settings.MaxFP;
             for (int i = 0; i < count2; ++i)
             {
-                FP dot = TSVector2.Dot(normal1, normals2[i]);
+                FP dot = FPVector2.Dot(normal1, normals2[i]);
                 if (dot < minDot)
                 {
                     minDot = dot;

@@ -47,7 +47,7 @@ namespace KBEngine.Physics3D {
         }
         #endregion
 
-        public static int[] Build(List<TSVector> pointCloud, Approximation factor)
+        public static int[] Build(List<FPVector> pointCloud, Approximation factor)
         {
             List<int> allIndices = new List<int>();
 
@@ -56,18 +56,18 @@ namespace KBEngine.Physics3D {
             for (int thetaIndex = 0; thetaIndex < steps; thetaIndex++)
             {
                 // [0,PI]
-                FP theta = TSMath.Pi / (steps - 1) * thetaIndex;
+                FP theta = FPMath.Pi / (steps - 1) * thetaIndex;
                 FP sinTheta = FP.Sin(theta);
                 FP cosTheta = FP.Cos(theta);
 
                 for (int phiIndex = 0; phiIndex < steps; phiIndex++)
                 {
                     // [-PI,PI]
-                    FP phi =  ((2 * FP.One) * TSMath.Pi) / (steps - 0) * phiIndex - TSMath.Pi;
+                    FP phi =  ((2 * FP.One) * FPMath.Pi) / (steps - 0) * phiIndex - FPMath.Pi;
                     FP sinPhi = FP.Sin(phi);
                     FP cosPhi = FP.Cos(phi);
 
-                    TSVector dir = new TSVector(sinTheta * cosPhi, cosTheta, sinTheta * sinPhi);
+                    FPVector dir = new FPVector(sinTheta * cosPhi, cosTheta, sinTheta * sinPhi);
 
                     int index = FindExtremePoint(pointCloud, ref dir);
                     allIndices.Add(index);
@@ -88,18 +88,18 @@ namespace KBEngine.Physics3D {
             // return allIndices.Distinct().ToArray();
         }
 
-        private static int FindExtremePoint(List<TSVector> points,ref TSVector dir)
+        private static int FindExtremePoint(List<FPVector> points,ref FPVector dir)
         {
             int index = 0;
             FP current = FP.MinValue;
 
-            TSVector point; FP value;
+            FPVector point; FP value;
 
             for (int i = 1; i < points.Count; i++)
             {
                 point = points[i];
 
-                value = TSVector.Dot(ref point, ref dir);
+                value = FPVector.Dot(ref point, ref dir);
                 if (value > current) { current = value; index= i; }
             }
 

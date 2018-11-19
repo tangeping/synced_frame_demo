@@ -13,14 +13,14 @@ namespace KBEngine {
         [SerializeField]
         [HideInInspector]
         [AddTracking]
-        private TSVector2 _position;
+        private FPVector2 _position;
 
         /**
         *  @brief Property access to position. 
         *  
         *  It works as proxy to a Body's position when there is a collider attached.
         **/
-        public TSVector2 position {
+        public FPVector2 position {
             get {
                 if (tsCollider != null && tsCollider.Body != null) {
 					return tsCollider.Body.TSPosition - scaledCenter;
@@ -67,12 +67,12 @@ namespace KBEngine {
         [SerializeField]
         [HideInInspector]
         [AddTracking]
-        private TSVector _scale;
+        private FPVector _scale;
 
         /**
         *  @brief Property access to scale. 
         **/
-        public TSVector scale {
+        public FPVector scale {
             get {
                 return _scale;
             }
@@ -85,13 +85,13 @@ namespace KBEngine {
         [HideInInspector]
         private bool _serialized;
 
-        private TSVector2 scaledCenter {
+        private FPVector2 scaledCenter {
             get {
                 if (tsCollider != null) {
                     return tsCollider.ScaledCenter;
                 }
 
-                return TSVector2.zero;
+                return FPVector2.zero;
             }
         }
 
@@ -155,9 +155,9 @@ namespace KBEngine {
 
         private void UpdateEditMode() {
             if (transform.hasChanged) {
-                _position = transform.position.ToTSVector2();
+                _position = transform.position.ToFPVector2();
                 _rotation = transform.rotation.eulerAngles.z;
-                _scale = transform.localScale.ToTSVector();
+                _scale = transform.localScale.ToFPVector();
 
                 _serialized = true;
             }

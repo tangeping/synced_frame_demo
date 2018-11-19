@@ -168,8 +168,8 @@ namespace KBEngine.Physics2D
                     FP ax = x * cellWidth + domain.LowerBound.x;
                     FP ay = y * cellHeight + domain.LowerBound.y;
 
-                    CxFastList<TSVector2> bp = p.GeomP.Points;
-                    CxFastList<TSVector2> ap = u.GeomP.Points;
+                    CxFastList<FPVector2> bp = p.GeomP.Points;
+                    CxFastList<FPVector2> ap = u.GeomP.Points;
 
                     //skip if it's already been combined with above polygon
                     if (u.GeomP == p.GeomP)
@@ -179,12 +179,12 @@ namespace KBEngine.Physics2D
                     }
 
                     //combine above (but disallow the hole thingies
-                    CxFastListNode<TSVector2> bi = bp.Begin();
+                    CxFastListNode<FPVector2> bi = bp.Begin();
                     while (Square(bi.Elem().y - ay) > Settings.Epsilon || bi.Elem().x < ax) bi = bi.Next();
 
                     //NOTE: Unused
                     //Vector2 b0 = bi.elem();
-                    TSVector2 b1 = bi.Next().Elem();
+                    FPVector2 b1 = bi.Next().Elem();
                     if (Square(b1.y - ay) > Settings.Epsilon)
                     {
                         x++;
@@ -192,7 +192,7 @@ namespace KBEngine.Physics2D
                     }
 
                     bool brk = true;
-                    CxFastListNode<TSVector2> ai = ap.Begin();
+                    CxFastListNode<FPVector2> ai = ap.Begin();
                     while (ai != ap.End())
                     {
                         if (VecDsq(ai.Elem(), b1) < Settings.Epsilon)
@@ -208,7 +208,7 @@ namespace KBEngine.Physics2D
                         continue;
                     }
 
-                    CxFastListNode<TSVector2> bj = bi.Next().Next();
+                    CxFastListNode<FPVector2> bj = bi.Next().Next();
                     if (bj == bp.End()) bj = bp.Begin();
                     while (bj != bi)
                     {
@@ -325,13 +325,13 @@ namespace KBEngine.Physics2D
             return x * x;
         }
 
-        private static FP VecDsq(TSVector2 a, TSVector2 b)
+        private static FP VecDsq(FPVector2 a, FPVector2 b)
         {
-            TSVector2 d = a - b;
+            FPVector2 d = a - b;
             return d.x * d.x + d.y * d.y;
         }
 
-        private static FP VecCross(TSVector2 a, TSVector2 b)
+        private static FP VecCross(FPVector2 a, FPVector2 b)
         {
             return a.x * b.y - a.y * b.x;
         }
@@ -363,26 +363,26 @@ namespace KBEngine.Physics2D
             int val = _lookMarch[key];
             if (val != 0)
             {
-                CxFastListNode<TSVector2> pi = null;
+                CxFastListNode<FPVector2> pi = null;
                 for (int i = 0; i < 8; i++)
                 {
-                    TSVector2 p;
+                    FPVector2 p;
                     if ((val & (1 << i)) != 0)
                     {
                         if (i == 7 && (val & 1) == 0)
-                            poly.Points.Add(p = new TSVector2(x0, Ylerp(y0, y1, x0, v0, v3, f, bin)));
+                            poly.Points.Add(p = new FPVector2(x0, Ylerp(y0, y1, x0, v0, v3, f, bin)));
                         else
                         {
-                            if (i == 0) p = new TSVector2(x0, y0);
-                            else if (i == 2) p = new TSVector2(x1, y0);
-                            else if (i == 4) p = new TSVector2(x1, y1);
-                            else if (i == 6) p = new TSVector2(x0, y1);
+                            if (i == 0) p = new FPVector2(x0, y0);
+                            else if (i == 2) p = new FPVector2(x1, y0);
+                            else if (i == 4) p = new FPVector2(x1, y1);
+                            else if (i == 6) p = new FPVector2(x0, y1);
 
-                            else if (i == 1) p = new TSVector2(Xlerp(x0, x1, y0, v0, v1, f, bin), y0);
-                            else if (i == 5) p = new TSVector2(Xlerp(x0, x1, y1, v3, v2, f, bin), y1);
+                            else if (i == 1) p = new FPVector2(Xlerp(x0, x1, y0, v0, v1, f, bin), y0);
+                            else if (i == 5) p = new FPVector2(Xlerp(x0, x1, y1, v3, v2, f, bin), y1);
 
-                            else if (i == 3) p = new TSVector2(x1, Ylerp(y0, y1, x1, v1, v2, f, bin));
-                            else p = new TSVector2(x0, Ylerp(y0, y1, x0, v0, v3, f, bin));
+                            else if (i == 3) p = new FPVector2(x1, Ylerp(y0, y1, x1, v1, v2, f, bin));
+                            else p = new FPVector2(x0, Ylerp(y0, y1, x0, v0, v3, f, bin));
 
                             pi = poly.Points.Insert(pi, p);
                         }
@@ -400,27 +400,27 @@ namespace KBEngine.Physics2D
 
         private static void combLeft(ref GeomPoly polya, ref GeomPoly polyb)
         {
-            CxFastList<TSVector2> ap = polya.Points;
-            CxFastList<TSVector2> bp = polyb.Points;
-            CxFastListNode<TSVector2> ai = ap.Begin();
-            CxFastListNode<TSVector2> bi = bp.Begin();
+            CxFastList<FPVector2> ap = polya.Points;
+            CxFastList<FPVector2> bp = polyb.Points;
+            CxFastListNode<FPVector2> ai = ap.Begin();
+            CxFastListNode<FPVector2> bi = bp.Begin();
 
-            TSVector2 b = bi.Elem();
-            CxFastListNode<TSVector2> prea = null;
+            FPVector2 b = bi.Elem();
+            CxFastListNode<FPVector2> prea = null;
             while (ai != ap.End())
             {
-                TSVector2 a = ai.Elem();
+                FPVector2 a = ai.Elem();
                 if (VecDsq(a, b) < Settings.Epsilon)
                 {
                     //ignore shared vertex if parallel
                     if (prea != null)
                     {
-                        TSVector2 a0 = prea.Elem();
+                        FPVector2 a0 = prea.Elem();
                         b = bi.Next().Elem();
 
-                        TSVector2 u = a - a0;
+                        FPVector2 u = a - a0;
                         //vec_new(u); vec_sub(a.p.p, a0.p.p, u);
-                        TSVector2 v = b - a;
+                        FPVector2 v = b - a;
                         //vec_new(v); vec_sub(b.p.p, a.p.p, v);
                         FP dot = VecCross(u, v);
                         if (dot * dot < Settings.Epsilon)
@@ -433,10 +433,10 @@ namespace KBEngine.Physics2D
 
                     //insert polyb into polya
                     bool fst = true;
-                    CxFastListNode<TSVector2> preb = null;
+                    CxFastListNode<FPVector2> preb = null;
                     while (!bp.Empty())
                     {
-                        TSVector2 bb = bp.Front();
+                        FPVector2 bb = bp.Front();
                         bp.Pop();
                         if (!fst && !bp.Empty())
                         {
@@ -449,14 +449,14 @@ namespace KBEngine.Physics2D
 
                     //ignore shared vertex if parallel
                     ai = ai.Next();
-                    TSVector2 a1 = ai.Elem();
+                    FPVector2 a1 = ai.Elem();
                     ai = ai.Next();
                     if (ai == ap.End()) ai = ap.Begin();
-                    TSVector2 a2 = ai.Elem();
-                    TSVector2 a00 = preb.Elem();
-                    TSVector2 uu = a1 - a00;
+                    FPVector2 a2 = ai.Elem();
+                    FPVector2 a00 = preb.Elem();
+                    FPVector2 uu = a1 - a00;
                     //vec_new(u); vec_sub(a1.p, a0.p, u);
-                    TSVector2 vv = a2 - a1;
+                    FPVector2 vv = a2 - a1;
                     //vec_new(v); vec_sub(a2.p, a1.p, v);
                     FP dot1 = VecCross(uu, vv);
                     if (dot1 * dot1 < Settings.Epsilon)
@@ -764,11 +764,11 @@ namespace KBEngine.Physics2D
         internal class GeomPoly
         {
             public int Length;
-            public CxFastList<TSVector2> Points;
+            public CxFastList<FPVector2> Points;
 
             public GeomPoly()
             {
-                Points = new CxFastList<TSVector2>();
+                Points = new CxFastList<FPVector2>();
                 Length = 0;
             }
         }

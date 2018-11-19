@@ -6,19 +6,19 @@ namespace KBEngine.Physics3D {
 
         public static ResourcePoolGenericShapeClone poolGenericShapeClone = new ResourcePoolGenericShapeClone();
 
-        public TSVector position;
-        public TSMatrix orientation;	
-		public TSVector linearVelocity;
-		public TSVector angularVelocity;
+        public FPVector position;
+        public FPMatrix orientation;	
+		public FPVector linearVelocity;
+		public FPVector angularVelocity;
 
-		public TSMatrix inertia;
-		public TSMatrix invInertia;
+		public FPMatrix inertia;
+		public FPMatrix invInertia;
 
-		public TSMatrix invInertiaWorld;
-		public TSMatrix invOrientation;
+		public FPMatrix invInertiaWorld;
+		public FPMatrix invOrientation;
 
-		public TSVector force;
-		public TSVector torque;
+		public FPVector force;
+		public FPVector torque;
 
 		public GenericShapeClone shapeClone;
 
@@ -45,17 +45,17 @@ namespace KBEngine.Physics3D {
 
         public bool isKinematic;
 
-        public TSVector sweptDirection;
+        public FPVector sweptDirection;
 
         public bool disabled;
 
         public FPRigidBodyConstraints freezeConstraint;
 
-        public TSVector _freezePosition;
+        public FPVector _freezePosition;
 
-        public TSMatrix _freezeRotation;
+        public FPMatrix _freezeRotation;
 
-        public TSQuaternion _freezeRotationQuat;
+        public FPQuaternion _freezeRotationQuat;
 
         public bool prevKinematicGravity;
 

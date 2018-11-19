@@ -126,7 +126,7 @@ namespace KBEngine.Physics2D
             _tree.RemoveProxy(proxyId);
         }
 
-        public void MoveProxy(int proxyId, ref AABB aabb, TSVector2 displacement)
+        public void MoveProxy(int proxyId, ref AABB aabb, FPVector2 displacement)
         {
             bool buffer = _tree.MoveProxy(proxyId, ref aabb, displacement);
             if (buffer)
@@ -313,7 +313,7 @@ namespace KBEngine.Physics2D
             _tree.RayCast(callback, ref input);
         }
 
-        public void ShiftOrigin(TSVector2 newOrigin)
+        public void ShiftOrigin(FPVector2 newOrigin)
         {
             _tree.ShiftOrigin(newOrigin);
         }

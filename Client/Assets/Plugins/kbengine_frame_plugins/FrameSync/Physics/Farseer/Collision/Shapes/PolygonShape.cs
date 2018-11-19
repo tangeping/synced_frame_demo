@@ -104,11 +104,11 @@ namespace KBEngine.Physics2D
                 for (int i = 0; i < _vertices.Count; ++i)
                 {
                     int next = i + 1 < _vertices.Count ? i + 1 : 0;
-                    TSVector2 edge = _vertices[next] - _vertices[i];
+                    FPVector2 edge = _vertices[next] - _vertices[i];
                     //Debug.Assert(edge.LengthSquared() > Settings.Epsilon * Settings.Epsilon);
 
                     //FPE optimization: Normals.Add(MathHelper.Cross(edge, 1.0f));
-                    TSVector2 temp = new TSVector2(edge.y, -edge.x);
+                    FPVector2 temp = new FPVector2(edge.y, -edge.x);
                     temp.Normalize();
                     _normals.Add(temp);
                 }
@@ -155,13 +155,13 @@ namespace KBEngine.Physics2D
                 return;
 
             //FPE optimization: Consolidated the calculate centroid and mass code to a single method.
-            TSVector2 center = TSVector2.zero;
+            FPVector2 center = FPVector2.zero;
             FP area = 0.0f;
             FP I = 0.0f;
 
             // pRef is the reference point for forming triangles.
             // It's location doesn't change the result (except for rounding error).
-            TSVector2 s = TSVector2.zero;
+            FPVector2 s = FPVector2.zero;
 
             // This code would put the reference point inside the polygon.
             for (int i = 0; i < Vertices.Count; ++i)
@@ -175,8 +175,8 @@ namespace KBEngine.Physics2D
             for (int i = 0; i < Vertices.Count; ++i)
             {
                 // Triangle vertices.
-                TSVector2 e1 = Vertices[i] - s;
-                TSVector2 e2 = i + 1 < Vertices.Count ? Vertices[i + 1] - s : Vertices[0] - s;
+                FPVector2 e1 = Vertices[i] - s;
+                FPVector2 e2 = i + 1 < Vertices.Count ? Vertices[i + 1] - s : Vertices[0] - s;
 
                 FP D = MathUtils.Cross(e1, e2);
 
@@ -212,16 +212,16 @@ namespace KBEngine.Physics2D
             MassData.Inertia = _density * I;
 
             // Shift to center of mass then to original body origin.
-            MassData.Inertia += MassData.Mass * (TSVector2.Dot(MassData.Centroid, MassData.Centroid) - TSVector2.Dot(center, center));
+            MassData.Inertia += MassData.Mass * (FPVector2.Dot(MassData.Centroid, MassData.Centroid) - FPVector2.Dot(center, center));
         }
 
-        public override bool TestPoint(ref Transform transform, ref TSVector2 point)
+        public override bool TestPoint(ref Transform transform, ref FPVector2 point)
         {
-            TSVector2 pLocal = MathUtils.MulT(transform.q, point - transform.p);
+            FPVector2 pLocal = MathUtils.MulT(transform.q, point - transform.p);
 
             for (int i = 0; i < Vertices.Count; ++i)
             {
-                FP dot = TSVector2.Dot(Normals[i], pLocal - Vertices[i]);
+                FP dot = FPVector2.Dot(Normals[i], pLocal - Vertices[i]);
                 if (dot > 0.0f)
                 {
                     return false;
@@ -236,9 +236,9 @@ namespace KBEngine.Physics2D
             output = new RayCastOutput();
 
             // Put the ray into the polygon's frame of reference.
-            TSVector2 p1 = MathUtils.MulT(transform.q, input.Point1 - transform.p);
-            TSVector2 p2 = MathUtils.MulT(transform.q, input.Point2 - transform.p);
-            TSVector2 d = p2 - p1;
+            FPVector2 p1 = MathUtils.MulT(transform.q, input.Point1 - transform.p);
+            FPVector2 p2 = MathUtils.MulT(transform.q, input.Point2 - transform.p);
+            FPVector2 d = p2 - p1;
 
             FP lower = 0.0f, upper = input.MaxFraction;
 
@@ -249,8 +249,8 @@ namespace KBEngine.Physics2D
                 // p = p1 + a * d
                 // dot(normal, p - v) = 0
                 // dot(normal, p1 - v) + a * dot(normal, d) = 0
-                FP numerator = TSVector2.Dot(Normals[i], Vertices[i] - p1);
-                FP denominator = TSVector2.Dot(Normals[i], d);
+                FP numerator = FPVector2.Dot(Normals[i], Vertices[i] - p1);
+                FP denominator = FPVector2.Dot(Normals[i], d);
 
                 if (denominator == 0.0f)
                 {
@@ -310,28 +310,28 @@ namespace KBEngine.Physics2D
         /// <param name="childIndex">The child shape index.</param>
         public override void ComputeAABB(out AABB aabb, ref Transform transform, int childIndex)
         {
-            TSVector2 lower = MathUtils.Mul(ref transform, Vertices[0]);
-            TSVector2 upper = lower;
+            FPVector2 lower = MathUtils.Mul(ref transform, Vertices[0]);
+            FPVector2 upper = lower;
 
             for (int i = 1; i < Vertices.Count; ++i)
             {
-                TSVector2 v = MathUtils.Mul(ref transform, Vertices[i]);
-                lower = TSVector2.Min(lower, v);
-                upper = TSVector2.Max(upper, v);
+                FPVector2 v = MathUtils.Mul(ref transform, Vertices[i]);
+                lower = FPVector2.Min(lower, v);
+                upper = FPVector2.Max(upper, v);
             }
 
-            TSVector2 r = new TSVector2(Radius, Radius);
+            FPVector2 r = new FPVector2(Radius, Radius);
             aabb.LowerBound = lower - r;
             aabb.UpperBound = upper + r;
         }
 
-        public override FP ComputeSubmergedArea(ref TSVector2 normal, FP offset, ref Transform xf, out TSVector2 sc)
+        public override FP ComputeSubmergedArea(ref FPVector2 normal, FP offset, ref Transform xf, out FPVector2 sc)
         {
-            sc = TSVector2.zero;
+            sc = FPVector2.zero;
 
             //Transform plane into shape co-ordinates
-            TSVector2 normalL = MathUtils.MulT(xf.q, normal);
-            FP offsetL = offset - TSVector2.Dot(normal, xf.p);
+            FPVector2 normalL = MathUtils.MulT(xf.q, normal);
+            FP offsetL = offset - FPVector2.Dot(normal, xf.p);
 
             FP[] depths = new FP[Settings.MaxPolygonVertices];
             int diveCount = 0;
@@ -342,7 +342,7 @@ namespace KBEngine.Physics2D
             int i;
             for (i = 0; i < Vertices.Count; i++)
             {
-                depths[i] = TSVector2.Dot(normalL, Vertices[i]) - offsetL;
+                depths[i] = FPVector2.Dot(normalL, Vertices[i]) - offsetL;
                 bool isSubmerged = depths[i] < -Settings.Epsilon;
                 if (i > 0)
                 {
@@ -395,13 +395,13 @@ namespace KBEngine.Physics2D
             FP intoLambda = (0 - depths[intoIndex]) / (depths[intoIndex2] - depths[intoIndex]);
             FP outoLambda = (0 - depths[outoIndex]) / (depths[outoIndex2] - depths[outoIndex]);
 
-            TSVector2 intoVec = new TSVector2(Vertices[intoIndex].x * (1 - intoLambda) + Vertices[intoIndex2].x * intoLambda, Vertices[intoIndex].y * (1 - intoLambda) + Vertices[intoIndex2].y * intoLambda);
-            TSVector2 outoVec = new TSVector2(Vertices[outoIndex].x * (1 - outoLambda) + Vertices[outoIndex2].x * outoLambda, Vertices[outoIndex].y * (1 - outoLambda) + Vertices[outoIndex2].y * outoLambda);
+            FPVector2 intoVec = new FPVector2(Vertices[intoIndex].x * (1 - intoLambda) + Vertices[intoIndex2].x * intoLambda, Vertices[intoIndex].y * (1 - intoLambda) + Vertices[intoIndex2].y * intoLambda);
+            FPVector2 outoVec = new FPVector2(Vertices[outoIndex].x * (1 - outoLambda) + Vertices[outoIndex2].x * outoLambda, Vertices[outoIndex].y * (1 - outoLambda) + Vertices[outoIndex2].y * outoLambda);
 
             //Initialize accumulator
             FP area = 0;
-            TSVector2 center = new TSVector2(0, 0);
-            TSVector2 p2 = Vertices[intoIndex2];
+            FPVector2 center = new FPVector2(0, 0);
+            FPVector2 p2 = Vertices[intoIndex2];
 
             FP k_inv3 = 1.0f / 3.0f;
 
@@ -410,15 +410,15 @@ namespace KBEngine.Physics2D
             while (i != outoIndex2)
             {
                 i = (i + 1) % Vertices.Count;
-                TSVector2 p3;
+                FPVector2 p3;
                 if (i == outoIndex2)
                     p3 = outoVec;
                 else
                     p3 = Vertices[i];
                 //Add the triangle formed by intoVec,p2,p3
                 {
-                    TSVector2 e1 = p2 - intoVec;
-                    TSVector2 e2 = p3 - intoVec;
+                    FPVector2 e1 = p2 - intoVec;
+                    FPVector2 e2 = p3 - intoVec;
 
                     FP D = MathUtils.Cross(e1, e2);
 

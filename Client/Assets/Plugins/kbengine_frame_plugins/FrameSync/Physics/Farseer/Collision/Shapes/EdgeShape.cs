@@ -32,12 +32,12 @@ namespace KBEngine.Physics2D
         /// <summary>
         /// Edge start vertex
         /// </summary>
-        internal TSVector2 _vertex1;
+        internal FPVector2 _vertex1;
 
         /// <summary>
         /// Edge end vertex
         /// </summary>
-        internal TSVector2 _vertex2;
+        internal FPVector2 _vertex2;
 
         internal EdgeShape()
             : base(0)
@@ -51,7 +51,7 @@ namespace KBEngine.Physics2D
         /// </summary>
         /// <param name="start">The start of the edge.</param>
         /// <param name="end">The end of the edge.</param>
-        public EdgeShape(TSVector2 start, TSVector2 end)
+        public EdgeShape(FPVector2 start, FPVector2 end)
             : base(0)
         {
             ShapeType = ShapeType.Edge;
@@ -77,17 +77,17 @@ namespace KBEngine.Physics2D
         /// <summary>
         /// Optional adjacent vertices. These are used for smooth collision.
         /// </summary>
-        public TSVector2 Vertex0 { get; set; }
+        public FPVector2 Vertex0 { get; set; }
 
         /// <summary>
         /// Optional adjacent vertices. These are used for smooth collision.
         /// </summary>
-        public TSVector2 Vertex3 { get; set; }
+        public FPVector2 Vertex3 { get; set; }
 
         /// <summary>
         /// These are the edge vertices
         /// </summary>
-        public TSVector2 Vertex1
+        public FPVector2 Vertex1
         {
             get { return _vertex1; }
             set
@@ -100,7 +100,7 @@ namespace KBEngine.Physics2D
         /// <summary>
         /// These are the edge vertices
         /// </summary>
-        public TSVector2 Vertex2
+        public FPVector2 Vertex2
         {
             get { return _vertex2; }
             set
@@ -115,7 +115,7 @@ namespace KBEngine.Physics2D
         /// </summary>
         /// <param name="start">The start.</param>
         /// <param name="end">The end.</param>
-        public void Set(TSVector2 start, TSVector2 end)
+        public void Set(FPVector2 start, FPVector2 end)
         {
             _vertex1 = start;
             _vertex2 = end;
@@ -125,7 +125,7 @@ namespace KBEngine.Physics2D
             ComputeProperties();
         }
 
-        public override bool TestPoint(ref Transform transform, ref TSVector2 point)
+        public override bool TestPoint(ref Transform transform, ref FPVector2 point)
         {
             return false;
         }
@@ -140,21 +140,21 @@ namespace KBEngine.Physics2D
             output = new RayCastOutput();
 
             // Put the ray into the edge's frame of reference.
-            TSVector2 p1 = MathUtils.MulT(transform.q, input.Point1 - transform.p);
-            TSVector2 p2 = MathUtils.MulT(transform.q, input.Point2 - transform.p);
-            TSVector2 d = p2 - p1;
+            FPVector2 p1 = MathUtils.MulT(transform.q, input.Point1 - transform.p);
+            FPVector2 p2 = MathUtils.MulT(transform.q, input.Point2 - transform.p);
+            FPVector2 d = p2 - p1;
 
-            TSVector2 v1 = _vertex1;
-            TSVector2 v2 = _vertex2;
-            TSVector2 e = v2 - v1;
-            TSVector2 normal = new TSVector2(e.y, -e.x); //TODO: Could possibly cache the normal.
+            FPVector2 v1 = _vertex1;
+            FPVector2 v2 = _vertex2;
+            FPVector2 e = v2 - v1;
+            FPVector2 normal = new FPVector2(e.y, -e.x); //TODO: Could possibly cache the normal.
             normal.Normalize();
 
             // q = p1 + t * d
             // dot(normal, q - v1) = 0
             // dot(normal, p1 - v1) + t * dot(normal, d) = 0
-            FP numerator = TSVector2.Dot(normal, v1 - p1);
-            FP denominator = TSVector2.Dot(normal, d);
+            FP numerator = FPVector2.Dot(normal, v1 - p1);
+            FP denominator = FPVector2.Dot(normal, d);
 
             if (denominator == 0.0f)
             {
@@ -167,18 +167,18 @@ namespace KBEngine.Physics2D
                 return false;
             }
 
-            TSVector2 q = p1 + t * d;
+            FPVector2 q = p1 + t * d;
 
             // q = v1 + s * r
             // s = dot(q - v1, r) / dot(r, r)
-            TSVector2 r = v2 - v1;
-            FP rr = TSVector2.Dot(r, r);
+            FPVector2 r = v2 - v1;
+            FP rr = FPVector2.Dot(r, r);
             if (rr == 0.0f)
             {
                 return false;
             }
 
-            FP s = TSVector2.Dot(q - v1, r) / rr;
+            FP s = FPVector2.Dot(q - v1, r) / rr;
             if (s < 0.0f || 1.0f < s)
             {
                 return false;
@@ -198,13 +198,13 @@ namespace KBEngine.Physics2D
 
         public override void ComputeAABB(out AABB aabb, ref Transform transform, int childIndex)
         {
-            TSVector2 v1 = MathUtils.Mul(ref transform, _vertex1);
-            TSVector2 v2 = MathUtils.Mul(ref transform, _vertex2);
+            FPVector2 v1 = MathUtils.Mul(ref transform, _vertex1);
+            FPVector2 v2 = MathUtils.Mul(ref transform, _vertex2);
 
-            TSVector2 lower = TSVector2.Min(v1, v2);
-            TSVector2 upper = TSVector2.Max(v1, v2);
+            FPVector2 lower = FPVector2.Min(v1, v2);
+            FPVector2 upper = FPVector2.Max(v1, v2);
 
-            TSVector2 r = new TSVector2(Radius, Radius);
+            FPVector2 r = new FPVector2(Radius, Radius);
             aabb.LowerBound = lower - r;
             aabb.UpperBound = upper + r;
         }
@@ -214,9 +214,9 @@ namespace KBEngine.Physics2D
             MassData.Centroid = 0.5f * (_vertex1 + _vertex2);
         }
 
-        public override FP ComputeSubmergedArea(ref TSVector2 normal, FP offset, ref Transform xf, out TSVector2 sc)
+        public override FP ComputeSubmergedArea(ref FPVector2 normal, FP offset, ref Transform xf, out FPVector2 sc)
         {
-            sc = TSVector2.zero;
+            sc = FPVector2.zero;
             return 0;
         }
 

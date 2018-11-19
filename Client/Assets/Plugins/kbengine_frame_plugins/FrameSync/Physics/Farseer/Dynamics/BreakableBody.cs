@@ -9,7 +9,7 @@ namespace KBEngine.Physics2D
     {
         private FP[] _angularVelocitiesCache = new FP[8];
         private bool _break;
-        private TSVector2[] _velocitiesCache = new TSVector2[8];
+        private FPVector2[] _velocitiesCache = new FPVector2[8];
         private World _world;
 
         public BreakableBody(IEnumerable<Vertices> vertices, World world, FP density)
@@ -62,7 +62,7 @@ namespace KBEngine.Physics2D
 
                     for (int i = 0; i < count; ++i)
                     {
-                        maxImpulse = KBEngine.TSMath.Max(maxImpulse, impulse.points[i].normalImpulse);
+                        maxImpulse = KBEngine.FPMath.Max(maxImpulse, impulse.points[i].normalImpulse);
                     }
 
                     if (maxImpulse > Strength)
@@ -89,7 +89,7 @@ namespace KBEngine.Physics2D
                 //Enlarge the cache if needed
                 if (Parts.Count > _angularVelocitiesCache.Length)
                 {
-                    _velocitiesCache = new TSVector2[Parts.Count];
+                    _velocitiesCache = new FPVector2[Parts.Count];
                     _angularVelocitiesCache = new FP[Parts.Count];
                 }
 

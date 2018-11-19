@@ -29,22 +29,22 @@ namespace KBEngine.Physics3D {
     /// </summary>
     public class ConvexHullShape : Shape
     {
-        List<TSVector> vertices = null;
+        List<FPVector> vertices = null;
 
-        TSVector shifted;
+        FPVector shifted;
 
         /// <summary>
         /// Constructor of ConvexHullShape class.
         /// </summary>
         /// <param name="vertices">A list containing all vertices defining
         /// the convex hull.</param>
-        public ConvexHullShape(List<TSVector> vertices)
+        public ConvexHullShape(List<FPVector> vertices)
         {
             this.vertices = vertices;
             UpdateShape();
         }
 
-        public TSVector Shift { get { return -1 * this.shifted; } }
+        public FPVector Shift { get { return -1 * this.shifted; } }
 
         public override void CalculateMassInertia()
         {
@@ -58,7 +58,7 @@ namespace KBEngine.Physics3D {
         /// </summary>
         /// <param name="direction">The direction.</param>
         /// <param name="result">The result.</param>
-        public override void SupportMapping(ref TSVector direction, out TSVector result)
+        public override void SupportMapping(ref FPVector direction, out FPVector result)
         {
             FP maxDotProduct = FP.MinValue;
             int maxIndex = 0;
@@ -66,7 +66,7 @@ namespace KBEngine.Physics3D {
 
             for (int i = 0; i < vertices.Count; i++)
             {
-                dotProduct = TSVector.Dot(vertices[i], direction);
+                dotProduct = FPVector.Dot(vertices[i], direction);
                 if (dotProduct > maxDotProduct)
                 {
                     maxDotProduct = dotProduct;

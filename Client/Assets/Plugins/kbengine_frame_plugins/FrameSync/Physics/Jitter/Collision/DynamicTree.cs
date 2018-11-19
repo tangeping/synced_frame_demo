@@ -128,7 +128,7 @@ namespace KBEngine.Physics3D {
             _nodes[proxyId].MinorRandomExtension = FP.Half * settingsRndExtension;
 
             // Fatten the aabb.
-            TSVector r = new TSVector(_nodes[proxyId].MinorRandomExtension);
+            FPVector r = new FPVector(_nodes[proxyId].MinorRandomExtension);
             _nodes[proxyId].AABB.min = aabb.min - r;
             _nodes[proxyId].AABB.max = aabb.max + r;
             _nodes[proxyId].UserData = userData;
@@ -161,7 +161,7 @@ namespace KBEngine.Physics3D {
         /// <param name="aabb">The aabb.</param>
         /// <param name="displacement">The displacement.</param>
         /// <returns>true if the proxy was re-inserted.</returns>
-        public bool MoveProxy(int proxyId, ref TSBBox aabb, TSVector displacement)
+        public bool MoveProxy(int proxyId, ref TSBBox aabb, FPVector displacement)
         {
             Debug.Assert(0 <= proxyId && proxyId < _nodeCapacity);
 
@@ -176,12 +176,12 @@ namespace KBEngine.Physics3D {
 
             // Extend AABB.
             TSBBox b = aabb;
-            TSVector r = new TSVector(_nodes[proxyId].MinorRandomExtension);
+            FPVector r = new FPVector(_nodes[proxyId].MinorRandomExtension);
             b.min = b.min - r;
             b.max = b.max + r;
 
             // Predict AABB displacement.
-            TSVector d = SettingsAABBMultiplier * displacement;
+            FPVector d = SettingsAABBMultiplier * displacement;
             //JVector randomExpansion = new JVector((FP)rnd.Next(0, 10) * FP.EN1, (FP)rnd.Next(0, 10) * FP.EN1, (FP)rnd.Next(0, 10) * FP.EN1);
 
             //d += randomExpansion;
@@ -252,7 +252,7 @@ namespace KBEngine.Physics3D {
             return ComputeHeight(_root);
         }
 
-        public void Query(TSVector origin, TSVector direction, List<int> collisions)
+        public void Query(FPVector origin, FPVector direction, List<int> collisions)
         {
             Stack<int> stack = stackPool.GetNew();
 

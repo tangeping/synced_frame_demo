@@ -39,7 +39,7 @@ namespace KBEngine {
         /**
          *  @brief Represents the simulated gravity.
          **/
-        public TSVector2 gravity2D = new TSVector2(0, -10);
+        public FPVector2 gravity2D = new FPVector2(0, -10);
 
         /**
          *  @brief If true enables a deeper collision detection system.
@@ -59,7 +59,7 @@ namespace KBEngine {
         /**
          *  @brief Represents the simulated gravity.
          **/
-        public TSVector gravity3D = new TSVector(0, -10, 0);
+        public FPVector gravity3D = new FPVector(0, -10, 0);
 
         /**
          *  @brief If true enables a deeper collision detection system.

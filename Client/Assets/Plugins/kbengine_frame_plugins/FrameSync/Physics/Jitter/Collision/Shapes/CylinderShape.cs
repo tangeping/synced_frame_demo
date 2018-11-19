@@ -58,7 +58,7 @@ namespace KBEngine.Physics3D {
         /// </summary>
         public override void CalculateMassInertia()
         {
-            this.mass = TSMath.Pi * radius * radius * height;
+            this.mass = FPMath.Pi * radius * radius * height;
             this.inertia.M11 = (FP.One / (4 * FP.One)) * mass * radius * radius + (FP.One / (12 * FP.One)) * mass * height * height;
             this.inertia.M22 = (FP.One / (2 * FP.One)) * mass * radius * radius;
             this.inertia.M33 = (FP.One / (4 * FP.One)) * mass * radius * radius + (FP.One / (12 * FP.One)) * mass * height * height;
@@ -71,7 +71,7 @@ namespace KBEngine.Physics3D {
         /// </summary>
         /// <param name="direction">The direction.</param>
         /// <param name="result">The result.</param>
-        public override void SupportMapping(ref TSVector direction, out TSVector result)
+        public override void SupportMapping(ref FPVector direction, out FPVector result)
         {
             FP sigma = FP.Sqrt(direction.x * direction.x + direction.z * direction.z);
 

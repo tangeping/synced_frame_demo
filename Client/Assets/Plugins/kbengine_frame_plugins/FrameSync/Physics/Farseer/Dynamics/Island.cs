@@ -87,7 +87,7 @@ namespace KBEngine.Physics2D
             JointCount = 0;
         }
 
-        public void Solve(ref TimeStep step, ref TSVector2 gravity)
+        public void Solve(ref TimeStep step, ref FPVector2 gravity)
         {
             FP h = step.dt;
 
@@ -96,9 +96,9 @@ namespace KBEngine.Physics2D
             {
                 Body b = Bodies[i];
 
-                TSVector2 c = b._sweep.C;
+                FPVector2 c = b._sweep.C;
                 FP a = b._sweep.A;
-                TSVector2 v = b._linearVelocity;
+                FPVector2 v = b._linearVelocity;
                 FP w = b._angularVelocity;
 
                 // Store positions for continuous collision.
@@ -181,14 +181,14 @@ namespace KBEngine.Physics2D
             // Integrate positions
             for (int i = 0; i < BodyCount; ++i)
             {
-                TSVector2 c = _positions[i].c;
+                FPVector2 c = _positions[i].c;
                 FP a = _positions[i].a;
-                TSVector2 v = _velocities[i].v;
+                FPVector2 v = _velocities[i].v;
                 FP w = _velocities[i].w;
 
                 // Check for large velocities
-                TSVector2 translation = h * v;
-                if (TSVector2.Dot(translation, translation) > Settings.MaxTranslationSquared)
+                FPVector2 translation = h * v;
+                if (FPVector2.Dot(translation, translation) > Settings.MaxTranslationSquared)
                 {
                     FP ratio = Settings.MaxTranslation / translation.magnitude;
                     v *= ratio;
@@ -263,7 +263,7 @@ namespace KBEngine.Physics2D
                     if (b.BodyType == BodyType.Static)
                         continue;
 
-                    if (!b.SleepingAllowed || b._angularVelocity * b._angularVelocity > AngTolSqr || TSVector2.Dot(b._linearVelocity, b._linearVelocity) > LinTolSqr)
+                    if (!b.SleepingAllowed || b._angularVelocity * b._angularVelocity > AngTolSqr || FPVector2.Dot(b._linearVelocity, b._linearVelocity) > LinTolSqr)
                     {
                         b._sleepTime = 0.0f;
                         minSleepTime = 0.0f;
@@ -271,7 +271,7 @@ namespace KBEngine.Physics2D
                     else
                     {
                         b._sleepTime += h;
-                        minSleepTime = KBEngine.TSMath.Min(minSleepTime, b._sleepTime);
+                        minSleepTime = KBEngine.FPMath.Min(minSleepTime, b._sleepTime);
                     }
                 }
 
@@ -337,14 +337,14 @@ namespace KBEngine.Physics2D
             // Integrate positions.
             for (int i = 0; i < BodyCount; ++i)
             {
-                TSVector2 c = _positions[i].c;
+                FPVector2 c = _positions[i].c;
                 FP a = _positions[i].a;
-                TSVector2 v = _velocities[i].v;
+                FPVector2 v = _velocities[i].v;
                 FP w = _velocities[i].w;
 
                 // Check for large velocities
-                TSVector2 translation = h * v;
-                if (TSVector2.Dot(translation, translation) > Settings.MaxTranslationSquared)
+                FPVector2 translation = h * v;
+                if (FPVector2.Dot(translation, translation) > Settings.MaxTranslationSquared)
                 {
                     FP ratio = Settings.MaxTranslation / translation.magnitude;
                     v *= ratio;

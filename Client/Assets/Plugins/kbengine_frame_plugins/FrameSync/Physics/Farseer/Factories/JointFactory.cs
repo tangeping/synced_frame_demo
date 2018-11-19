@@ -19,16 +19,16 @@ namespace KBEngine.Physics2D
 
         #region Revolute Joint
 
-        public static RevoluteJoint CreateRevoluteJoint(World world, Body bodyA, Body bodyB, TSVector2 anchorA, TSVector2 anchorB, bool useWorldCoordinates = false)
+        public static RevoluteJoint CreateRevoluteJoint(World world, Body bodyA, Body bodyB, FPVector2 anchorA, FPVector2 anchorB, bool useWorldCoordinates = false)
         {
             RevoluteJoint joint = new RevoluteJoint(bodyA, bodyB, anchorA, anchorB, useWorldCoordinates);
             world.AddJoint(joint);
             return joint;
         }
 
-        public static RevoluteJoint CreateRevoluteJoint(World world, Body bodyA, Body bodyB, TSVector2 anchor)
+        public static RevoluteJoint CreateRevoluteJoint(World world, Body bodyA, Body bodyB, FPVector2 anchor)
         {
-            TSVector2 localanchorA = bodyA.GetLocalPoint(bodyB.GetWorldPoint(anchor));
+            FPVector2 localanchorA = bodyA.GetLocalPoint(bodyB.GetWorldPoint(anchor));
             RevoluteJoint joint = new RevoluteJoint(bodyA, bodyB, localanchorA, anchor);
             world.AddJoint(joint);
             return joint;
@@ -39,7 +39,7 @@ namespace KBEngine.Physics2D
 
         #region Rope Joint
 
-        public static RopeJoint CreateRopeJoint(World world, Body bodyA, Body bodyB, TSVector2 anchorA, TSVector2 anchorB, bool useWorldCoordinates = false)
+        public static RopeJoint CreateRopeJoint(World world, Body bodyA, Body bodyB, FPVector2 anchorA, FPVector2 anchorB, bool useWorldCoordinates = false)
         {
             RopeJoint ropeJoint = new RopeJoint(bodyA, bodyB, anchorA, anchorB, useWorldCoordinates);
             world.AddJoint(ropeJoint);
@@ -50,7 +50,7 @@ namespace KBEngine.Physics2D
 
         #region Weld Joint
 
-        public static WeldJoint CreateWeldJoint(World world, Body bodyA, Body bodyB, TSVector2 anchorA, TSVector2 anchorB, bool useWorldCoordinates = false)
+        public static WeldJoint CreateWeldJoint(World world, Body bodyA, Body bodyB, FPVector2 anchorA, FPVector2 anchorB, bool useWorldCoordinates = false)
         {
             WeldJoint weldJoint = new WeldJoint(bodyA, bodyB, anchorA, anchorB, useWorldCoordinates);
             world.AddJoint(weldJoint);
@@ -61,7 +61,7 @@ namespace KBEngine.Physics2D
 
         #region Prismatic Joint
 
-        public static PrismaticJoint CreatePrismaticJoint(World world, Body bodyA, Body bodyB, TSVector2 anchor, TSVector2 axis, bool useWorldCoordinates = false)
+        public static PrismaticJoint CreatePrismaticJoint(World world, Body bodyA, Body bodyB, FPVector2 anchor, FPVector2 axis, bool useWorldCoordinates = false)
         {
             PrismaticJoint joint = new PrismaticJoint(bodyA, bodyB, anchor, axis, useWorldCoordinates);
             world.AddJoint(joint);
@@ -72,16 +72,16 @@ namespace KBEngine.Physics2D
 
         #region Wheel Joint
 
-        public static WheelJoint CreateWheelJoint(World world, Body bodyA, Body bodyB, TSVector2 anchor, TSVector2 axis, bool useWorldCoordinates = false)
+        public static WheelJoint CreateWheelJoint(World world, Body bodyA, Body bodyB, FPVector2 anchor, FPVector2 axis, bool useWorldCoordinates = false)
         {
             WheelJoint joint = new WheelJoint(bodyA, bodyB, anchor, axis, useWorldCoordinates);
             world.AddJoint(joint);
             return joint;
         }
 
-        public static WheelJoint CreateWheelJoint(World world, Body bodyA, Body bodyB, TSVector2 axis)
+        public static WheelJoint CreateWheelJoint(World world, Body bodyA, Body bodyB, FPVector2 axis)
         {
-            return CreateWheelJoint(world, bodyA, bodyB, TSVector2.zero, axis);
+            return CreateWheelJoint(world, bodyA, bodyB, FPVector2.zero, axis);
         }
 
         #endregion
@@ -99,7 +99,7 @@ namespace KBEngine.Physics2D
 
         #region Distance Joint
 
-        public static DistanceJoint CreateDistanceJoint(World world, Body bodyA, Body bodyB, TSVector2 anchorA, TSVector2 anchorB, bool useWorldCoordinates = false)
+        public static DistanceJoint CreateDistanceJoint(World world, Body bodyA, Body bodyB, FPVector2 anchorA, FPVector2 anchorB, bool useWorldCoordinates = false)
         {
             DistanceJoint distanceJoint = new DistanceJoint(bodyA, bodyB, anchorA, anchorB, useWorldCoordinates);
             world.AddJoint(distanceJoint);
@@ -108,14 +108,14 @@ namespace KBEngine.Physics2D
 
         public static DistanceJoint CreateDistanceJoint(World world, Body bodyA, Body bodyB)
         {
-            return CreateDistanceJoint(world, bodyA, bodyB, TSVector2.zero, TSVector2.zero);
+            return CreateDistanceJoint(world, bodyA, bodyB, FPVector2.zero, FPVector2.zero);
         }
 
         #endregion
 
         #region Friction Joint
 
-        public static FrictionJoint CreateFrictionJoint(World world, Body bodyA, Body bodyB, TSVector2 anchor, bool useWorldCoordinates = false)
+        public static FrictionJoint CreateFrictionJoint(World world, Body bodyA, Body bodyB, FPVector2 anchor, bool useWorldCoordinates = false)
         {
             FrictionJoint frictionJoint = new FrictionJoint(bodyA, bodyB, anchor, useWorldCoordinates);
             world.AddJoint(frictionJoint);
@@ -124,7 +124,7 @@ namespace KBEngine.Physics2D
 
         public static FrictionJoint CreateFrictionJoint(World world, Body bodyA, Body bodyB)
         {
-            return CreateFrictionJoint(world, bodyA, bodyB, TSVector2.zero);
+            return CreateFrictionJoint(world, bodyA, bodyB, FPVector2.zero);
         }
 
         #endregion
@@ -142,7 +142,7 @@ namespace KBEngine.Physics2D
 
         #region Pulley Joint
 
-        public static PulleyJoint CreatePulleyJoint(World world, Body bodyA, Body bodyB, TSVector2 anchorA, TSVector2 anchorB, TSVector2 worldAnchorA, TSVector2 worldAnchorB, FP ratio, bool useWorldCoordinates = false)
+        public static PulleyJoint CreatePulleyJoint(World world, Body bodyA, Body bodyB, FPVector2 anchorA, FPVector2 anchorB, FPVector2 worldAnchorA, FPVector2 worldAnchorB, FP ratio, bool useWorldCoordinates = false)
         {
             PulleyJoint pulleyJoint = new PulleyJoint(bodyA, bodyB, anchorA, anchorB, worldAnchorA, worldAnchorB, ratio, useWorldCoordinates);
             world.AddJoint(pulleyJoint);
@@ -153,7 +153,7 @@ namespace KBEngine.Physics2D
 
         #region MouseJoint
 
-        public static FixedMouseJoint CreateFixedMouseJoint(World world, Body body, TSVector2 worldAnchor)
+        public static FixedMouseJoint CreateFixedMouseJoint(World world, Body body, FPVector2 worldAnchor)
         {
             FixedMouseJoint joint = new FixedMouseJoint(body, worldAnchor);
             world.AddJoint(joint);

@@ -63,9 +63,9 @@ namespace KBEngine.Physics2D
     public static class SeparationFunction
     {
         [ThreadStatic]
-        private static TSVector2 _axis;
+        private static FPVector2 _axis;
         [ThreadStatic]
-        private static TSVector2 _localPoint;
+        private static FPVector2 _localPoint;
         [ThreadStatic]
         private static DistanceProxy _proxyA;
         [ThreadStatic]
@@ -77,7 +77,7 @@ namespace KBEngine.Physics2D
 
         public static void Set(ref SimplexCache cache, DistanceProxy proxyA, ref Sweep sweepA, DistanceProxy proxyB, ref Sweep sweepB, FP t1)
         {
-            _localPoint = TSVector2.zero;
+            _localPoint = FPVector2.zero;
             _proxyA = proxyA;
             _proxyB = proxyB;
             int count = cache.Count;
@@ -93,10 +93,10 @@ namespace KBEngine.Physics2D
             if (count == 1)
             {
                 _type = SeparationFunctionType.Points;
-                TSVector2 localPointA = _proxyA.Vertices[cache.IndexA[0]];
-                TSVector2 localPointB = _proxyB.Vertices[cache.IndexB[0]];
-                TSVector2 pointA = MathUtils.Mul(ref xfA, localPointA);
-                TSVector2 pointB = MathUtils.Mul(ref xfB, localPointB);
+                FPVector2 localPointA = _proxyA.Vertices[cache.IndexA[0]];
+                FPVector2 localPointB = _proxyB.Vertices[cache.IndexB[0]];
+                FPVector2 pointA = MathUtils.Mul(ref xfA, localPointA);
+                FPVector2 pointB = MathUtils.Mul(ref xfB, localPointB);
                 _axis = pointB - pointA;
                 _axis.Normalize();
             }
@@ -104,21 +104,21 @@ namespace KBEngine.Physics2D
             {
                 // Two points on B and one on A.
                 _type = SeparationFunctionType.FaceB;
-                TSVector2 localPointB1 = proxyB.Vertices[cache.IndexB[0]];
-                TSVector2 localPointB2 = proxyB.Vertices[cache.IndexB[1]];
+                FPVector2 localPointB1 = proxyB.Vertices[cache.IndexB[0]];
+                FPVector2 localPointB2 = proxyB.Vertices[cache.IndexB[1]];
 
-                TSVector2 a = localPointB2 - localPointB1;
-                _axis = new TSVector2(a.y, -a.x);
+                FPVector2 a = localPointB2 - localPointB1;
+                _axis = new FPVector2(a.y, -a.x);
                 _axis.Normalize();
-                TSVector2 normal = MathUtils.Mul(ref xfB.q, _axis);
+                FPVector2 normal = MathUtils.Mul(ref xfB.q, _axis);
 
                 _localPoint = 0.5f * (localPointB1 + localPointB2);
-                TSVector2 pointB = MathUtils.Mul(ref xfB, _localPoint);
+                FPVector2 pointB = MathUtils.Mul(ref xfB, _localPoint);
 
-                TSVector2 localPointA = proxyA.Vertices[cache.IndexA[0]];
-                TSVector2 pointA = MathUtils.Mul(ref xfA, localPointA);
+                FPVector2 localPointA = proxyA.Vertices[cache.IndexA[0]];
+                FPVector2 pointA = MathUtils.Mul(ref xfA, localPointA);
 
-                FP s = TSVector2.Dot(pointA - pointB, normal);
+                FP s = FPVector2.Dot(pointA - pointB, normal);
                 if (s < 0.0f)
                 {
                     _axis = -_axis;
@@ -128,21 +128,21 @@ namespace KBEngine.Physics2D
             {
                 // Two points on A and one or two points on B.
                 _type = SeparationFunctionType.FaceA;
-                TSVector2 localPointA1 = _proxyA.Vertices[cache.IndexA[0]];
-                TSVector2 localPointA2 = _proxyA.Vertices[cache.IndexA[1]];
+                FPVector2 localPointA1 = _proxyA.Vertices[cache.IndexA[0]];
+                FPVector2 localPointA2 = _proxyA.Vertices[cache.IndexA[1]];
 
-                TSVector2 a = localPointA2 - localPointA1;
-                _axis = new TSVector2(a.y, -a.x);
+                FPVector2 a = localPointA2 - localPointA1;
+                _axis = new FPVector2(a.y, -a.x);
                 _axis.Normalize();
-                TSVector2 normal = MathUtils.Mul(ref xfA.q, _axis);
+                FPVector2 normal = MathUtils.Mul(ref xfA.q, _axis);
 
                 _localPoint = 0.5f * (localPointA1 + localPointA2);
-                TSVector2 pointA = MathUtils.Mul(ref xfA, _localPoint);
+                FPVector2 pointA = MathUtils.Mul(ref xfA, _localPoint);
 
-                TSVector2 localPointB = _proxyB.Vertices[cache.IndexB[0]];
-                TSVector2 pointB = MathUtils.Mul(ref xfB, localPointB);
+                FPVector2 localPointB = _proxyB.Vertices[cache.IndexB[0]];
+                FPVector2 pointB = MathUtils.Mul(ref xfB, localPointB);
 
-                FP s = TSVector2.Dot(pointB - pointA, normal);
+                FP s = FPVector2.Dot(pointB - pointA, normal);
                 if (s < 0.0f)
                 {
                     _axis = -_axis;
@@ -162,53 +162,53 @@ namespace KBEngine.Physics2D
             {
                 case SeparationFunctionType.Points:
                     {
-                        TSVector2 axisA = MathUtils.MulT(ref xfA.q, _axis);
-                        TSVector2 axisB = MathUtils.MulT(ref xfB.q, -_axis);
+                        FPVector2 axisA = MathUtils.MulT(ref xfA.q, _axis);
+                        FPVector2 axisB = MathUtils.MulT(ref xfB.q, -_axis);
 
                         indexA = _proxyA.GetSupport(axisA);
                         indexB = _proxyB.GetSupport(axisB);
 
-                        TSVector2 localPointA = _proxyA.Vertices[indexA];
-                        TSVector2 localPointB = _proxyB.Vertices[indexB];
+                        FPVector2 localPointA = _proxyA.Vertices[indexA];
+                        FPVector2 localPointB = _proxyB.Vertices[indexB];
 
-                        TSVector2 pointA = MathUtils.Mul(ref xfA, localPointA);
-                        TSVector2 pointB = MathUtils.Mul(ref xfB, localPointB);
+                        FPVector2 pointA = MathUtils.Mul(ref xfA, localPointA);
+                        FPVector2 pointB = MathUtils.Mul(ref xfB, localPointB);
 
-                        FP separation = TSVector2.Dot(pointB - pointA, _axis);
+                        FP separation = FPVector2.Dot(pointB - pointA, _axis);
                         return separation;
                     }
 
                 case SeparationFunctionType.FaceA:
                     {
-                        TSVector2 normal = MathUtils.Mul(ref xfA.q, _axis);
-                        TSVector2 pointA = MathUtils.Mul(ref xfA, _localPoint);
+                        FPVector2 normal = MathUtils.Mul(ref xfA.q, _axis);
+                        FPVector2 pointA = MathUtils.Mul(ref xfA, _localPoint);
 
-                        TSVector2 axisB = MathUtils.MulT(ref xfB.q, -normal);
+                        FPVector2 axisB = MathUtils.MulT(ref xfB.q, -normal);
 
                         indexA = -1;
                         indexB = _proxyB.GetSupport(axisB);
 
-                        TSVector2 localPointB = _proxyB.Vertices[indexB];
-                        TSVector2 pointB = MathUtils.Mul(ref xfB, localPointB);
+                        FPVector2 localPointB = _proxyB.Vertices[indexB];
+                        FPVector2 pointB = MathUtils.Mul(ref xfB, localPointB);
 
-                        FP separation = TSVector2.Dot(pointB - pointA, normal);
+                        FP separation = FPVector2.Dot(pointB - pointA, normal);
                         return separation;
                     }
 
                 case SeparationFunctionType.FaceB:
                     {
-                        TSVector2 normal = MathUtils.Mul(ref xfB.q, _axis);
-                        TSVector2 pointB = MathUtils.Mul(ref xfB, _localPoint);
+                        FPVector2 normal = MathUtils.Mul(ref xfB.q, _axis);
+                        FPVector2 pointB = MathUtils.Mul(ref xfB, _localPoint);
 
-                        TSVector2 axisA = MathUtils.MulT(ref xfA.q, -normal);
+                        FPVector2 axisA = MathUtils.MulT(ref xfA.q, -normal);
 
                         indexB = -1;
                         indexA = _proxyA.GetSupport(axisA);
 
-                        TSVector2 localPointA = _proxyA.Vertices[indexA];
-                        TSVector2 pointA = MathUtils.Mul(ref xfA, localPointA);
+                        FPVector2 localPointA = _proxyA.Vertices[indexA];
+                        FPVector2 pointA = MathUtils.Mul(ref xfA, localPointA);
 
-                        FP separation = TSVector2.Dot(pointA - pointB, normal);
+                        FP separation = FPVector2.Dot(pointA - pointB, normal);
                         return separation;
                     }
 
@@ -230,35 +230,35 @@ namespace KBEngine.Physics2D
             {
                 case SeparationFunctionType.Points:
                     {
-                        TSVector2 localPointA = _proxyA.Vertices[indexA];
-                        TSVector2 localPointB = _proxyB.Vertices[indexB];
+                        FPVector2 localPointA = _proxyA.Vertices[indexA];
+                        FPVector2 localPointB = _proxyB.Vertices[indexB];
 
-                        TSVector2 pointA = MathUtils.Mul(ref xfA, localPointA);
-                        TSVector2 pointB = MathUtils.Mul(ref xfB, localPointB);
-                        FP separation = TSVector2.Dot(pointB - pointA, _axis);
+                        FPVector2 pointA = MathUtils.Mul(ref xfA, localPointA);
+                        FPVector2 pointB = MathUtils.Mul(ref xfB, localPointB);
+                        FP separation = FPVector2.Dot(pointB - pointA, _axis);
 
                         return separation;
                     }
                 case SeparationFunctionType.FaceA:
                     {
-                        TSVector2 normal = MathUtils.Mul(ref xfA.q, _axis);
-                        TSVector2 pointA = MathUtils.Mul(ref xfA, _localPoint);
+                        FPVector2 normal = MathUtils.Mul(ref xfA.q, _axis);
+                        FPVector2 pointA = MathUtils.Mul(ref xfA, _localPoint);
 
-                        TSVector2 localPointB = _proxyB.Vertices[indexB];
-                        TSVector2 pointB = MathUtils.Mul(ref xfB, localPointB);
+                        FPVector2 localPointB = _proxyB.Vertices[indexB];
+                        FPVector2 pointB = MathUtils.Mul(ref xfB, localPointB);
 
-                        FP separation = TSVector2.Dot(pointB - pointA, normal);
+                        FP separation = FPVector2.Dot(pointB - pointA, normal);
                         return separation;
                     }
                 case SeparationFunctionType.FaceB:
                     {
-                        TSVector2 normal = MathUtils.Mul(ref xfB.q, _axis);
-                        TSVector2 pointB = MathUtils.Mul(ref xfB, _localPoint);
+                        FPVector2 normal = MathUtils.Mul(ref xfB.q, _axis);
+                        FPVector2 pointB = MathUtils.Mul(ref xfB, _localPoint);
 
-                        TSVector2 localPointA = _proxyA.Vertices[indexA];
-                        TSVector2 pointA = MathUtils.Mul(ref xfA, localPointA);
+                        FPVector2 localPointA = _proxyA.Vertices[indexA];
+                        FPVector2 pointA = MathUtils.Mul(ref xfA, localPointA);
 
-                        FP separation = TSVector2.Dot(pointA - pointB, normal);
+                        FP separation = FPVector2.Dot(pointA - pointB, normal);
                         return separation;
                     }
                 default:
@@ -309,7 +309,7 @@ namespace KBEngine.Physics2D
             FP tMax = input.TMax;
 
             FP totalRadius = input.ProxyA.Radius + input.ProxyB.Radius;
-            FP target = KBEngine.TSMath.Max(Settings.LinearSlop, totalRadius - 3.0f * Settings.LinearSlop);
+            FP target = KBEngine.FPMath.Max(Settings.LinearSlop, totalRadius - 3.0f * Settings.LinearSlop);
             FP tolerance = 0.25f * Settings.LinearSlop;
             Debug.Assert(target > tolerance);
 

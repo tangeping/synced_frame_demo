@@ -18,7 +18,7 @@ namespace KBEngine
 
         private static FP POINT_RADIUS = 0.001f;
 
-        private static object OverlapGeneric(Physics2D.Shape shape, TSVector2 position, Physics2D.BodySpecialSensor sensorType, int layerMask) {
+        private static object OverlapGeneric(Physics2D.Shape shape, FPVector2 position, Physics2D.BodySpecialSensor sensorType, int layerMask) {
             Physics2D.World world = (Physics2D.World)Physics2DWorldManager.instance.GetWorld();
 
             Physics2D.Body body = Physics2D.BodyFactory.CreateBody(world);
@@ -52,7 +52,7 @@ namespace KBEngine
             return null;
         }
 
-        private static object _OverlapCircle(TSVector2 point, FP radius, Physics2D.BodySpecialSensor sensorType, int layerMask = UnityEngine.Physics.DefaultRaycastLayers) {
+        private static object _OverlapCircle(FPVector2 point, FP radius, Physics2D.BodySpecialSensor sensorType, int layerMask = UnityEngine.Physics.DefaultRaycastLayers) {
             return OverlapGeneric(new Physics2D.CircleShape(radius, 1), point, sensorType, layerMask);
         }
 
@@ -63,7 +63,7 @@ namespace KBEngine
         *  @param radius Radius of the circle.
         *  @param layerMask Unity's layer mask to filter objects.
         **/
-        public static FPCollider2D OverlapCircle(TSVector2 point, FP radius, int layerMask = UnityEngine.Physics.DefaultRaycastLayers) {
+        public static FPCollider2D OverlapCircle(FPVector2 point, FP radius, int layerMask = UnityEngine.Physics.DefaultRaycastLayers) {
             return (FPCollider2D) _OverlapCircle(point, radius, Physics2D.BodySpecialSensor.ActiveOnce, layerMask);
         }
 
@@ -74,7 +74,7 @@ namespace KBEngine
         *  @param radius Radius of the circle.
         *  @param layerMask Unity's layer mask to filter objects.
         **/
-        public static FPCollider2D[] OverlapCircleAll(TSVector2 point, FP radius, int layerMask = UnityEngine.Physics.DefaultRaycastLayers) {
+        public static FPCollider2D[] OverlapCircleAll(FPVector2 point, FP radius, int layerMask = UnityEngine.Physics.DefaultRaycastLayers) {
             return (FPCollider2D[]) _OverlapCircle(point, radius, Physics2D.BodySpecialSensor.ActiveAll, layerMask);
         }
 
@@ -85,16 +85,16 @@ namespace KBEngine
         *  @param radius Bottom-right corner of the rectangle.
         *  @param layerMask Unity's layer mask to filter objects.
         **/
-        public static object _OverlapArea(TSVector2 pointA, TSVector2 pointB, Physics2D.BodySpecialSensor sensorType, int layerMask = UnityEngine.Physics.DefaultRaycastLayers) {
-            TSVector2 center;
+        public static object _OverlapArea(FPVector2 pointA, FPVector2 pointB, Physics2D.BodySpecialSensor sensorType, int layerMask = UnityEngine.Physics.DefaultRaycastLayers) {
+            FPVector2 center;
             center.x = (pointA.x + pointB.x) * FP.Half;
             center.y = (pointA.y + pointB.y) * FP.Half;
 
             Physics2D.Vertices vertices = new Physics2D.Vertices(4);
-            vertices.Add(new TSVector2(pointA.x, pointA.y) - center);
-            vertices.Add(new TSVector2(pointB.x, pointA.y) - center);
-            vertices.Add(new TSVector2(pointB.x, pointB.y) - center);
-            vertices.Add(new TSVector2(pointA.x, pointB.y) - center);
+            vertices.Add(new FPVector2(pointA.x, pointA.y) - center);
+            vertices.Add(new FPVector2(pointB.x, pointA.y) - center);
+            vertices.Add(new FPVector2(pointB.x, pointB.y) - center);
+            vertices.Add(new FPVector2(pointA.x, pointB.y) - center);
 
             return OverlapGeneric(new Physics2D.PolygonShape(vertices, 1), center, sensorType, layerMask);
         }
@@ -106,7 +106,7 @@ namespace KBEngine
         *  @param radius Bottom-right corner of the rectangle.
         *  @param layerMask Unity's layer mask to filter objects.
         **/
-        public static FPCollider2D OverlapArea(TSVector2 pointA, TSVector2 pointB, int layerMask = UnityEngine.Physics.DefaultRaycastLayers) {
+        public static FPCollider2D OverlapArea(FPVector2 pointA, FPVector2 pointB, int layerMask = UnityEngine.Physics.DefaultRaycastLayers) {
             return (FPCollider2D) _OverlapArea(pointA, pointB, Physics2D.BodySpecialSensor.ActiveOnce, layerMask);
         }
 
@@ -117,7 +117,7 @@ namespace KBEngine
         *  @param radius Bottom-right corner of the rectangle.
         *  @param layerMask Unity's layer mask to filter objects.
         **/
-        public static FPCollider2D[] OverlapAreaAll(TSVector2 pointA, TSVector2 pointB, int layerMask = UnityEngine.Physics.DefaultRaycastLayers) {
+        public static FPCollider2D[] OverlapAreaAll(FPVector2 pointA, FPVector2 pointB, int layerMask = UnityEngine.Physics.DefaultRaycastLayers) {
             return (FPCollider2D[]) _OverlapArea(pointA, pointB, Physics2D.BodySpecialSensor.ActiveAll, layerMask);
         }
 
@@ -127,7 +127,7 @@ namespace KBEngine
         *  @param point Center of the point in world space.
         *  @param layerMask Unity's layer mask to filter objects.
         **/
-        public static FPCollider2D OverlapPoint(TSVector2 point, int layerMask = UnityEngine.Physics.DefaultRaycastLayers) {
+        public static FPCollider2D OverlapPoint(FPVector2 point, int layerMask = UnityEngine.Physics.DefaultRaycastLayers) {
             return (FPCollider2D)_OverlapCircle(point, POINT_RADIUS, Physics2D.BodySpecialSensor.ActiveOnce, layerMask);
         }
 
@@ -137,11 +137,11 @@ namespace KBEngine
         *  @param point Center of the point in world space.
         *  @param layerMask Unity's layer mask to filter objects.
         **/
-        public static FPCollider2D[] OverlapPointAll(TSVector2 point, int layerMask = UnityEngine.Physics.DefaultRaycastLayers) {
+        public static FPCollider2D[] OverlapPointAll(FPVector2 point, int layerMask = UnityEngine.Physics.DefaultRaycastLayers) {
             return (FPCollider2D[])_OverlapCircle(point, POINT_RADIUS, Physics2D.BodySpecialSensor.ActiveAll, layerMask);
         }
 
-        private static object _OverlapBox(TSVector2 point, TSVector2 size, FP angle, Physics2D.BodySpecialSensor sensorType, int layerMask = UnityEngine.Physics.DefaultRaycastLayers) {
+        private static object _OverlapBox(FPVector2 point, FPVector2 size, FP angle, Physics2D.BodySpecialSensor sensorType, int layerMask = UnityEngine.Physics.DefaultRaycastLayers) {
             size *= FP.Half;
             angle *= FP.Deg2Rad;
 
@@ -156,7 +156,7 @@ namespace KBEngine
         *  @param angle Rotation angle in degrees of the box.
         *  @param layerMask Unity's layer mask to filter objects.
         **/
-        public static FPCollider2D OverlapBox(TSVector2 point, TSVector2 size, FP angle, int layerMask = UnityEngine.Physics.DefaultRaycastLayers) {
+        public static FPCollider2D OverlapBox(FPVector2 point, FPVector2 size, FP angle, int layerMask = UnityEngine.Physics.DefaultRaycastLayers) {
             return (FPCollider2D) _OverlapBox(point, size, angle, Physics2D.BodySpecialSensor.ActiveOnce, layerMask);
         }
 
@@ -168,11 +168,11 @@ namespace KBEngine
         *  @param angle Rotation angle in degrees of the box.
         *  @param layerMask Unity's layer mask to filter objects.
         **/
-        public static FPCollider2D[] OverlapBoxAll(TSVector2 point, TSVector2 size, FP angle, int layerMask = UnityEngine.Physics.DefaultRaycastLayers) {
+        public static FPCollider2D[] OverlapBoxAll(FPVector2 point, FPVector2 size, FP angle, int layerMask = UnityEngine.Physics.DefaultRaycastLayers) {
             return (FPCollider2D[]) _OverlapBox(point, size, angle, Physics2D.BodySpecialSensor.ActiveAll, layerMask);
         }
 
-        private static object _OverlapCapsule(TSVector2 point, TSVector2 size, TSCapsuleDirection2D direction, FP angle, Physics2D.BodySpecialSensor sensorType, int layerMask = UnityEngine.Physics.DefaultRaycastLayers) {
+        private static object _OverlapCapsule(FPVector2 point, FPVector2 size, TSCapsuleDirection2D direction, FP angle, Physics2D.BodySpecialSensor sensorType, int layerMask = UnityEngine.Physics.DefaultRaycastLayers) {
             if (direction == TSCapsuleDirection2D.HORIZONTAL) {
                 FP aux = size.y;
                 size.y = size.x;
@@ -198,7 +198,7 @@ namespace KBEngine
         *  @param angle Rotation angle in degrees of the capsule.
         *  @param layerMask Unity's layer mask to filter objects.
         **/
-        public static FPCollider2D OverlapCapsule(TSVector2 point, TSVector2 size, TSCapsuleDirection2D direction, FP angle, int layerMask = UnityEngine.Physics.DefaultRaycastLayers) {
+        public static FPCollider2D OverlapCapsule(FPVector2 point, FPVector2 size, TSCapsuleDirection2D direction, FP angle, int layerMask = UnityEngine.Physics.DefaultRaycastLayers) {
             return (FPCollider2D) _OverlapCapsule(point, size, direction, angle, Physics2D.BodySpecialSensor.ActiveOnce, layerMask);
         }
 
@@ -211,22 +211,22 @@ namespace KBEngine
         *  @param angle Rotation angle in degrees of the capsule.
         *  @param layerMask Unity's layer mask to filter objects.
         **/
-        public static FPCollider2D[] OverlapCapsuleAll(TSVector2 point, TSVector2 size, TSCapsuleDirection2D direction, FP angle, int layerMask = UnityEngine.Physics.DefaultRaycastLayers) {
+        public static FPCollider2D[] OverlapCapsuleAll(FPVector2 point, FPVector2 size, TSCapsuleDirection2D direction, FP angle, int layerMask = UnityEngine.Physics.DefaultRaycastLayers) {
             return (FPCollider2D[]) _OverlapCapsule(point, size, direction, angle, Physics2D.BodySpecialSensor.ActiveAll, layerMask);
         }
 
-        public static object _CircleCast(TSVector2 origin, FP radius, TSVector2 direction, FP distance, Physics2D.BodySpecialSensor sensorType, int layerMask = UnityEngine.Physics.DefaultRaycastLayers) {
+        public static object _CircleCast(FPVector2 origin, FP radius, FPVector2 direction, FP distance, Physics2D.BodySpecialSensor sensorType, int layerMask = UnityEngine.Physics.DefaultRaycastLayers) {
             if (distance + radius > FP.MaxValue) {
                 distance = FP.MaxValue - radius;
             }
 
             direction.Normalize();
 
-            TSVector2 offsetToCenter = ((direction * distance) * FP.Half);
+            FPVector2 offsetToCenter = ((direction * distance) * FP.Half);
             offsetToCenter.x = FP.Abs(offsetToCenter.x);
             offsetToCenter.y = FP.Abs(offsetToCenter.y);
 
-            FP angle = TSVector2.Angle(direction, TSVector2.right);
+            FP angle = FPVector2.Angle(direction, FPVector2.right);
 
             if (direction.x <= 0 && direction.y >= 0) {
                 offsetToCenter.x = -offsetToCenter.x;
@@ -239,9 +239,9 @@ namespace KBEngine
                 angle = -angle;
             }
 
-            TSVector2 center = origin + offsetToCenter;
+            FPVector2 center = origin + offsetToCenter;
 
-            object result = _OverlapCapsule(center, new TSVector2(distance + radius * 2, radius * 2), TSCapsuleDirection2D.HORIZONTAL, -angle, sensorType, layerMask);
+            object result = _OverlapCapsule(center, new FPVector2(distance + radius * 2, radius * 2), TSCapsuleDirection2D.HORIZONTAL, -angle, sensorType, layerMask);
 
             if (result is FPCollider2D) {
                 return new FPRaycastHit2D((FPCollider2D) result);
@@ -262,11 +262,11 @@ namespace KBEngine
         *  
         *  @param origin Origin of the circle in world space.
         *  @param radius Radius of the circle.
-        *  @param direction Direction {@link TSVector2} of the cast.
+        *  @param direction Direction {@link FPVector2} of the cast.
         *  @param distance Max distance to reach.
         *  @param layerMask Unity's layer mask to filter objects.
         **/
-        public static FPRaycastHit2D CircleCast(TSVector2 origin, FP radius, TSVector2 direction, FP distance, int layerMask = UnityEngine.Physics.DefaultRaycastLayers) {
+        public static FPRaycastHit2D CircleCast(FPVector2 origin, FP radius, FPVector2 direction, FP distance, int layerMask = UnityEngine.Physics.DefaultRaycastLayers) {
             return (FPRaycastHit2D) _CircleCast(origin, radius, direction, distance, Physics2D.BodySpecialSensor.ActiveOnce, layerMask);
         }
 
@@ -275,19 +275,19 @@ namespace KBEngine
         *  
         *  @param origin Origin of the circle in world space.
         *  @param radius Radius of the circle.
-        *  @param direction Direction {@link TSVector2} of the cast.
+        *  @param direction Direction {@link FPVector2} of the cast.
         *  @param distance Max distance to reach.
         *  @param layerMask Unity's layer mask to filter objects.
         **/
-        public static FPRaycastHit2D[] CircleCastAll(TSVector2 origin, FP radius, TSVector2 direction, FP distance, int layerMask = UnityEngine.Physics.DefaultRaycastLayers) {
+        public static FPRaycastHit2D[] CircleCastAll(FPVector2 origin, FP radius, FPVector2 direction, FP distance, int layerMask = UnityEngine.Physics.DefaultRaycastLayers) {
             return (FPRaycastHit2D[]) _CircleCast(origin, radius, direction, distance, Physics2D.BodySpecialSensor.ActiveAll, layerMask);
         }
 
-        public static FPRaycastHit2D Raycast(TSVector2 origin, TSVector2 direction, FP distance) {
+        public static FPRaycastHit2D Raycast(FPVector2 origin, FPVector2 direction, FP distance) {
             return Physics2DWorldManager.instance.Raycast(origin, direction, distance);
         }
 
-        public static FPRaycastHit2D[] RaycastAll(TSVector2 origin, TSVector2 direction, FP distance) {
+        public static FPRaycastHit2D[] RaycastAll(FPVector2 origin, FPVector2 direction, FP distance) {
             return Physics2DWorldManager.instance.RaycastAll(origin, direction, distance);
         }
 

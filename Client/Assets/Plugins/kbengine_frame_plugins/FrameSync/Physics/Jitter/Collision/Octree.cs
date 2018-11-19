@@ -110,7 +110,7 @@ namespace KBEngine.Physics3D {
             public TSBBox box;
         }
 
-        private TSVector[] positions;
+        private FPVector[] positions;
         private TSBBox[] triBoxes;
         private Node[] nodes;
         //private UInt16[] nodeStack;
@@ -142,10 +142,10 @@ namespace KBEngine.Physics3D {
         /// <param name="positions">Vertices.</param>
         /// <param name="tris">Indices.</param>
         #region public void AddTriangles(List<JVector> positions, List<TriangleVertexIndices> tris)
-        public void SetTriangles(List<TSVector> positions, List<TriangleVertexIndices> tris)
+        public void SetTriangles(List<FPVector> positions, List<TriangleVertexIndices> tris)
         {
             // copy the position data into a array
-            this.positions = new TSVector[positions.Count];
+            this.positions = new FPVector[positions.Count];
             positions.CopyTo(this.positions);
 
             // copy the triangles
@@ -164,21 +164,21 @@ namespace KBEngine.Physics3D {
             triBoxes = new TSBBox[tris.Length];
 
             // create an infinite size root box
-            rootNodeBox = new TSBBox(new TSVector(FP.PositiveInfinity, FP.PositiveInfinity, FP.PositiveInfinity),
-                                           new TSVector(FP.NegativeInfinity, FP.NegativeInfinity, FP.NegativeInfinity));
+            rootNodeBox = new TSBBox(new FPVector(FP.PositiveInfinity, FP.PositiveInfinity, FP.PositiveInfinity),
+                                           new FPVector(FP.NegativeInfinity, FP.NegativeInfinity, FP.NegativeInfinity));
 
 
             for (int i = 0; i < tris.Length; i++)
             {
-                TSVector.Min(ref positions[tris[i].I1], ref positions[tris[i].I2], out triBoxes[i].min);
-                TSVector.Min(ref positions[tris[i].I0], ref triBoxes[i].min, out triBoxes[i].min);
+                FPVector.Min(ref positions[tris[i].I1], ref positions[tris[i].I2], out triBoxes[i].min);
+                FPVector.Min(ref positions[tris[i].I0], ref triBoxes[i].min, out triBoxes[i].min);
 
-                TSVector.Max(ref positions[tris[i].I1], ref positions[tris[i].I2], out triBoxes[i].max);
-                TSVector.Max(ref positions[tris[i].I0], ref triBoxes[i].max, out triBoxes[i].max);
+                FPVector.Max(ref positions[tris[i].I1], ref positions[tris[i].I2], out triBoxes[i].max);
+                FPVector.Max(ref positions[tris[i].I0], ref triBoxes[i].max, out triBoxes[i].max);
 
                 // get size of the root box
-                TSVector.Min(ref rootNodeBox.min, ref triBoxes[i].min, out rootNodeBox.min);
-                TSVector.Max(ref rootNodeBox.max, ref triBoxes[i].max, out rootNodeBox.max);
+                FPVector.Min(ref rootNodeBox.min, ref triBoxes[i].min, out rootNodeBox.min);
+                FPVector.Max(ref rootNodeBox.max, ref triBoxes[i].max, out rootNodeBox.max);
             }
 
             List<BuildNode> buildNodes = new List<BuildNode>();
@@ -272,7 +272,7 @@ namespace KBEngine.Physics3D {
         /// <param name="positions">Vertices.</param>
         /// <param name="tris">Indices.</param>
         #region Constructor
-        public Octree(List<TSVector> positions, List<TriangleVertexIndices> tris)
+        public Octree(List<FPVector> positions, List<TriangleVertexIndices> tris)
         {
             SetTriangles(positions, tris);
             BuildOctree();
@@ -288,22 +288,22 @@ namespace KBEngine.Physics3D {
         #region  private void CreateAABox(ref JBBox aabb, EChild child,out JBBox result)
         private void CreateAABox(ref TSBBox aabb, EChild child,out TSBBox result)
         {
-            TSVector dims;
-            TSVector.Subtract(ref aabb.max, ref aabb.min, out dims);
-            TSVector.Multiply(ref dims, FP.Half, out dims);
+            FPVector dims;
+            FPVector.Subtract(ref aabb.max, ref aabb.min, out dims);
+            FPVector.Multiply(ref dims, FP.Half, out dims);
 
-            TSVector offset = TSVector.zero;
+            FPVector offset = FPVector.zero;
 
             switch (child)
             {
-                case EChild.PPP: offset = new TSVector(1, 1, 1); break;
-                case EChild.PPM: offset = new TSVector(1, 1, 0); break;
-                case EChild.PMP: offset = new TSVector(1, 0, 1); break;
-                case EChild.PMM: offset = new TSVector(1, 0, 0); break;
-                case EChild.MPP: offset = new TSVector(0, 1, 1); break;
-                case EChild.MPM: offset = new TSVector(0, 1, 0); break;
-                case EChild.MMP: offset = new TSVector(0, 0, 1); break;
-                case EChild.MMM: offset = new TSVector(0, 0, 0); break;
+                case EChild.PPP: offset = new FPVector(1, 1, 1); break;
+                case EChild.PPM: offset = new FPVector(1, 1, 0); break;
+                case EChild.PMP: offset = new FPVector(1, 0, 1); break;
+                case EChild.PMM: offset = new FPVector(1, 0, 0); break;
+                case EChild.MPP: offset = new FPVector(0, 1, 1); break;
+                case EChild.MPM: offset = new FPVector(0, 1, 0); break;
+                case EChild.MMP: offset = new FPVector(0, 0, 1); break;
+                case EChild.MMM: offset = new FPVector(0, 0, 0); break;
 
                 default:
                     System.Diagnostics.Debug.WriteLine("Octree.CreateAABox  got impossible child");
@@ -311,17 +311,17 @@ namespace KBEngine.Physics3D {
             }
 
             result = new TSBBox();
-            result.min = new TSVector(offset.x * dims.x, offset.y * dims.y, offset.z * dims.z);
-            TSVector.Add(ref result.min, ref aabb.min, out result.min);
+            result.min = new FPVector(offset.x * dims.x, offset.y * dims.y, offset.z * dims.z);
+            FPVector.Add(ref result.min, ref aabb.min, out result.min);
 
-            TSVector.Add(ref result.min, ref dims, out result.max);
+            FPVector.Add(ref result.min, ref dims, out result.max);
 
             // expand it just a tiny bit just to be safe!
             FP extra = FP.EN5;
 
-            TSVector temp; TSVector.Multiply(ref dims, extra, out temp);
-            TSVector.Subtract(ref result.min, ref temp, out result.min);
-            TSVector.Add(ref result.max, ref temp, out result.max);
+            FPVector temp; FPVector.Multiply(ref dims, extra, out temp);
+            FPVector.Subtract(ref result.min, ref temp, out result.min);
+            FPVector.Add(ref result.max, ref temp, out result.max);
         }
         #endregion
 
@@ -401,7 +401,7 @@ namespace KBEngine.Physics3D {
         /// <param name="triangles"></param>
         /// <returns></returns>
         #region public int GetTrianglesIntersectingtRay(JVector rayOrigin, JVector rayDelta)
-        public int GetTrianglesIntersectingRay(List<int> triangles, TSVector rayOrigin, TSVector rayDelta)
+        public int GetTrianglesIntersectingRay(List<int> triangles, FPVector rayOrigin, FPVector rayDelta)
         {
             if (nodes.Length == 0)
                 return 0;
@@ -459,7 +459,7 @@ namespace KBEngine.Physics3D {
         /// <param name="vertex">The index of the vertex</param>
         /// <returns></returns>
         #region public JVector GetVertex(int vertex)
-        public TSVector GetVertex(int vertex)
+        public FPVector GetVertex(int vertex)
         {
             return positions[vertex];
         }
@@ -469,7 +469,7 @@ namespace KBEngine.Physics3D {
         /// </summary>
         /// <param name="vertex">The index of the vertex</param>
         /// <param name="result"></param>
-        public void GetVertex(int vertex, out TSVector result)
+        public void GetVertex(int vertex, out FPVector result)
         {
             result = positions[vertex];
         }

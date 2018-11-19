@@ -6,11 +6,11 @@
 
         public RigidBody body1, body2;
 
-        public TSVector normal, tangent;
+        public FPVector normal, tangent;
 
-		public TSVector realRelPos1, realRelPos2;
-		public TSVector relativePos1, relativePos2;
-		public TSVector p1, p2;
+		public FPVector realRelPos1, realRelPos2;
+		public FPVector relativePos1, relativePos2;
+		public FPVector p1, p2;
 
 		public FP accumulatedNormalImpulse;
 		public FP accumulatedTangentImpulse;

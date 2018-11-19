@@ -17,7 +17,7 @@ namespace KBEngine.Physics2D
         /// <param name="linkDensity">The link density.</param>
         /// <param name="attachRopeJoint">Creates a rope joint between start and end. This enforces the length of the rope. Said in another way: it makes the rope less bouncy.</param>
         /// <returns></returns>
-        public static Path CreateChain(World world, TSVector2 start, TSVector2 end, FP linkWidth, FP linkHeight, int numberOfLinks, FP linkDensity, bool attachRopeJoint)
+        public static Path CreateChain(World world, FPVector2 start, FPVector2 end, FP linkWidth, FP linkHeight, int numberOfLinks, FP linkDensity, bool attachRopeJoint)
         {
             Debug.Assert(numberOfLinks >= 2);
 
@@ -49,10 +49,10 @@ namespace KBEngine.Physics2D
             //}
 
             //Attach all the chainlinks together with a revolute joint
-            PathManager.AttachBodiesWithRevoluteJoint(world, chainLinks, new TSVector2(0, -linkHeight), new TSVector2(0, linkHeight), false, false);
+            PathManager.AttachBodiesWithRevoluteJoint(world, chainLinks, new FPVector2(0, -linkHeight), new FPVector2(0, linkHeight), false, false);
 
             if (attachRopeJoint)
-                JointFactory.CreateRopeJoint(world, chainLinks[0], chainLinks[chainLinks.Count - 1], TSVector2.zero, TSVector2.zero);
+                JointFactory.CreateRopeJoint(world, chainLinks[0], chainLinks[chainLinks.Count - 1], FPVector2.zero, FPVector2.zero);
 
             return (path);
         }

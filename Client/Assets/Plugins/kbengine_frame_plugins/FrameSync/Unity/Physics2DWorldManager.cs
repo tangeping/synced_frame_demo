@@ -24,7 +24,7 @@ namespace KBEngine {
         /**
          *  @brief Property access to simulated gravity.
          **/
-        public TSVector Gravity {
+        public FPVector Gravity {
             get;
             set;
         }
@@ -48,7 +48,7 @@ namespace KBEngine {
 
             Settings.ContinuousPhysics = SpeculativeContacts;
 
-            world = new KBEngine.Physics2D.World(new TSVector2(Gravity.x, Gravity.y));
+            world = new KBEngine.Physics2D.World(new FPVector2(Gravity.x, Gravity.y));
             ContactManager.physicsManager = this;
 
             world.BodyRemoved += OnRemovedRigidBody;
@@ -230,10 +230,10 @@ namespace KBEngine {
             return go.layer;
         }
 
-        public FPRaycastHit2D Raycast(TSVector2 origin, TSVector2 direction, FP distance) {
+        public FPRaycastHit2D Raycast(FPVector2 origin, FPVector2 direction, FP distance) {
             FPRaycastHit2D result = null;
 
-            Func<KBEngine.Physics2D.Fixture, TSVector2, TSVector2, FP, FP> callback = delegate (KBEngine.Physics2D.Fixture fixture, TSVector2 point, TSVector2 normal, FP fraction) {
+            Func<KBEngine.Physics2D.Fixture, FPVector2, FPVector2, FP, FP> callback = delegate (KBEngine.Physics2D.Fixture fixture, FPVector2 point, FPVector2 normal, FP fraction) {
                 result = new FPRaycastHit2D(gameObjectMap[fixture.Body].GetComponent<FPCollider2D>());
                 return 0;
             };
@@ -243,10 +243,10 @@ namespace KBEngine {
             return result;
         }
 
-        public FPRaycastHit2D[] RaycastAll(TSVector2 origin, TSVector2 direction, FP distance) {
+        public FPRaycastHit2D[] RaycastAll(FPVector2 origin, FPVector2 direction, FP distance) {
             List<FPRaycastHit2D> result = new List<FPRaycastHit2D>();
 
-            Func<KBEngine.Physics2D.Fixture, TSVector2, TSVector2, FP, FP> callback = delegate (KBEngine.Physics2D.Fixture fixture, TSVector2 point, TSVector2 normal, FP fraction) {
+            Func<KBEngine.Physics2D.Fixture, FPVector2, FPVector2, FP, FP> callback = delegate (KBEngine.Physics2D.Fixture fixture, FPVector2 point, FPVector2 normal, FP fraction) {
                 result.Add(new FPRaycastHit2D(gameObjectMap[fixture.Body].GetComponent<FPCollider2D>()));
                 return -1;
             };

@@ -31,9 +31,9 @@ namespace KBEngine.Physics3D {
     public interface IDebugDrawer
     {
 
-        void DrawLine(TSVector start, TSVector end);
-        void DrawPoint(TSVector pos);
-        void DrawTriangle(TSVector pos1,TSVector pos2,TSVector pos3);
+        void DrawLine(FPVector start, FPVector end);
+        void DrawPoint(FPVector pos);
+        void DrawTriangle(FPVector pos1,FPVector pos2,FPVector pos3);
 
         
     }

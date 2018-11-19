@@ -96,8 +96,8 @@ namespace KBEngine.Physics2D
     /// </summary>
     public class PrismaticJoint : Joint2D
     {
-        private TSVector2 _localYAxisA;
-        private TSVector _impulse;
+        private FPVector2 _localYAxisA;
+        private FPVector _impulse;
         private FP _lowerTranslation;
         private FP _upperTranslation;
         private FP _maxMotorForce;
@@ -109,18 +109,18 @@ namespace KBEngine.Physics2D
         // Solver temp
         private int _indexA;
         private int _indexB;
-        private TSVector2 _localCenterA;
-        private TSVector2 _localCenterB;
+        private FPVector2 _localCenterA;
+        private FPVector2 _localCenterB;
         private FP _invMassA;
         private FP _invMassB;
         private FP _invIA;
         private FP _invIB;
-        private TSVector2 _axis, _perp;
+        private FPVector2 _axis, _perp;
         private FP _s1, _s2;
         private FP _a1, _a2;
         private Mat33 _K;
         private FP _motorMass;
-        private TSVector2 _axis1;
+        private FPVector2 _axis1;
 
         internal PrismaticJoint()
         {
@@ -141,19 +141,19 @@ namespace KBEngine.Physics2D
         /// <param name="anchorB">The second body anchor.</param>
         /// <param name="axis">The axis.</param>
         /// <param name="useWorldCoordinates">Set to true if you are using world coordinates as anchors.</param>
-        public PrismaticJoint(Body bodyA, Body bodyB, TSVector2 anchorA, TSVector2 anchorB, TSVector2 axis, bool useWorldCoordinates = false)
+        public PrismaticJoint(Body bodyA, Body bodyB, FPVector2 anchorA, FPVector2 anchorB, FPVector2 axis, bool useWorldCoordinates = false)
             : base(bodyA, bodyB)
         {
             Initialize(anchorA, anchorB, axis, useWorldCoordinates);
         }
 
-        public PrismaticJoint(Body bodyA, Body bodyB, TSVector2 anchor, TSVector2 axis, bool useWorldCoordinates = false)
+        public PrismaticJoint(Body bodyA, Body bodyB, FPVector2 anchor, FPVector2 axis, bool useWorldCoordinates = false)
             : base(bodyA, bodyB)
         {
             Initialize(anchor, anchor, axis, useWorldCoordinates);
         }
 
-        private void Initialize(TSVector2 localAnchorA, TSVector2 localAnchorB, TSVector2 axis, bool useWorldCoordinates)
+        private void Initialize(FPVector2 localAnchorA, FPVector2 localAnchorB, FPVector2 axis, bool useWorldCoordinates)
         {
             JointType = JointType.Prismatic;
 
@@ -177,20 +177,20 @@ namespace KBEngine.Physics2D
         /// <summary>
         /// The local anchor point on BodyA
         /// </summary>
-        public TSVector2 LocalAnchorA { get; set; }
+        public FPVector2 LocalAnchorA { get; set; }
 
         /// <summary>
         /// The local anchor point on BodyB
         /// </summary>
-        public TSVector2 LocalAnchorB { get; set; }
+        public FPVector2 LocalAnchorB { get; set; }
 
-        public override TSVector2 WorldAnchorA
+        public override FPVector2 WorldAnchorA
         {
             get { return BodyA.GetWorldPoint(LocalAnchorA); }
             set { LocalAnchorA = BodyA.GetLocalPoint(value); }
         }
 
-        public override TSVector2 WorldAnchorB
+        public override FPVector2 WorldAnchorB
         {
             get { return BodyB.GetWorldPoint(LocalAnchorB); }
             set { LocalAnchorB = BodyB.GetLocalPoint(value); }
@@ -204,10 +204,10 @@ namespace KBEngine.Physics2D
         {
             get
             {
-                TSVector2 d = BodyB.GetWorldPoint(LocalAnchorB) - BodyA.GetWorldPoint(LocalAnchorA);
-                TSVector2 axis = BodyA.GetWorldVector(LocalXAxis);
+                FPVector2 d = BodyB.GetWorldPoint(LocalAnchorB) - BodyA.GetWorldPoint(LocalAnchorA);
+                FPVector2 axis = BodyA.GetWorldVector(LocalXAxis);
 
-                return TSVector2.Dot(d, axis);
+                return FPVector2.Dot(d, axis);
             }
         }
 
@@ -223,19 +223,19 @@ namespace KBEngine.Physics2D
                 BodyA.GetTransform(out xf1);
                 BodyB.GetTransform(out xf2);
 
-                TSVector2 r1 = MathUtils.Mul(ref xf1.q, LocalAnchorA - BodyA.LocalCenter);
-                TSVector2 r2 = MathUtils.Mul(ref xf2.q, LocalAnchorB - BodyB.LocalCenter);
-                TSVector2 p1 = BodyA._sweep.C + r1;
-                TSVector2 p2 = BodyB._sweep.C + r2;
-                TSVector2 d = p2 - p1;
-                TSVector2 axis = BodyA.GetWorldVector(LocalXAxis);
+                FPVector2 r1 = MathUtils.Mul(ref xf1.q, LocalAnchorA - BodyA.LocalCenter);
+                FPVector2 r2 = MathUtils.Mul(ref xf2.q, LocalAnchorB - BodyB.LocalCenter);
+                FPVector2 p1 = BodyA._sweep.C + r1;
+                FPVector2 p2 = BodyB._sweep.C + r2;
+                FPVector2 d = p2 - p1;
+                FPVector2 axis = BodyA.GetWorldVector(LocalXAxis);
 
-                TSVector2 v1 = BodyA._linearVelocity;
-                TSVector2 v2 = BodyB._linearVelocity;
+                FPVector2 v1 = BodyA._linearVelocity;
+                FPVector2 v2 = BodyB._linearVelocity;
                 FP w1 = BodyA._angularVelocity;
                 FP w2 = BodyB._angularVelocity;
 
-                FP speed = TSVector2.Dot(d, MathUtils.Cross(w1, axis)) + TSVector2.Dot(axis, v2 + MathUtils.Cross(w2, r2) - v1 - MathUtils.Cross(w1, r1));
+                FP speed = FPVector2.Dot(d, MathUtils.Cross(w1, axis)) + FPVector2.Dot(axis, v2 + MathUtils.Cross(w2, r2) - v1 - MathUtils.Cross(w1, r1));
                 return speed;
             }
         }
@@ -372,7 +372,7 @@ namespace KBEngine.Physics2D
         /// <summary>
         /// The axis at which the joint moves.
         /// </summary>
-        public TSVector2 Axis
+        public FPVector2 Axis
         {
             get { return _axis1; }
             set
@@ -387,14 +387,14 @@ namespace KBEngine.Physics2D
         /// <summary>
         /// The axis in local coordinates relative to BodyA
         /// </summary>
-        public TSVector2 LocalXAxis { get; private set; }
+        public FPVector2 LocalXAxis { get; private set; }
 
         /// <summary>
         /// The reference angle.
         /// </summary>
         public FP ReferenceAngle { get; set; }
 
-        public override TSVector2 GetReactionForce(FP invDt)
+        public override FPVector2 GetReactionForce(FP invDt)
         {
             return invDt * (_impulse.x * _perp + (MotorImpulse + _impulse.z) * _axis);
         }
@@ -415,22 +415,22 @@ namespace KBEngine.Physics2D
             _invIA = BodyA._invI;
             _invIB = BodyB._invI;
 
-            TSVector2 cA = data.positions[_indexA].c;
+            FPVector2 cA = data.positions[_indexA].c;
             FP aA = data.positions[_indexA].a;
-            TSVector2 vA = data.velocities[_indexA].v;
+            FPVector2 vA = data.velocities[_indexA].v;
             FP wA = data.velocities[_indexA].w;
 
-            TSVector2 cB = data.positions[_indexB].c;
+            FPVector2 cB = data.positions[_indexB].c;
             FP aB = data.positions[_indexB].a;
-            TSVector2 vB = data.velocities[_indexB].v;
+            FPVector2 vB = data.velocities[_indexB].v;
             FP wB = data.velocities[_indexB].w;
 
             Rot qA = new Rot(aA), qB = new Rot(aB);
 
             // Compute the effective masses.
-            TSVector2 rA = MathUtils.Mul(qA, LocalAnchorA - _localCenterA);
-            TSVector2 rB = MathUtils.Mul(qB, LocalAnchorB - _localCenterB);
-            TSVector2 d = (cB - cA) + rB - rA;
+            FPVector2 rA = MathUtils.Mul(qA, LocalAnchorA - _localCenterA);
+            FPVector2 rB = MathUtils.Mul(qB, LocalAnchorB - _localCenterB);
+            FPVector2 d = (cB - cA) + rB - rA;
 
             FP mA = _invMassA, mB = _invMassB;
             FP iA = _invIA, iB = _invIB;
@@ -467,15 +467,15 @@ namespace KBEngine.Physics2D
                 FP k23 = iA * _a1 + iB * _a2;
                 FP k33 = mA + mB + iA * _a1 * _a1 + iB * _a2 * _a2;
 
-                _K.ex = new TSVector(k11, k12, k13);
-                _K.ey = new TSVector(k12, k22, k23);
-                _K.ez = new TSVector(k13, k23, k33);
+                _K.ex = new FPVector(k11, k12, k13);
+                _K.ey = new FPVector(k12, k22, k23);
+                _K.ez = new FPVector(k13, k23, k33);
             }
 
             // Compute motor and limit terms.
             if (_enableLimit)
             {
-                FP jointTranslation = TSVector2.Dot(_axis, d);
+                FP jointTranslation = FPVector2.Dot(_axis, d);
                 if (FP.Abs(_upperTranslation - _lowerTranslation) < 2.0f * Settings.LinearSlop)
                 {
                     _limitState = LimitState.Equal;
@@ -519,7 +519,7 @@ namespace KBEngine.Physics2D
                 _impulse *= data.step.dtRatio;
                 MotorImpulse *= data.step.dtRatio;
 
-                TSVector2 P = _impulse.x * _perp + (MotorImpulse + _impulse.z) * _axis;
+                FPVector2 P = _impulse.x * _perp + (MotorImpulse + _impulse.z) * _axis;
                 FP LA = _impulse.x * _s1 + _impulse.y + (MotorImpulse + _impulse.z) * _a1;
                 FP LB = _impulse.x * _s2 + _impulse.y + (MotorImpulse + _impulse.z) * _a2;
 
@@ -531,7 +531,7 @@ namespace KBEngine.Physics2D
             }
             else
             {
-                _impulse = TSVector.zero;
+                _impulse = FPVector.zero;
                 MotorImpulse = 0.0f;
             }
 
@@ -543,9 +543,9 @@ namespace KBEngine.Physics2D
 
         internal override void SolveVelocityConstraints(ref SolverData data)
         {
-            TSVector2 vA = data.velocities[_indexA].v;
+            FPVector2 vA = data.velocities[_indexA].v;
             FP wA = data.velocities[_indexA].w;
-            TSVector2 vB = data.velocities[_indexB].v;
+            FPVector2 vB = data.velocities[_indexB].v;
             FP wB = data.velocities[_indexB].w;
 
             FP mA = _invMassA, mB = _invMassB;
@@ -554,14 +554,14 @@ namespace KBEngine.Physics2D
             // Solve linear motor constraint.
             if (_enableMotor && _limitState != LimitState.Equal)
             {
-                FP Cdot = TSVector2.Dot(_axis, vB - vA) + _a2 * wB - _a1 * wA;
+                FP Cdot = FPVector2.Dot(_axis, vB - vA) + _a2 * wB - _a1 * wA;
                 FP impulse = _motorMass * (_motorSpeed - Cdot);
                 FP oldImpulse = MotorImpulse;
                 FP maxImpulse = data.step.dt * _maxMotorForce;
                 MotorImpulse = MathUtils.Clamp(MotorImpulse + impulse, -maxImpulse, maxImpulse);
                 impulse = MotorImpulse - oldImpulse;
 
-                TSVector2 P = impulse * _axis;
+                FPVector2 P = impulse * _axis;
                 FP LA = impulse * _a1;
                 FP LB = impulse * _a2;
 
@@ -572,39 +572,39 @@ namespace KBEngine.Physics2D
                 wB += iB * LB;
             }
 
-            TSVector2 Cdot1 = new TSVector2();
-            Cdot1.x = TSVector2.Dot(_perp, vB - vA) + _s2 * wB - _s1 * wA;
+            FPVector2 Cdot1 = new FPVector2();
+            Cdot1.x = FPVector2.Dot(_perp, vB - vA) + _s2 * wB - _s1 * wA;
             Cdot1.y = wB - wA;
 
             if (_enableLimit && _limitState != LimitState.Inactive)
             {
                 // Solve prismatic and limit constraint in block form.
                 FP Cdot2;
-                Cdot2 = TSVector2.Dot(_axis, vB - vA) + _a2 * wB - _a1 * wA;
-                TSVector Cdot = new TSVector(Cdot1.x, Cdot1.y, Cdot2);
+                Cdot2 = FPVector2.Dot(_axis, vB - vA) + _a2 * wB - _a1 * wA;
+                FPVector Cdot = new FPVector(Cdot1.x, Cdot1.y, Cdot2);
 
-                TSVector f1 = _impulse;
-                TSVector df = _K.Solve33(Cdot * -1);
+                FPVector f1 = _impulse;
+                FPVector df = _K.Solve33(Cdot * -1);
                 _impulse += df;
 
                 if (_limitState == LimitState.AtLower)
                 {
-                    _impulse.z = KBEngine.TSMath.Max(_impulse.z, 0.0f);
+                    _impulse.z = KBEngine.FPMath.Max(_impulse.z, 0.0f);
                 }
                 else if (_limitState == LimitState.AtUpper)
                 {
-                    _impulse.z = KBEngine.TSMath.Min(_impulse.z, 0.0f);
+                    _impulse.z = KBEngine.FPMath.Min(_impulse.z, 0.0f);
                 }
 
                 // f2(1:2) = invK(1:2,1:2) * (-Cdot(1:2) - K(1:2,3) * (f2(3) - f1(3))) + f1(1:2)
-                TSVector2 b = -Cdot1 - (_impulse.z - f1.z) * new TSVector2(_K.ez.x, _K.ez.y);
-                TSVector2 f2r = _K.Solve22(b) + new TSVector2(f1.x, f1.y);
+                FPVector2 b = -Cdot1 - (_impulse.z - f1.z) * new FPVector2(_K.ez.x, _K.ez.y);
+                FPVector2 f2r = _K.Solve22(b) + new FPVector2(f1.x, f1.y);
                 _impulse.x = f2r.x;
                 _impulse.y = f2r.y;
 
                 df = _impulse - f1;
 
-                TSVector2 P = df.x * _perp + df.z * _axis;
+                FPVector2 P = df.x * _perp + df.z * _axis;
                 FP LA = df.x * _s1 + df.y + df.z * _a1;
                 FP LB = df.x * _s2 + df.y + df.z * _a2;
 
@@ -617,11 +617,11 @@ namespace KBEngine.Physics2D
             else
             {
                 // Limit is inactive, just solve the prismatic constraint in block form.
-                TSVector2 df = _K.Solve22(-Cdot1);
+                FPVector2 df = _K.Solve22(-Cdot1);
                 _impulse.x += df.x;
                 _impulse.y += df.y;
 
-                TSVector2 P = df.x * _perp;
+                FPVector2 P = df.x * _perp;
                 FP LA = df.x * _s1 + df.y;
                 FP LB = df.x * _s2 + df.y;
 
@@ -640,9 +640,9 @@ namespace KBEngine.Physics2D
 
         internal override bool SolvePositionConstraints(ref SolverData data)
         {
-            TSVector2 cA = data.positions[_indexA].c;
+            FPVector2 cA = data.positions[_indexA].c;
             FP aA = data.positions[_indexA].a;
-            TSVector2 cB = data.positions[_indexB].c;
+            FPVector2 cB = data.positions[_indexB].c;
             FP aB = data.positions[_indexB].a;
 
             Rot qA = new Rot(aA), qB = new Rot(aB);
@@ -651,21 +651,21 @@ namespace KBEngine.Physics2D
             FP iA = _invIA, iB = _invIB;
 
             // Compute fresh Jacobians
-            TSVector2 rA = MathUtils.Mul(qA, LocalAnchorA - _localCenterA);
-            TSVector2 rB = MathUtils.Mul(qB, LocalAnchorB - _localCenterB);
-            TSVector2 d = cB + rB - cA - rA;
+            FPVector2 rA = MathUtils.Mul(qA, LocalAnchorA - _localCenterA);
+            FPVector2 rB = MathUtils.Mul(qB, LocalAnchorB - _localCenterB);
+            FPVector2 d = cB + rB - cA - rA;
 
-            TSVector2 axis = MathUtils.Mul(qA, LocalXAxis);
+            FPVector2 axis = MathUtils.Mul(qA, LocalXAxis);
             FP a1 = MathUtils.Cross(d + rA, axis);
             FP a2 = MathUtils.Cross(rB, axis);
-            TSVector2 perp = MathUtils.Mul(qA, _localYAxisA);
+            FPVector2 perp = MathUtils.Mul(qA, _localYAxisA);
 
             FP s1 = MathUtils.Cross(d + rA, perp);
             FP s2 = MathUtils.Cross(rB, perp);
 
-            TSVector impulse;
-            TSVector2 C1 = new TSVector2();
-            C1.x = TSVector2.Dot(perp, d);
+            FPVector impulse;
+            FPVector2 C1 = new FPVector2();
+            C1.x = FPVector2.Dot(perp, d);
             C1.y = aB - aA - ReferenceAngle;
 
             FP linearError = FP.Abs(C1.x);
@@ -675,26 +675,26 @@ namespace KBEngine.Physics2D
             FP C2 = 0.0f;
             if (_enableLimit)
             {
-                FP translation = TSVector2.Dot(axis, d);
+                FP translation = FPVector2.Dot(axis, d);
                 if (FP.Abs(_upperTranslation - _lowerTranslation) < 2.0f * Settings.LinearSlop)
                 {
                     // Prevent large angular corrections
                     C2 = MathUtils.Clamp(translation, -Settings.MaxLinearCorrection, Settings.MaxLinearCorrection);
-                    linearError = KBEngine.TSMath.Max(linearError, FP.Abs(translation));
+                    linearError = KBEngine.FPMath.Max(linearError, FP.Abs(translation));
                     active = true;
                 }
                 else if (translation <= _lowerTranslation)
                 {
                     // Prevent large linear corrections and allow some slop.
                     C2 = MathUtils.Clamp(translation - _lowerTranslation + Settings.LinearSlop, -Settings.MaxLinearCorrection, 0.0f);
-                    linearError = KBEngine.TSMath.Max(linearError, _lowerTranslation - translation);
+                    linearError = KBEngine.FPMath.Max(linearError, _lowerTranslation - translation);
                     active = true;
                 }
                 else if (translation >= _upperTranslation)
                 {
                     // Prevent large linear corrections and allow some slop.
                     C2 = MathUtils.Clamp(translation - _upperTranslation - Settings.LinearSlop, 0.0f, Settings.MaxLinearCorrection);
-                    linearError = KBEngine.TSMath.Max(linearError, translation - _upperTranslation);
+                    linearError = KBEngine.FPMath.Max(linearError, translation - _upperTranslation);
                     active = true;
                 }
             }
@@ -714,11 +714,11 @@ namespace KBEngine.Physics2D
                 FP k33 = mA + mB + iA * a1 * a1 + iB * a2 * a2;
 
                 Mat33 K = new Mat33();
-                K.ex = new TSVector(k11, k12, k13);
-                K.ey = new TSVector(k12, k22, k23);
-                K.ez = new TSVector(k13, k23, k33);
+                K.ex = new FPVector(k11, k12, k13);
+                K.ey = new FPVector(k12, k22, k23);
+                K.ez = new FPVector(k13, k23, k33);
 
-                TSVector C = new TSVector();
+                FPVector C = new FPVector();
                 C.x = C1.x;
                 C.y = C1.y;
                 C.z = C2;
@@ -736,17 +736,17 @@ namespace KBEngine.Physics2D
                 }
 
                 Mat22 K = new Mat22();
-                K.ex = new TSVector2(k11, k12);
-                K.ey = new TSVector2(k12, k22);
+                K.ex = new FPVector2(k11, k12);
+                K.ey = new FPVector2(k12, k22);
 
-                TSVector2 impulse1 = K.Solve(-C1);
-                impulse = new TSVector();
+                FPVector2 impulse1 = K.Solve(-C1);
+                impulse = new FPVector();
                 impulse.x = impulse1.x;
                 impulse.y = impulse1.y;
                 impulse.z = 0.0f;
             }
 
-            TSVector2 P = impulse.x * perp + impulse.z * axis;
+            FPVector2 P = impulse.x * perp + impulse.z * axis;
             FP LA = impulse.x * s1 + impulse.y + impulse.z * a1;
             FP LB = impulse.x * s2 + impulse.y + impulse.z * a2;
 

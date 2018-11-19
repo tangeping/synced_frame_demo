@@ -197,19 +197,19 @@ namespace KBEngine {
         /**
          *  @brief Applies the provided force in the body. 
          *  
-         *  @param force A {@link TSVector} representing the force to be applied.
+         *  @param force A {@link FPVector} representing the force to be applied.
          **/
-        public void AddForce(TSVector force) {
+        public void AddForce(FPVector force) {
             AddForce(force, ForceMode.Force);
         }
 
         /**
          *  @brief Applies the provided force in the body. 
          *  
-         *  @param force A {@link TSVector} representing the force to be applied.
+         *  @param force A {@link FPVector} representing the force to be applied.
          *  @param mode Indicates how the force should be applied.
          **/
-        public void AddForce(TSVector force, ForceMode mode) {
+        public void AddForce(FPVector force, ForceMode mode) {
             if (mode == ForceMode.Force) {
                 tsCollider.Body.TSApplyForce(force);
             } else if (mode == ForceMode.Impulse) {
@@ -220,20 +220,20 @@ namespace KBEngine {
         /**
          *  @brief Applies the provided force in the body. 
          *  
-         *  @param force A {@link TSVector} representing the force to be applied.
+         *  @param force A {@link FPVector} representing the force to be applied.
          *  @param position Indicates the location where the force should hit.
          **/
-        public void AddForceAtPosition(TSVector force, TSVector position) {
+        public void AddForceAtPosition(FPVector force, FPVector position) {
             AddForceAtPosition(force, position, ForceMode.Impulse);
         }
 
         /**
          *  @brief Applies the provided force in the body. 
          *  
-         *  @param force A {@link TSVector} representing the force to be applied.
+         *  @param force A {@link FPVector} representing the force to be applied.
          *  @param position Indicates the location where the force should hit.
          **/
-        public void AddForceAtPosition(TSVector force, TSVector position, ForceMode mode) {
+        public void AddForceAtPosition(FPVector force, FPVector position, ForceMode mode) {
             if (mode == ForceMode.Force) {
                 tsCollider.Body.TSApplyForce(force, position);
             } else if (mode == ForceMode.Impulse) {
@@ -244,17 +244,17 @@ namespace KBEngine {
         /**
          *  @brief Returns the velocity of the body at some position in world space. 
          **/
-        public TSVector GetPointVelocity(TSVector worldPoint) {
-            TSVector directionPoint = position - tsCollider.Body.TSPosition;
-            return TSVector.Cross(tsCollider.Body.TSAngularVelocity, directionPoint) + tsCollider.Body.TSLinearVelocity;
+        public FPVector GetPointVelocity(FPVector worldPoint) {
+            FPVector directionPoint = position - tsCollider.Body.TSPosition;
+            return FPVector.Cross(tsCollider.Body.TSAngularVelocity, directionPoint) + tsCollider.Body.TSLinearVelocity;
         }
 
         /**
          *  @brief Simulates the provided tourque in the body. 
          *  
-         *  @param torque A {@link TSVector} representing the torque to be applied.
+         *  @param torque A {@link FPVector} representing the torque to be applied.
          **/
-        public void AddTorque(TSVector torque) {
+        public void AddTorque(FPVector torque) {
             tsCollider.Body.TSApplyTorque(torque);
         }
 
@@ -262,30 +262,30 @@ namespace KBEngine {
         /**
          *  @brief Changes orientation to look at target position. 
          *  
-         *  @param target A {@link TSVector} representing the position to look at.
+         *  @param target A {@link FPVector} representing the position to look at.
          **/
-        public void LookAt(TSVector target) {
-            rotation = TSQuaternion.CreateFromMatrix(TSMatrix.CreateFromLookAt(position, target));
+        public void LookAt(FPVector target) {
+            rotation = FPQuaternion.CreateFromMatrix(FPMatrix.CreateFromLookAt(position, target));
         }
 
         /**
          *  @brief Moves the body to a new position. 
          **/
-        public void MovePosition(TSVector position) {
+        public void MovePosition(FPVector position) {
             this.position = position;
         }
 
         /**
          *  @brief Rotates the body to a provided rotation. 
          **/
-        public void MoveRotation(TSQuaternion rot) {
+        public void MoveRotation(FPQuaternion rot) {
             this.rotation = rot;
         }
 
         /**
         *  @brief Position of the body. 
         **/
-        public TSVector position {
+        public FPVector position {
             get {
                 return FPTransform.position;
             }
@@ -298,7 +298,7 @@ namespace KBEngine {
         /**
         *  @brief Orientation of the body. 
         **/
-        public TSQuaternion rotation {
+        public FPQuaternion rotation {
             get {
                 return FPTransform.rotation;
             }
@@ -311,7 +311,7 @@ namespace KBEngine {
         /**
         *  @brief LinearVelocity of the body. 
         **/
-        public TSVector velocity {
+        public FPVector velocity {
             get {
                 return tsCollider.Body.TSLinearVelocity;
             }
@@ -324,7 +324,7 @@ namespace KBEngine {
         /**
         *  @brief AngularVelocity of the body. 
         **/
-        public TSVector angularVelocity {
+        public FPVector angularVelocity {
             get {
                 return tsCollider.Body.TSAngularVelocity;
             }

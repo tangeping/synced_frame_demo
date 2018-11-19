@@ -17,8 +17,8 @@ namespace KBEngine.Physics2D {
 
         public bool _enabled = true;
         public FP _angularVelocity;
-        public TSVector2 _linearVelocity;
-        public TSVector2 _force;
+        public FPVector2 _linearVelocity;
+        public FPVector2 _force;
         public FP _invI;
         public FP _invMass;
         public FP _sleepTime;

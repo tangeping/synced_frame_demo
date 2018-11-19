@@ -67,10 +67,10 @@ namespace KBEngine.Physics3D {
         /// </summary>
         public override void CalculateMassInertia()
         {
-            mass = (FP.One / (3 * FP.One)) * TSMath.Pi * radius * radius * height;
+            mass = (FP.One / (3 * FP.One)) * FPMath.Pi * radius * radius * height;
 
             // inertia through center of mass axis.
-            inertia = TSMatrix.Identity;
+            inertia = FPMatrix.Identity;
             inertia.M11 = (3 * FP.EN1 / 8) * mass * (radius * radius + 4 * height * height);
             inertia.M22 = (3 * FP.EN1) * mass * radius * radius;
             inertia.M33 = (3 * FP.EN1 / 8) * mass * (radius * radius + 4 * height * height);
@@ -78,7 +78,7 @@ namespace KBEngine.Physics3D {
             // J_x=J_y=3/20 M (R^2+4 H^2)
 
             // the supportmap center is in the half height, the real geomcenter is:
-            geomCen = TSVector.zero;
+            geomCen = FPVector.zero;
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace KBEngine.Physics3D {
         /// </summary>
         /// <param name="direction">The direction.</param>
         /// <param name="result">The result.</param>
-        public override void SupportMapping(ref TSVector direction, out TSVector result)
+        public override void SupportMapping(ref FPVector direction, out FPVector result)
         {
             FP sigma = FP.Sqrt(direction.x * direction.x + direction.z * direction.z);
 

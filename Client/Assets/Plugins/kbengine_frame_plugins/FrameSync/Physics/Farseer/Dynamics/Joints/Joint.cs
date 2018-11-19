@@ -149,13 +149,13 @@ namespace KBEngine.Physics2D
         /// Get the anchor point on bodyA in world coordinates.
         /// On some joints, this value indicate the anchor point within the world.
         /// </summary>
-        public abstract TSVector2 WorldAnchorA { get; set; }
+        public abstract FPVector2 WorldAnchorA { get; set; }
 
         /// <summary>
         /// Get the anchor point on bodyB in world coordinates.
         /// On some joints, this value indicate the anchor point within the world.
         /// </summary>
-        public abstract TSVector2 WorldAnchorB { get; set; }
+        public abstract FPVector2 WorldAnchorB { get; set; }
 
         /// <summary>
         /// Set the user data pointer.
@@ -191,7 +191,7 @@ namespace KBEngine.Physics2D
         /// Get the reaction force on body at the joint anchor in Newtons.
         /// </summary>
         /// <param name="invDt">The inverse delta time.</param>
-        public abstract TSVector2 GetReactionForce(FP invDt);
+        public abstract FPVector2 GetReactionForce(FP invDt);
 
         /// <summary>
         /// Get the reaction torque on the body at the joint anchor in N*m.

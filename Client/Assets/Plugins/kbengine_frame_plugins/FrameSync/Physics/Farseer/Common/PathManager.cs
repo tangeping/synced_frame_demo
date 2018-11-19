@@ -58,7 +58,7 @@ namespace KBEngine.Physics2D
             if (!path.Closed)
                 throw new Exception("The path must be closed to convert to a polygon.");
 
-            List<TSVector2> verts = path.GetVertices(subdivisions);
+            List<FPVector2> verts = path.GetVertices(subdivisions);
 
             List<Vertices> decomposedVerts = Triangulate.ConvexPartition(new Vertices(verts), TriangulationAlgorithm.Bayazit, true, FP.EN3);
 
@@ -80,7 +80,7 @@ namespace KBEngine.Physics2D
         /// <returns></returns>
         public static List<Body> EvenlyDistributeShapesAlongPath(World world, Path path, IEnumerable<Shape> shapes, BodyType type, int copies, object userData = null)
         {
-            List<TSVector> centers = path.SubdivideEvenly(copies);
+            List<FPVector> centers = path.SubdivideEvenly(copies);
             List<Body> bodyList = new List<Body>();
 
             for (int i = 0; i < centers.Count; i++)
@@ -89,7 +89,7 @@ namespace KBEngine.Physics2D
 
                 // copy the type from original body
                 b.BodyType = type;
-                b.Position = new TSVector2(centers[i].x, centers[i].y);
+                b.Position = new FPVector2(centers[i].x, centers[i].y);
                 b.Rotation = centers[i].z;
                 b.UserData = userData;
 
@@ -139,9 +139,9 @@ namespace KBEngine.Physics2D
         /// <param name="timeStep">The time step.</param>
         public static void MoveBodyOnPath(Path path, Body body, FP time, FP strength, FP timeStep)
         {
-            TSVector2 destination = path.GetPosition(time);
-            TSVector2 positionDelta = body.Position - destination;
-            TSVector2 velocity = (positionDelta / timeStep) * strength;
+            FPVector2 destination = path.GetPosition(time);
+            FPVector2 positionDelta = body.Position - destination;
+            FPVector2 velocity = (positionDelta / timeStep) * strength;
 
             body.LinearVelocity = -velocity;
         }
@@ -155,7 +155,7 @@ namespace KBEngine.Physics2D
         /// <param name="localAnchorB">The local anchor B.</param>
         /// <param name="connectFirstAndLast">if set to <c>true</c> [connect first and last].</param>
         /// <param name="collideConnected">if set to <c>true</c> [collide connected].</param>
-        public static List<RevoluteJoint> AttachBodiesWithRevoluteJoint(World world, List<Body> bodies, TSVector2 localAnchorA, TSVector2 localAnchorB, bool connectFirstAndLast, bool collideConnected)
+        public static List<RevoluteJoint> AttachBodiesWithRevoluteJoint(World world, List<Body> bodies, FPVector2 localAnchorA, FPVector2 localAnchorB, bool connectFirstAndLast, bool collideConnected)
         {
             List<RevoluteJoint> joints = new List<RevoluteJoint>(bodies.Count + 1);
 

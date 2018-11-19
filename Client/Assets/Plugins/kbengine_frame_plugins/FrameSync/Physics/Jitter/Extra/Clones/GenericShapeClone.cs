@@ -5,13 +5,13 @@
     **/
     public class GenericShapeClone {
 
-        public TSMatrix inertia;
+        public FPMatrix inertia;
         public FP mass;
 
         public TSBBox boundingBox;
-        public TSVector geomCen;
+        public FPVector geomCen;
 
-        public TSVector vector1, vector2;
+        public FPVector vector1, vector2;
 
         public FP fp1, fp2, fp3;
 

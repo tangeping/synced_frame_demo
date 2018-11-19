@@ -56,7 +56,7 @@ namespace KBEngine.Physics3D {
         }
 
 
-        public PrismaticJoint3D(World world, RigidBody body1, RigidBody body2, TSVector pointOnBody1,TSVector pointOnBody2)
+        public PrismaticJoint3D(World world, RigidBody body1, RigidBody body2, FPVector pointOnBody1,FPVector pointOnBody2)
             : base(world)
         {
             fixedAngle = new FixedAngle(body1, body2);
@@ -64,7 +64,7 @@ namespace KBEngine.Physics3D {
         }
 
 
-        public PrismaticJoint3D(World world, RigidBody body1, RigidBody body2, TSVector pointOnBody1, TSVector pointOnBody2, FP maximumDistance, FP minimumDistance)
+        public PrismaticJoint3D(World world, RigidBody body1, RigidBody body2, FPVector pointOnBody1, FPVector pointOnBody2, FP maximumDistance, FP minimumDistance)
             : base(world)
         {
             fixedAngle = new FixedAngle(body1, body2);

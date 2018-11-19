@@ -35,8 +35,8 @@ namespace KBEngine.Physics2D
         private static List<Vertices> TriangulatePolygon(Vertices vertices)
         {
             List<Vertices> list = new List<Vertices>();
-            TSVector2 lowerInt = new TSVector2();
-            TSVector2 upperInt = new TSVector2(); // intersection points
+            FPVector2 lowerInt = new FPVector2();
+            FPVector2 upperInt = new FPVector2(); // intersection points
             int lowerIndex = 0, upperIndex = 0;
             Vertices lowerPoly, upperPoly;
 
@@ -50,7 +50,7 @@ namespace KBEngine.Physics2D
                     {
                         // if line intersects with an edge
                         FP d;
-                        TSVector2 p;
+                        FPVector2 p;
                         if (Left(At(i - 1, vertices), At(i, vertices), At(j, vertices)) && RightOn(At(i - 1, vertices), At(i, vertices), At(j - 1, vertices)))
                         {
                             // find the point of intersection
@@ -90,7 +90,7 @@ namespace KBEngine.Physics2D
                     // if there are no vertices to connect to, choose a point in the middle
                     if (lowerIndex == (upperIndex + 1) % vertices.Count)
                     {
-                        TSVector2 p = ((lowerInt + upperInt) / 2);
+                        FPVector2 p = ((lowerInt + upperInt) / 2);
 
                         lowerPoly = Copy(i, upperIndex, vertices);
                         lowerPoly.Add(p);
@@ -149,7 +149,7 @@ namespace KBEngine.Physics2D
             return list;
         }
 
-        private static TSVector2 At(int i, Vertices vertices)
+        private static FPVector2 At(int i, Vertices vertices)
         {
             int s = vertices.Count;
             return vertices[i < 0 ? s - 1 - ((-i - 1) % s) : i % s];
@@ -196,7 +196,7 @@ namespace KBEngine.Physics2D
                 if ((k + 1) % vertices.Count == i || k == i || (k + 1) % vertices.Count == j || k == j)
                     continue; // ignore incident edges
 
-                TSVector2 intersectionPoint;
+                FPVector2 intersectionPoint;
 
                 if (LineTools.LineIntersect(At(i, vertices), At(j, vertices), At(k, vertices), At(k + 1, vertices), out intersectionPoint))
                     return false;
@@ -214,27 +214,27 @@ namespace KBEngine.Physics2D
             return Right(At(i - 1, vertices), At(i, vertices), At(i + 1, vertices));
         }
 
-        private static bool Left(TSVector2 a, TSVector2 b, TSVector2 c)
+        private static bool Left(FPVector2 a, FPVector2 b, FPVector2 c)
         {
             return MathUtils.Area(ref a, ref b, ref c) > 0;
         }
 
-        private static bool LeftOn(TSVector2 a, TSVector2 b, TSVector2 c)
+        private static bool LeftOn(FPVector2 a, FPVector2 b, FPVector2 c)
         {
             return MathUtils.Area(ref a, ref b, ref c) >= 0;
         }
 
-        private static bool Right(TSVector2 a, TSVector2 b, TSVector2 c)
+        private static bool Right(FPVector2 a, FPVector2 b, FPVector2 c)
         {
             return MathUtils.Area(ref a, ref b, ref c) < 0;
         }
 
-        private static bool RightOn(TSVector2 a, TSVector2 b, TSVector2 c)
+        private static bool RightOn(FPVector2 a, FPVector2 b, FPVector2 c)
         {
             return MathUtils.Area(ref a, ref b, ref c) <= 0;
         }
 
-        private static FP SquareDist(TSVector2 a, TSVector2 b)
+        private static FP SquareDist(FPVector2 a, FPVector2 b)
         {
             FP dx = b.x - a.x;
             FP dy = b.y - a.y;

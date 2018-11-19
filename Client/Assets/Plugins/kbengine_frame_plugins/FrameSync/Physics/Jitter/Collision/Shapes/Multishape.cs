@@ -54,7 +54,7 @@ namespace KBEngine.Physics3D {
         /// <param name="rayOrigin"></param>
         /// <param name="rayDelta"></param>
         /// <returns></returns>
-        public abstract int Prepare(ref TSVector rayOrigin, ref TSVector rayDelta);
+        public abstract int Prepare(ref FPVector rayOrigin, ref FPVector rayDelta);
 
         protected abstract Multishape CreateWorkingClone();
 
@@ -103,7 +103,7 @@ namespace KBEngine.Physics3D {
         /// </summary>
         /// <param name="orientation">The orientation of the shape.</param>
         /// <param name="box">The axis aligned bounding box of the shape.</param>
-        public override void GetBoundingBox(ref TSMatrix orientation, out TSBBox box)
+        public override void GetBoundingBox(ref FPMatrix orientation, out TSBBox box)
         {
             TSBBox helpBox = TSBBox.LargeBox;
             int length = this.Prepare(ref helpBox);
@@ -118,7 +118,7 @@ namespace KBEngine.Physics3D {
             }
         }
 
-        public override void MakeHull(ref List<TSVector> triangleList, int generationThreshold)
+        public override void MakeHull(ref List<FPVector> triangleList, int generationThreshold)
         {
             //throw new NotImplementedException();
         }
@@ -129,12 +129,12 @@ namespace KBEngine.Physics3D {
         /// </summary>
         public override void CalculateMassInertia()
         {
-            geomCen = TSVector.zero;
+            geomCen = FPVector.zero;
 
             // TODO: calc this right
-            inertia = TSMatrix.Identity;
+            inertia = FPMatrix.Identity;
 
-            TSVector size; TSVector.Subtract(ref boundingBox.max, ref boundingBox.min, out size);
+            FPVector size; FPVector.Subtract(ref boundingBox.max, ref boundingBox.min, out size);
 
             mass = size.x * size.y * size.z;
 

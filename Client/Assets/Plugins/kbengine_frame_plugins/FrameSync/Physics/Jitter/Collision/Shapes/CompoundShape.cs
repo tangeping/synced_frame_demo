@@ -39,9 +39,9 @@ namespace KBEngine.Physics3D {
         public struct TransformedShape
         {
             private Shape shape;
-            internal TSVector position;
-            internal TSMatrix orientation;
-            internal TSMatrix invOrientation;
+            internal FPVector position;
+            internal FPMatrix orientation;
+            internal FPMatrix invOrientation;
             internal TSBBox boundingBox;
 
             /// <summary>
@@ -52,14 +52,14 @@ namespace KBEngine.Physics3D {
             /// <summary>
             /// The position of a 'sub' shape
             /// </summary>
-            public TSVector Position { get { return position; } set { position = value; } }
+            public FPVector Position { get { return position; } set { position = value; } }
 
             public TSBBox BoundingBox { get { return boundingBox; } }
 
             /// <summary>
             /// The inverse orientation of the 'sub' shape.
             /// </summary>
-            public TSMatrix InverseOrientation
+            public FPMatrix InverseOrientation
             {
                 get { return invOrientation; }
             }
@@ -67,10 +67,10 @@ namespace KBEngine.Physics3D {
             /// <summary>
             /// The orienation of the 'sub' shape.
             /// </summary>
-            public TSMatrix Orientation
+            public FPMatrix Orientation
             {
                 get { return orientation; }
-                set { orientation = value; TSMatrix.Transpose(ref orientation, out invOrientation); }
+                set { orientation = value; FPMatrix.Transpose(ref orientation, out invOrientation); }
             }
 
             public void UpdateBoundingBox()
@@ -87,11 +87,11 @@ namespace KBEngine.Physics3D {
             /// <param name="shape">The shape.</param>
             /// <param name="orientation">The orientation this shape should have.</param>
             /// <param name="position">The position this shape should have.</param>
-            public TransformedShape(Shape shape, TSMatrix orientation, TSVector position)
+            public TransformedShape(Shape shape, FPMatrix orientation, FPVector position)
             {
                 this.position = position;
                 this.orientation = orientation;
-                TSMatrix.Transpose(ref orientation, out invOrientation);
+                FPMatrix.Transpose(ref orientation, out invOrientation);
                 this.shape = shape;
                 this.boundingBox = new TSBBox();
                 UpdateBoundingBox();
@@ -106,8 +106,8 @@ namespace KBEngine.Physics3D {
         /// </summary>
         public TransformedShape[] Shapes { get { return this.shapes; } }
 
-        TSVector shifted;
-        public TSVector Shift { get { return -FP.One * this.shifted; } }
+        FPVector shifted;
+        public FPVector Shift { get { return -FP.One * this.shifted; } }
 
         private TSBBox mInternalBBox;
 
@@ -148,18 +148,18 @@ namespace KBEngine.Physics3D {
             return true;
         }
 
-        public override void MakeHull(ref List<TSVector> triangleList, int generationThreshold)
+        public override void MakeHull(ref List<FPVector> triangleList, int generationThreshold)
         {
-            List<TSVector> triangles = new List<TSVector>();
+            List<FPVector> triangles = new List<FPVector>();
 
             for (int i = 0; i < shapes.Length; i++)
             {
                 shapes[i].Shape.MakeHull(ref triangles, 4);
                 for (int e = 0; e < triangles.Count; e++)
                 {
-                    TSVector pos = triangles[e];
-                    TSVector.Transform(ref pos,ref shapes[i].orientation,out pos);
-                    TSVector.Add(ref pos, ref shapes[i].position,out pos);
+                    FPVector pos = triangles[e];
+                    FPVector.Transform(ref pos,ref shapes[i].orientation,out pos);
+                    FPVector.Add(ref pos, ref shapes[i].position,out pos);
                     triangleList.Add(pos);
                 }
                 triangles.Clear();
@@ -180,13 +180,13 @@ namespace KBEngine.Physics3D {
 
         public override void CalculateMassInertia()
         {
-            base.inertia = TSMatrix.Zero;
+            base.inertia = FPMatrix.Zero;
             base.mass = FP.Zero;
 
             for (int i = 0; i < Shapes.Length; i++)
             {
-                TSMatrix currentInertia = Shapes[i].InverseOrientation * Shapes[i].Shape.Inertia * Shapes[i].Orientation;
-                TSVector p = Shapes[i].Position * -FP.One;
+                FPMatrix currentInertia = Shapes[i].InverseOrientation * Shapes[i].Shape.Inertia * Shapes[i].Orientation;
+                FPVector p = Shapes[i].Position * -FP.One;
                 FP m = Shapes[i].Shape.Mass;
 
                 currentInertia.M11 += m * (p.y * p.y + p.z * p.z);
@@ -227,12 +227,12 @@ namespace KBEngine.Physics3D {
         /// </summary>
         /// <param name="direction">The direction.</param>
         /// <param name="result">The result.</param>
-        public override void SupportMapping(ref TSVector direction, out TSVector result)
+        public override void SupportMapping(ref FPVector direction, out FPVector result)
         {
-            TSVector.Transform(ref direction, ref shapes[currentShape].invOrientation, out result);
+            FPVector.Transform(ref direction, ref shapes[currentShape].invOrientation, out result);
             shapes[currentShape].Shape.SupportMapping(ref direction, out result);
-            TSVector.Transform(ref result, ref shapes[currentShape].orientation, out result);
-            TSVector.Add(ref result, ref shapes[currentShape].position, out result);
+            FPVector.Transform(ref result, ref shapes[currentShape].orientation, out result);
+            FPVector.Add(ref result, ref shapes[currentShape].position, out result);
         }
 
         /// <summary>
@@ -241,20 +241,20 @@ namespace KBEngine.Physics3D {
         /// </summary>
         /// <param name="orientation">The orientation of the shape.</param>
         /// <param name="box">The axis aligned bounding box of the shape.</param>
-        public override void GetBoundingBox(ref TSMatrix orientation, out TSBBox box)
+        public override void GetBoundingBox(ref FPMatrix orientation, out TSBBox box)
         {
             box.min = mInternalBBox.min;
             box.max = mInternalBBox.max;
 
-            TSVector localHalfExtents = FP.Half * (box.max - box.min);
-            TSVector localCenter = FP.Half * (box.max + box.min);
+            FPVector localHalfExtents = FP.Half * (box.max - box.min);
+            FPVector localCenter = FP.Half * (box.max + box.min);
 
-            TSVector center;
-            TSVector.Transform(ref localCenter, ref orientation, out center);
+            FPVector center;
+            FPVector.Transform(ref localCenter, ref orientation, out center);
 
-            TSMatrix abs; TSMath.Absolute(ref orientation, out abs);
-            TSVector temp;
-            TSVector.Transform(ref localHalfExtents, ref abs, out temp);
+            FPMatrix abs; FPMath.Absolute(ref orientation, out abs);
+            FPVector temp;
+            FPVector.Transform(ref localHalfExtents, ref abs, out temp);
 
             box.max = center + temp;
             box.min = center - temp;
@@ -301,7 +301,7 @@ namespace KBEngine.Physics3D {
         /// <param name="rayOrigin"></param>
         /// <param name="rayEnd"></param>
         /// <returns></returns>
-        public override int Prepare(ref TSVector rayOrigin, ref TSVector rayEnd)
+        public override int Prepare(ref FPVector rayOrigin, ref FPVector rayEnd)
         {
             TSBBox box = TSBBox.SmallBox;
 
@@ -321,8 +321,8 @@ namespace KBEngine.Physics3D {
 
         protected void UpdateInternalBoundingBox()
         {
-            mInternalBBox.min = new TSVector(FP.MaxValue);
-            mInternalBBox.max = new TSVector(FP.MinValue);
+            mInternalBBox.min = new FPVector(FP.MaxValue);
+            mInternalBBox.max = new FPVector(FP.MinValue);
 
             for (int i = 0; i < shapes.Length; i++)
             {

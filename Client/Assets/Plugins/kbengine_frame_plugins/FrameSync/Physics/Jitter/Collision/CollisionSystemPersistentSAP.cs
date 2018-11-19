@@ -499,11 +499,11 @@ namespace KBEngine.Physics3D {
         /// which start at rayOrigin and end in rayOrigin + rayDirection.
         /// </summary>
         #region public override bool Raycast(JVector rayOrigin, JVector rayDirection, out JVector normal,out FP fraction)
-        public override bool Raycast(TSVector rayOrigin, TSVector rayDirection, RaycastCallback raycast, out RigidBody body, out TSVector normal, out FP fraction)
+        public override bool Raycast(FPVector rayOrigin, FPVector rayDirection, RaycastCallback raycast, out RigidBody body, out FPVector normal, out FP fraction)
         {
-            body = null; normal = TSVector.zero; fraction = FP.MaxValue;
+            body = null; normal = FPVector.zero; fraction = FP.MaxValue;
 
-            TSVector tempNormal;FP tempFraction;
+            FPVector tempNormal;FP tempFraction;
             bool result = false;
 
             // TODO: This can be done better in CollisionSystemPersistenSAP
@@ -554,9 +554,9 @@ namespace KBEngine.Physics3D {
         /// which start at rayOrigin and end in rayOrigin + rayDirection.
         /// </summary>
         #region public override bool Raycast(RigidBody body, JVector rayOrigin, JVector rayDirection, out JVector normal, out FP fraction)
-        public override bool Raycast(RigidBody body, TSVector rayOrigin, TSVector rayDirection, out TSVector normal, out FP fraction)
+        public override bool Raycast(RigidBody body, FPVector rayOrigin, FPVector rayDirection, out FPVector normal, out FP fraction)
         {
-            fraction = FP.MaxValue; normal = TSVector.zero;
+            fraction = FP.MaxValue; normal = FPVector.zero;
 
             if (!body.BoundingBox.RayIntersect(ref rayOrigin, ref rayDirection)) return false;
 
@@ -564,12 +564,12 @@ namespace KBEngine.Physics3D {
             {
                 Multishape ms = (body.Shape as Multishape).RequestWorkingClone();
                 
-                TSVector tempNormal;FP tempFraction;
+                FPVector tempNormal;FP tempFraction;
                 bool multiShapeCollides = false;
 
-                TSVector transformedOrigin; TSVector.Subtract(ref rayOrigin, ref body.position, out transformedOrigin);
-                TSVector.Transform(ref transformedOrigin, ref body.invOrientation, out transformedOrigin);
-                TSVector transformedDirection; TSVector.Transform(ref rayDirection, ref body.invOrientation, out transformedDirection);
+                FPVector transformedOrigin; FPVector.Subtract(ref rayOrigin, ref body.position, out transformedOrigin);
+                FPVector.Transform(ref transformedOrigin, ref body.invOrientation, out transformedOrigin);
+                FPVector transformedDirection; FPVector.Transform(ref rayDirection, ref body.invOrientation, out transformedDirection);
 
                 int msLength = ms.Prepare(ref transformedOrigin, ref transformedDirection);
 
@@ -585,13 +585,13 @@ namespace KBEngine.Physics3D {
                             if (useTerrainNormal && ms is TerrainShape)
                             {
                                 (ms as TerrainShape).CollisionNormal(out tempNormal);
-                                TSVector.Transform(ref tempNormal, ref body.orientation, out tempNormal);
+                                FPVector.Transform(ref tempNormal, ref body.orientation, out tempNormal);
                                 tempNormal.Negate();
                             }
                             else if (useTriangleMeshNormal && ms is TriangleMeshShape)
                             {
                                 (ms as TriangleMeshShape).CollisionNormal(out tempNormal);
-                                TSVector.Transform(ref tempNormal, ref body.orientation, out tempNormal);
+                                FPVector.Transform(ref tempNormal, ref body.orientation, out tempNormal);
                                 tempNormal.Negate();
                             }
 

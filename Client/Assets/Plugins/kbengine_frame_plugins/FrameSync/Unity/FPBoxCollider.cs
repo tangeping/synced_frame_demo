@@ -16,10 +16,10 @@ namespace KBEngine {
         /**
          *  @brief Size of the box. 
          **/
-        public TSVector size {
+        public FPVector size {
             get {
                 if (_body != null) {
-                    TSVector boxSize = ((BoxShape)_body.Shape).Size;
+                    FPVector boxSize = ((BoxShape)_body.Shape).Size;
                     boxSize.x /= lossyScale.x;
                     boxSize.y /= lossyScale.y;
                     boxSize.z /= lossyScale.z;
@@ -27,14 +27,14 @@ namespace KBEngine {
                     return boxSize;
                 }
 
-                return _size.ToTSVector();
+                return _size.ToFPVector();
             }
 
             set {
                 _size = value.ToVector();
 
                 if (_body != null) {
-                    ((BoxShape)_body.Shape).Size = TSVector.Scale(value, lossyScale);
+                    ((BoxShape)_body.Shape).Size = FPVector.Scale(value, lossyScale);
                 }
             }
         }
@@ -47,14 +47,14 @@ namespace KBEngine {
             if (GetComponent<BoxCollider2D>() != null) {
                 BoxCollider2D boxCollider2D = GetComponent<BoxCollider2D>();
 
-                size = new TSVector(boxCollider2D.size.x, boxCollider2D.size.y, 1);
-                Center = new TSVector(boxCollider2D.offset.x, boxCollider2D.offset.y, 0);
+                size = new FPVector(boxCollider2D.size.x, boxCollider2D.size.y, 1);
+                Center = new FPVector(boxCollider2D.offset.x, boxCollider2D.offset.y, 0);
                 isTrigger = boxCollider2D.isTrigger;
             } else if (GetComponent<BoxCollider>() != null) {
                 BoxCollider boxCollider = GetComponent<BoxCollider>();
 
-                size = new TSVector(boxCollider.size.x, boxCollider.size.y, 1);
-                Center = boxCollider.center.ToTSVector();
+                size = new FPVector(boxCollider.size.x, boxCollider.size.y, 1);
+                Center = boxCollider.center.ToFPVector();
                 isTrigger = boxCollider.isTrigger;
             }
         }
@@ -63,7 +63,7 @@ namespace KBEngine {
          *  @brief Create the internal shape used to represent a TSBoxCollider.
          **/
         public override Shape CreateShape() {
-			return new BoxShape(TSVector.Scale(size, lossyScale));
+			return new BoxShape(FPVector.Scale(size, lossyScale));
         }
 
         protected override void DrawGizmos() {
@@ -71,7 +71,7 @@ namespace KBEngine {
         }
 
         protected override Vector3 GetGizmosSize() {
-			return TSVector.Scale(size, lossyScale).ToVector();
+			return FPVector.Scale(size, lossyScale).ToVector();
         }        
 
     }

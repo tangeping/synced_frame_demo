@@ -29,12 +29,12 @@ namespace KBEngine.Physics3D {
     /// </summary>
     public class BoxShape : Shape
     {
-        internal TSVector size = TSVector.zero;
+        internal FPVector size = FPVector.zero;
 
         /// <summary>
         /// The sidelength of the box.
         /// </summary>
-        public TSVector Size { 
+        public FPVector Size { 
             get { return size; }
             set { size = value; UpdateShape(); }
         }
@@ -43,7 +43,7 @@ namespace KBEngine.Physics3D {
         /// Creates a new instance of the BoxShape class.
         /// </summary>
         /// <param name="size">The size of the box.</param>
-        public BoxShape(TSVector size)
+        public BoxShape(FPVector size)
         {
             this.size = size;
             this.UpdateShape();
@@ -63,7 +63,7 @@ namespace KBEngine.Physics3D {
             this.UpdateShape();
         }
 
-        internal TSVector halfSize = TSVector.zero;
+        internal FPVector halfSize = FPVector.zero;
 
         /// <summary>
         /// This method uses the <see cref="ISupportMappable"/> implementation
@@ -82,14 +82,14 @@ namespace KBEngine.Physics3D {
         /// </summary>
         /// <param name="orientation">The orientation of the shape.</param>
         /// <param name="box">The axis aligned bounding box of the shape.</param>
-        public override void GetBoundingBox(ref TSMatrix orientation, out TSBBox box)
+        public override void GetBoundingBox(ref FPMatrix orientation, out TSBBox box)
         {
-            TSMatrix abs; TSMath.Absolute(ref orientation, out abs);
-            TSVector temp;
-            TSVector.Transform(ref halfSize, ref abs, out temp);
+            FPMatrix abs; FPMath.Absolute(ref orientation, out abs);
+            FPVector temp;
+            FPVector.Transform(ref halfSize, ref abs, out temp);
 
             box.max = temp;
-            TSVector.Negate(ref temp, out box.min);
+            FPVector.Negate(ref temp, out box.min);
         }
 
         /// <summary>
@@ -102,12 +102,12 @@ namespace KBEngine.Physics3D {
         {
             mass = size.x * size.y * size.z;
 
-            inertia = TSMatrix.Identity;
+            inertia = FPMatrix.Identity;
             inertia.M11 = (FP.One / (12 * FP.One)) * mass * (size.y * size.y + size.z * size.z);
             inertia.M22 = (FP.One / (12 * FP.One)) * mass * (size.x * size.x + size.z * size.z);
             inertia.M33 = (FP.One / (12 * FP.One)) * mass * (size.x * size.x + size.y * size.y);
 
-            this.geomCen = TSVector.zero;
+            this.geomCen = FPVector.zero;
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace KBEngine.Physics3D {
         /// </summary>
         /// <param name="direction">The direction.</param>
         /// <param name="result">The result.</param>
-        public override void SupportMapping(ref TSVector direction, out TSVector result)
+        public override void SupportMapping(ref FPVector direction, out FPVector result)
         {
             result.x = FP.Sign(direction.x) * halfSize.x;
             result.y = FP.Sign(direction.y) * halfSize.y;

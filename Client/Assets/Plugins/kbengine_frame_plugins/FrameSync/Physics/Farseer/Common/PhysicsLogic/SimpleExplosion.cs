@@ -30,18 +30,18 @@ namespace KBEngine.Physics2D
         /// <param name="maxForce">A maximum amount of force. When force gets over this value, it will be equal to maxForce</param>
         /// <returns>A list of bodies and the amount of force that was applied to them.</returns>
         // TS - public Dictionary<Body, Vector2> Activate(Vector2 pos, FP radius, FP force, FP maxForce = FP.MaxValue)
-        public Dictionary<Body, TSVector2> Activate(TSVector2 pos, FP radius, FP force, FP maxForce)
+        public Dictionary<Body, FPVector2> Activate(FPVector2 pos, FP radius, FP force, FP maxForce)
         {
             HashSet<Body> affectedBodies = new HashSet<Body>();
 
             AABB aabb;
-            aabb.LowerBound = pos - new TSVector2(radius);
-            aabb.UpperBound = pos + new TSVector2(radius);
+            aabb.LowerBound = pos - new FPVector2(radius);
+            aabb.UpperBound = pos + new FPVector2(radius);
 
             // Query the world for bodies within the radius.
             World.QueryAABB(fixture =>
             {
-                if (TSVector2.Distance(fixture.Body.Position, pos) <= radius)
+                if (FPVector2.Distance(fixture.Body.Position, pos) <= radius)
                 {
                     if (!affectedBodies.Contains(fixture.Body))
                         affectedBodies.Add(fixture.Body);
@@ -53,20 +53,20 @@ namespace KBEngine.Physics2D
             return ApplyImpulse(pos, radius, force, maxForce, affectedBodies);
         }
 
-        private Dictionary<Body, TSVector2> ApplyImpulse(TSVector2 pos, FP radius, FP force, FP maxForce, HashSet<Body> overlappingBodies)
+        private Dictionary<Body, FPVector2> ApplyImpulse(FPVector2 pos, FP radius, FP force, FP maxForce, HashSet<Body> overlappingBodies)
         {
-            Dictionary<Body, TSVector2> forces = new Dictionary<Body, TSVector2>(overlappingBodies.Count);
+            Dictionary<Body, FPVector2> forces = new Dictionary<Body, FPVector2>(overlappingBodies.Count);
 
             foreach (Body overlappingBody in overlappingBodies)
             {
                 if (IsActiveOn(overlappingBody))
                 {
-                    FP distance = TSVector2.Distance(pos, overlappingBody.Position);
+                    FP distance = FPVector2.Distance(pos, overlappingBody.Position);
                     FP forcePercent = GetPercent(distance, radius);
 
-                    TSVector2 forceVector = pos - overlappingBody.Position;
+                    FPVector2 forceVector = pos - overlappingBody.Position;
                     forceVector *= 1f / FP.Sqrt(forceVector.x * forceVector.x + forceVector.y * forceVector.y);
-                    forceVector *= TSMath.Min(force * forcePercent, maxForce);
+                    forceVector *= FPMath.Min(force * forcePercent, maxForce);
                     forceVector *= -1;
 
                     overlappingBody.ApplyLinearImpulse(forceVector);
@@ -87,7 +87,7 @@ namespace KBEngine.Physics2D
             if (FP.IsNaN(percent))
                 return 0f;
 
-            return TSMath.Clamp(percent, 0f, 1f);
+            return FPMath.Clamp(percent, 0f, 1f);
         }
     }
 }

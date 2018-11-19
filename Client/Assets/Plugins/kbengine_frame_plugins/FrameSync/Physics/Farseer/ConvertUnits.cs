@@ -31,29 +31,29 @@ namespace KBEngine.Physics2D
             return simUnits * _displayUnitsToSimUnitsRatio;
         }
 
-        public static TSVector2 ToDisplayUnits(TSVector2 simUnits)
+        public static FPVector2 ToDisplayUnits(FPVector2 simUnits)
         {
             return simUnits * _displayUnitsToSimUnitsRatio;
         }
 
-        public static void ToDisplayUnits(ref TSVector2 simUnits, out TSVector2 displayUnits)
+        public static void ToDisplayUnits(ref FPVector2 simUnits, out FPVector2 displayUnits)
         {
-            TSVector2.Multiply(ref simUnits, _displayUnitsToSimUnitsRatio, out displayUnits);
+            FPVector2.Multiply(ref simUnits, _displayUnitsToSimUnitsRatio, out displayUnits);
         }
 
-        public static TSVector ToDisplayUnits(TSVector simUnits)
+        public static FPVector ToDisplayUnits(FPVector simUnits)
         {
             return simUnits * _displayUnitsToSimUnitsRatio;
         }
 
-        public static TSVector2 ToDisplayUnits(FP x, FP y)
+        public static FPVector2 ToDisplayUnits(FP x, FP y)
         {
-            return new TSVector2(x, y) * _displayUnitsToSimUnitsRatio;
+            return new FPVector2(x, y) * _displayUnitsToSimUnitsRatio;
         }
 
-        public static void ToDisplayUnits(FP x, FP y, out TSVector2 displayUnits)
+        public static void ToDisplayUnits(FP x, FP y, out FPVector2 displayUnits)
         {
-            displayUnits = TSVector2.zero;
+            displayUnits = FPVector2.zero;
             displayUnits.x = x * _displayUnitsToSimUnitsRatio;
             displayUnits.y = y * _displayUnitsToSimUnitsRatio;
         }
@@ -68,29 +68,29 @@ namespace KBEngine.Physics2D
             return displayUnits * _simUnitsToDisplayUnitsRatio;
         }
 
-        public static TSVector2 ToSimUnits(TSVector2 displayUnits)
+        public static FPVector2 ToSimUnits(FPVector2 displayUnits)
         {
             return displayUnits * _simUnitsToDisplayUnitsRatio;
         }
 
-        public static TSVector ToSimUnits(TSVector displayUnits)
+        public static FPVector ToSimUnits(FPVector displayUnits)
         {
             return displayUnits * _simUnitsToDisplayUnitsRatio;
         }
 
-        public static void ToSimUnits(ref TSVector2 displayUnits, out TSVector2 simUnits)
+        public static void ToSimUnits(ref FPVector2 displayUnits, out FPVector2 simUnits)
         {
-            TSVector2.Multiply(ref displayUnits, _simUnitsToDisplayUnitsRatio, out simUnits);
+            FPVector2.Multiply(ref displayUnits, _simUnitsToDisplayUnitsRatio, out simUnits);
         }
 
-        public static TSVector2 ToSimUnits(FP x, FP y)
+        public static FPVector2 ToSimUnits(FP x, FP y)
         {
-            return new TSVector2(x, y) * _simUnitsToDisplayUnitsRatio;
+            return new FPVector2(x, y) * _simUnitsToDisplayUnitsRatio;
         }
 
-        public static void ToSimUnits(FP x, FP y, out TSVector2 simUnits)
+        public static void ToSimUnits(FP x, FP y, out FPVector2 simUnits)
         {
-            simUnits = TSVector2.zero;
+            simUnits = FPVector2.zero;
             simUnits.x = x * _simUnitsToDisplayUnitsRatio;
             simUnits.y = y * _simUnitsToDisplayUnitsRatio;
         }

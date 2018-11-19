@@ -53,12 +53,12 @@ namespace KBEngine.Physics3D {
         /// </summary>
         /// <param name="direction">The direction.</param>
         /// <param name="result">The result.</param>
-        public override void SupportMapping(ref TSVector direction, out TSVector result)
+        public override void SupportMapping(ref FPVector direction, out FPVector result)
         {
             result = direction;
             result.Normalize();
 
-            TSVector.Multiply(ref result, radius, out result);
+            FPVector.Multiply(ref result, radius, out result);
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace KBEngine.Physics3D {
         /// </summary>
         /// <param name="orientation">The orientation of the shape.</param>
         /// <param name="box">The resulting axis aligned bounding box.</param>
-        public override void GetBoundingBox(ref TSMatrix orientation, out TSBBox box)
+        public override void GetBoundingBox(ref FPMatrix orientation, out TSBBox box)
         {
             box.min.x = -radius;
             box.min.y = -radius;
@@ -81,11 +81,11 @@ namespace KBEngine.Physics3D {
         /// </summary>
         public override void CalculateMassInertia()
         {
-            mass = ((4 * FP.One) / (3 * FP.One)) * TSMath.Pi * radius * radius * radius;
+            mass = ((4 * FP.One) / (3 * FP.One)) * FPMath.Pi * radius * radius * radius;
 
             // (0,0,0) is the center of mass, so only
             // the main matrix elements are != 0
-            inertia = TSMatrix.Identity;
+            inertia = FPMatrix.Identity;
             inertia.M11 = 4 * FP.EN1 * this.mass * radius * radius;
 			inertia.M22 = 4 * FP.EN1 * this.mass * radius * radius;
 			inertia.M33 = 4 * FP.EN1 * this.mass * radius * radius;

@@ -422,7 +422,7 @@ namespace KBEngine.Physics2D
         /// </summary>
         /// <param name="point">A point in world coordinates.</param>
         /// <returns></returns>
-        public bool TestPoint(ref TSVector2 point)
+        public bool TestPoint(ref FPVector2 point)
         {
             return Shape.TestPoint(ref Body._xf, ref point);
         }
@@ -537,7 +537,7 @@ namespace KBEngine.Physics2D
 
                 proxy.AABB.Combine(ref aabb1, ref aabb2);
 
-                TSVector2 displacement = transform2.p - transform1.p;
+                FPVector2 displacement = transform2.p - transform1.p;
 
                 broadPhase.MoveProxy(proxy.ProxyId, ref proxy.AABB, displacement);
             }

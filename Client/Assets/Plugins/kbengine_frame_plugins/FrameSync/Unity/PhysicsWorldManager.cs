@@ -21,7 +21,7 @@ namespace KBEngine {
         /**
          *  @brief Property access to simulated gravity.
          **/
-        public TSVector Gravity {
+        public FPVector Gravity {
             get;
             set;
         }
@@ -138,7 +138,7 @@ namespace KBEngine {
             };
         }
 
-        public bool Raycast(TSVector rayOrigin, TSVector rayDirection, RaycastCallback raycast, out IBody body, out TSVector normal, out FP fraction) {
+        public bool Raycast(FPVector rayOrigin, FPVector rayDirection, RaycastCallback raycast, out IBody body, out FPVector normal, out FP fraction) {
             RigidBody rb;
             bool result = world.CollisionSystem.Raycast(rayOrigin, rayDirection, raycast, out rb, out normal, out fraction);
             body = rb;
@@ -148,11 +148,11 @@ namespace KBEngine {
 
         public FPRaycastHit Raycast(FPRay ray, FP maxDistance, RaycastCallback callback = null) {
             IBody hitBody;
-            TSVector hitNormal;
+            FPVector hitNormal;
             FP hitFraction;
 
-            TSVector origin = ray.origin;
-            TSVector direction = ray.direction;
+            FPVector origin = ray.origin;
+            FPVector direction = ray.direction;
 
             if (Raycast(origin, direction, callback, out hitBody, out hitNormal, out hitFraction)) {
                 if (hitFraction <= maxDistance) {

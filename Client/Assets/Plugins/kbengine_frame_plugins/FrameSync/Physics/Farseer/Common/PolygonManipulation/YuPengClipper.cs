@@ -69,12 +69,12 @@ namespace KBEngine.Physics2D
 
       // Translate polygons into upper right quadrant
       // as the algorithm depends on it
-      TSVector2 lbSubject = subject.GetAABB().LowerBound;
-      TSVector2 lbClip = clip.GetAABB().LowerBound;
-      TSVector2 translate;
-      TSVector2.Min(ref lbSubject, ref lbClip, out translate);
-      translate = TSVector2.one - translate;
-      if (translate != TSVector2.zero)
+      FPVector2 lbSubject = subject.GetAABB().LowerBound;
+      FPVector2 lbClip = clip.GetAABB().LowerBound;
+      FPVector2 translate;
+      FPVector2.Min(ref lbSubject, ref lbClip, out translate);
+      translate = FPVector2.one - translate;
+      if (translate != FPVector2.zero)
       {
         slicedSubject.Translate(ref translate);
         slicedClip.Translate(ref translate);
@@ -133,16 +133,16 @@ namespace KBEngine.Physics2D
       for (int i = 0; i < polygon1.Count; i++)
       {
         // Get edge vertices
-        TSVector2 a = polygon1[i];
-        TSVector2 b = polygon1[polygon1.NextIndex(i)];
+        FPVector2 a = polygon1[i];
+        FPVector2 b = polygon1[polygon1.NextIndex(i)];
 
         // Get intersections between this edge and polygon2
         for (int j = 0; j < polygon2.Count; j++)
         {
-          TSVector2 c = polygon2[j];
-          TSVector2 d = polygon2[polygon2.NextIndex(j)];
+          FPVector2 c = polygon2[j];
+          FPVector2 d = polygon2[polygon2.NextIndex(j)];
 
-          TSVector2 intersectionPoint;
+          FPVector2 intersectionPoint;
           // Check if the edges intersect
           if (LineTools.LineIntersect(a, b, c, d, out intersectionPoint))
           {
@@ -210,7 +210,7 @@ namespace KBEngine.Physics2D
       for (int i = 0; i < poly.Count; ++i)
       {
         simplicies.Add(new Edge(poly[i], poly[poly.NextIndex(i)]));
-        coeff.Add(CalculateSimplexCoefficient(TSVector2.zero, poly[i], poly[poly.NextIndex(i)]));
+        coeff.Add(CalculateSimplexCoefficient(FPVector2.zero, poly[i], poly[poly.NextIndex(i)]));
       }
     }
 
@@ -377,15 +377,15 @@ namespace KBEngine.Physics2D
     /// Needed to calculate the characteristics function of a simplex.
     /// </summary>
     /// <remarks>Used by method <c>CalculateEdgeCharacter()</c>.</remarks>
-    private static FP CalculateBeta(TSVector2 point, Edge e, FP coefficient)
+    private static FP CalculateBeta(FPVector2 point, Edge e, FP coefficient)
     {
       FP result = 0f;
       if (PointInSimplex(point, e))
       {
         result = coefficient;
       }
-      if (PointOnLineSegment(TSVector2.zero, e.EdgeStart, point) ||
-          PointOnLineSegment(TSVector2.zero, e.EdgeEnd, point))
+      if (PointOnLineSegment(FPVector2.zero, e.EdgeStart, point) ||
+          PointOnLineSegment(FPVector2.zero, e.EdgeEnd, point))
       {
         result = .5f * coefficient;
       }
@@ -396,7 +396,7 @@ namespace KBEngine.Physics2D
     /// Needed for sorting multiple intersections points on the same edge.
     /// </summary>
     /// <remarks>Used by method <c>CalculateIntersections()</c>.</remarks>
-    private static FP GetAlpha(TSVector2 start, TSVector2 end, TSVector2 point)
+    private static FP GetAlpha(FPVector2 start, FPVector2 end, FPVector2 point)
     {
       return (point - start).LengthSquared() / (end - start).LengthSquared();
     }
@@ -405,7 +405,7 @@ namespace KBEngine.Physics2D
     /// Returns the coefficient of a simplex.
     /// </summary>
     /// <remarks>Used by method <c>CalculateSimplicalChain()</c>.</remarks>
-    private static FP CalculateSimplexCoefficient(TSVector2 a, TSVector2 b, TSVector2 c)
+    private static FP CalculateSimplexCoefficient(FPVector2 a, FPVector2 b, FPVector2 c)
     {
       FP isLeft = MathUtils.Area(ref a, ref b, ref c);
       if (isLeft < 0f)
@@ -428,10 +428,10 @@ namespace KBEngine.Physics2D
     /// <param name="edge">The edge that the point is tested against.</param>
     /// <returns>False if the winding number is even and the point is outside
     /// the simplex and True otherwise.</returns>
-    private static bool PointInSimplex(TSVector2 point, Edge edge)
+    private static bool PointInSimplex(FPVector2 point, Edge edge)
     {
       Vertices polygon = new Vertices();
-      polygon.Add(TSVector2.zero);
+      polygon.Add(FPVector2.zero);
       polygon.Add(edge.EdgeStart);
       polygon.Add(edge.EdgeEnd);
       return (polygon.PointInPolygon(ref point) == 1);
@@ -441,15 +441,15 @@ namespace KBEngine.Physics2D
     /// Tests if a point lies on a line segment.
     /// </summary>
     /// <remarks>Used by method <c>CalculateBeta()</c>.</remarks>
-    private static bool PointOnLineSegment(TSVector2 start, TSVector2 end, TSVector2 point)
+    private static bool PointOnLineSegment(FPVector2 start, FPVector2 end, FPVector2 point)
     {
-      TSVector2 segment = end - start;
+      FPVector2 segment = end - start;
       return MathUtils.Area(ref start, ref end, ref point) == 0f &&
-             TSVector2.Dot(point - start, segment) >= 0f &&
-             TSVector2.Dot(point - end, segment) <= 0f;
+             FPVector2.Dot(point - start, segment) >= 0f &&
+             FPVector2.Dot(point - end, segment) <= 0f;
     }
 
-    private static bool VectorEqual(TSVector2 vec1, TSVector2 vec2)
+    private static bool VectorEqual(FPVector2 vec1, FPVector2 vec2)
     {
       return (vec2 - vec1).LengthSquared() <= ClipperEpsilonSquared;
     }
@@ -459,16 +459,16 @@ namespace KBEngine.Physics2D
     /// <summary>Specifies an Edge. Edges are used to represent simplicies in simplical chains</summary>
     private sealed class Edge
     {
-      public Edge(TSVector2 edgeStart, TSVector2 edgeEnd)
+      public Edge(FPVector2 edgeStart, FPVector2 edgeEnd)
       {
         EdgeStart = edgeStart;
         EdgeEnd = edgeEnd;
       }
 
-      public TSVector2 EdgeStart { get; private set; }
-      public TSVector2 EdgeEnd { get; private set; }
+      public FPVector2 EdgeStart { get; private set; }
+      public FPVector2 EdgeEnd { get; private set; }
 
-      public TSVector2 GetCenter()
+      public FPVector2 GetCenter()
       {
         return (EdgeStart + EdgeEnd) / 2f;
       }

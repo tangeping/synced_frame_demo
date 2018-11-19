@@ -16,9 +16,9 @@ namespace KBEngine.Physics2D
     /// </summary>
     internal static class FlipcodeDecomposer
     {
-        private static TSVector2 _tmpA;
-        private static TSVector2 _tmpB;
-        private static TSVector2 _tmpC;
+        private static FPVector2 _tmpA;
+        private static FPVector2 _tmpB;
+        private static FPVector2 _tmpC;
 
         /// <summary>
         /// Decompose the polygon into triangles.
@@ -104,7 +104,7 @@ namespace KBEngine.Physics2D
         /// <param name="c">The C point.</param>
         /// <param name="p">The point to be tested.</param>
         /// <returns>True if the point is inside the triangle</returns>
-        private static bool InsideTriangle(ref TSVector2 a, ref TSVector2 b, ref TSVector2 c, ref TSVector2 p)
+        private static bool InsideTriangle(ref FPVector2 a, ref FPVector2 b, ref FPVector2 c, ref FPVector2 p)
         {
             //A cross bp
             FP abp = (c.x - b.x) * (p.y - b.y) - (c.y - b.y) * (p.x - b.x);
@@ -139,7 +139,7 @@ namespace KBEngine.Physics2D
                 if ((p == u) || (p == v) || (p == w))
                     continue;
 
-                TSVector2 point = contour[V[p]];
+                FPVector2 point = contour[V[p]];
 
                 if (InsideTriangle(ref _tmpA, ref _tmpB, ref _tmpC, ref point))
                     return false;

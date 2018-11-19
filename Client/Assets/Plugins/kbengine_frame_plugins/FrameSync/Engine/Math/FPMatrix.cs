@@ -23,7 +23,7 @@ namespace KBEngine
     /// <summary>
     /// 3x3 Matrix.
     /// </summary>
-    public struct TSMatrix
+    public struct FPMatrix
     {
         /// <summary>
         /// M11
@@ -62,19 +62,19 @@ namespace KBEngine
         /// </summary>
         public FP M33;
 
-        internal static TSMatrix InternalIdentity;
+        internal static FPMatrix InternalIdentity;
 
         /// <summary>
         /// Identity matrix.
         /// </summary>
-        public static readonly TSMatrix Identity;
-        public static readonly TSMatrix Zero;
+        public static readonly FPMatrix Identity;
+        public static readonly FPMatrix Zero;
 
-        static TSMatrix()
+        static FPMatrix()
         {
-            Zero = new TSMatrix();
+            Zero = new FPMatrix();
 
-            Identity = new TSMatrix();
+            Identity = new FPMatrix();
             Identity.M11 = FP.One;
             Identity.M22 = FP.One;
             Identity.M33 = FP.One;
@@ -82,30 +82,30 @@ namespace KBEngine
             InternalIdentity = Identity;
         }
 
-        public TSVector eulerAngles {
+        public FPVector eulerAngles {
             get {
-                TSVector result = new TSVector();
+                FPVector result = new FPVector();
 
-                result.x = TSMath.Atan2(M32, M33) * FP.Rad2Deg;
-                result.y = TSMath.Atan2(-M31, TSMath.Sqrt(M32 * M32 + M33 * M33)) * FP.Rad2Deg;
-                result.z = TSMath.Atan2(M21, M11) * FP.Rad2Deg;
+                result.x = FPMath.Atan2(M32, M33) * FP.Rad2Deg;
+                result.y = FPMath.Atan2(-M31, FPMath.Sqrt(M32 * M32 + M33 * M33)) * FP.Rad2Deg;
+                result.z = FPMath.Atan2(M21, M11) * FP.Rad2Deg;
 
                 return result * -1;
             }
         }
 
-        public static TSMatrix CreateFromYawPitchRoll(FP yaw, FP pitch, FP roll)
+        public static FPMatrix CreateFromYawPitchRoll(FP yaw, FP pitch, FP roll)
         {
-            TSMatrix matrix;
-            TSQuaternion quaternion;
-            TSQuaternion.CreateFromYawPitchRoll(yaw, pitch, roll, out quaternion);
+            FPMatrix matrix;
+            FPQuaternion quaternion;
+            FPQuaternion.CreateFromYawPitchRoll(yaw, pitch, roll, out quaternion);
             CreateFromQuaternion(ref quaternion, out matrix);
             return matrix;
         }
 
-        public static TSMatrix CreateRotationX(FP radians)
+        public static FPMatrix CreateRotationX(FP radians)
         {
-            TSMatrix matrix;
+            FPMatrix matrix;
             FP num2 = FP.Cos(radians);
             FP num = FP.Sin(radians);
             matrix.M11 = FP.One;
@@ -120,7 +120,7 @@ namespace KBEngine
             return matrix;
         }
 
-        public static void CreateRotationX(FP radians, out TSMatrix result)
+        public static void CreateRotationX(FP radians, out FPMatrix result)
         {
             FP num2 = FP.Cos(radians);
             FP num = FP.Sin(radians);
@@ -135,9 +135,9 @@ namespace KBEngine
             result.M33 = num2;
         }
 
-        public static TSMatrix CreateRotationY(FP radians)
+        public static FPMatrix CreateRotationY(FP radians)
         {
-            TSMatrix matrix;
+            FPMatrix matrix;
             FP num2 = FP.Cos(radians);
             FP num = FP.Sin(radians);
             matrix.M11 = num2;
@@ -152,7 +152,7 @@ namespace KBEngine
             return matrix;
         }
 
-        public static void CreateRotationY(FP radians, out TSMatrix result)
+        public static void CreateRotationY(FP radians, out FPMatrix result)
         {
             FP num2 = FP.Cos(radians);
             FP num = FP.Sin(radians);
@@ -167,9 +167,9 @@ namespace KBEngine
             result.M33 = num2;
         }
 
-        public static TSMatrix CreateRotationZ(FP radians)
+        public static FPMatrix CreateRotationZ(FP radians)
         {
-            TSMatrix matrix;
+            FPMatrix matrix;
             FP num2 = FP.Cos(radians);
             FP num = FP.Sin(radians);
             matrix.M11 = num2;
@@ -185,7 +185,7 @@ namespace KBEngine
         }
 
 
-        public static void CreateRotationZ(FP radians, out TSMatrix result)
+        public static void CreateRotationZ(FP radians, out FPMatrix result)
         {
             FP num2 = FP.Cos(radians);
             FP num = FP.Sin(radians);
@@ -213,7 +213,7 @@ namespace KBEngine
         /// <param name="m32">m32</param>
         /// <param name="m33">m33</param>
         #region public JMatrix(FP m11, FP m12, FP m13, FP m21, FP m22, FP m23,FP m31, FP m32, FP m33)
-        public TSMatrix(FP m11, FP m12, FP m13, FP m21, FP m22, FP m23,FP m31, FP m32, FP m33)
+        public FPMatrix(FP m11, FP m12, FP m13, FP m21, FP m22, FP m23,FP m31, FP m32, FP m33)
         {
             this.M11 = m11;
             this.M12 = m12;
@@ -245,10 +245,10 @@ namespace KBEngine
         /// <param name="matrix2">The second matrix.</param>
         /// <returns>The product of both matrices.</returns>
         #region public static JMatrix Multiply(JMatrix matrix1, JMatrix matrix2)
-        public static TSMatrix Multiply(TSMatrix matrix1, TSMatrix matrix2)
+        public static FPMatrix Multiply(FPMatrix matrix1, FPMatrix matrix2)
         {
-            TSMatrix result;
-            TSMatrix.Multiply(ref matrix1, ref matrix2, out result);
+            FPMatrix result;
+            FPMatrix.Multiply(ref matrix1, ref matrix2, out result);
             return result;
         }
 
@@ -258,7 +258,7 @@ namespace KBEngine
         /// <param name="matrix1">The first matrix.</param>
         /// <param name="matrix2">The second matrix.</param>
         /// <param name="result">The product of both matrices.</param>
-        public static void Multiply(ref TSMatrix matrix1, ref TSMatrix matrix2, out TSMatrix result)
+        public static void Multiply(ref FPMatrix matrix1, ref FPMatrix matrix2, out FPMatrix result)
         {
             FP num0 = ((matrix1.M11 * matrix2.M11) + (matrix1.M12 * matrix2.M21)) + (matrix1.M13 * matrix2.M31);
             FP num1 = ((matrix1.M11 * matrix2.M12) + (matrix1.M12 * matrix2.M22)) + (matrix1.M13 * matrix2.M32);
@@ -289,10 +289,10 @@ namespace KBEngine
         /// <param name="matrix2">The second matrix.</param>
         /// <returns>The sum of both matrices.</returns>
         #region public static JMatrix Add(JMatrix matrix1, JMatrix matrix2)
-        public static TSMatrix Add(TSMatrix matrix1, TSMatrix matrix2)
+        public static FPMatrix Add(FPMatrix matrix1, FPMatrix matrix2)
         {
-            TSMatrix result;
-            TSMatrix.Add(ref matrix1, ref matrix2, out result);
+            FPMatrix result;
+            FPMatrix.Add(ref matrix1, ref matrix2, out result);
             return result;
         }
 
@@ -302,7 +302,7 @@ namespace KBEngine
         /// <param name="matrix1">The first matrix.</param>
         /// <param name="matrix2">The second matrix.</param>
         /// <param name="result">The sum of both matrices.</param>
-        public static void Add(ref TSMatrix matrix1, ref TSMatrix matrix2, out TSMatrix result)
+        public static void Add(ref FPMatrix matrix1, ref FPMatrix matrix2, out FPMatrix result)
         {
             result.M11 = matrix1.M11 + matrix2.M11;
             result.M12 = matrix1.M12 + matrix2.M12;
@@ -322,10 +322,10 @@ namespace KBEngine
         /// <param name="matrix">The matrix to invert.</param>
         /// <returns>The inverted JMatrix.</returns>
         #region public static JMatrix Inverse(JMatrix matrix)
-        public static TSMatrix Inverse(TSMatrix matrix)
+        public static FPMatrix Inverse(FPMatrix matrix)
         {
-            TSMatrix result;
-            TSMatrix.Inverse(ref matrix, out result);
+            FPMatrix result;
+            FPMatrix.Inverse(ref matrix, out result);
             return result;
         }
 
@@ -335,7 +335,7 @@ namespace KBEngine
                    M31 * M22 * M13 - M32 * M23 * M11 - M33 * M21 * M12;
         }
 
-        public static void Invert(ref TSMatrix matrix, out TSMatrix result)
+        public static void Invert(ref FPMatrix matrix, out FPMatrix result)
         {
             FP determinantInverse = 1 / matrix.Determinant();
             FP m11 = (matrix.M22 * matrix.M33 - matrix.M23 * matrix.M32) * determinantInverse;
@@ -368,7 +368,7 @@ namespace KBEngine
         /// </summary>
         /// <param name="matrix">The matrix to invert.</param>
         /// <param name="result">The inverted JMatrix.</param>
-        public static void Inverse(ref TSMatrix matrix, out TSMatrix result)
+        public static void Inverse(ref FPMatrix matrix, out FPMatrix result)
         {
 			FP det = 1024 * matrix.M11 * matrix.M22 * matrix.M33 -
 				1024 * matrix.M11 * matrix.M23 * matrix.M32 -
@@ -421,10 +421,10 @@ namespace KBEngine
         /// <param name="scaleFactor">The scale factor.</param>
         /// <returns>A JMatrix multiplied by the scale factor.</returns>
         #region public static JMatrix Multiply(JMatrix matrix1, FP scaleFactor)
-        public static TSMatrix Multiply(TSMatrix matrix1, FP scaleFactor)
+        public static FPMatrix Multiply(FPMatrix matrix1, FP scaleFactor)
         {
-            TSMatrix result;
-            TSMatrix.Multiply(ref matrix1, scaleFactor, out result);
+            FPMatrix result;
+            FPMatrix.Multiply(ref matrix1, scaleFactor, out result);
             return result;
         }
 
@@ -434,7 +434,7 @@ namespace KBEngine
         /// <param name="matrix1">The matrix.</param>
         /// <param name="scaleFactor">The scale factor.</param>
         /// <param name="result">A JMatrix multiplied by the scale factor.</param>
-        public static void Multiply(ref TSMatrix matrix1, FP scaleFactor, out TSMatrix result)
+        public static void Multiply(ref FPMatrix matrix1, FP scaleFactor, out FPMatrix result)
         {
             FP num = scaleFactor;
             result.M11 = matrix1.M11 * num;
@@ -456,23 +456,23 @@ namespace KBEngine
         /// <returns>JMatrix representing an orientation.</returns>
         #region public static JMatrix CreateFromQuaternion(JQuaternion quaternion)
 
-		public static TSMatrix CreateFromLookAt(TSVector position, TSVector target){
-			TSMatrix result;
-			LookAt (target - position, TSVector.up, out result);
+		public static FPMatrix CreateFromLookAt(FPVector position, FPVector target){
+			FPMatrix result;
+			LookAt (target - position, FPVector.up, out result);
 			return result;
 		}
 
-        public static TSMatrix LookAt(TSVector forward, TSVector upwards) {
-            TSMatrix result;
+        public static FPMatrix LookAt(FPVector forward, FPVector upwards) {
+            FPMatrix result;
             LookAt(forward, upwards, out result);
 
             return result;
         }
 
-        public static void LookAt(TSVector forward, TSVector upwards, out TSMatrix result) {
-            TSVector zaxis = forward; zaxis.Normalize();
-            TSVector xaxis = TSVector.Cross(upwards, zaxis); xaxis.Normalize();
-            TSVector yaxis = TSVector.Cross(zaxis, xaxis);
+        public static void LookAt(FPVector forward, FPVector upwards, out FPMatrix result) {
+            FPVector zaxis = forward; zaxis.Normalize();
+            FPVector xaxis = FPVector.Cross(upwards, zaxis); xaxis.Normalize();
+            FPVector yaxis = FPVector.Cross(zaxis, xaxis);
 
             result.M11 = xaxis.x;
             result.M21 = yaxis.x;
@@ -485,10 +485,10 @@ namespace KBEngine
             result.M33 = zaxis.z;
         }
 
-        public static TSMatrix CreateFromQuaternion(TSQuaternion quaternion)
+        public static FPMatrix CreateFromQuaternion(FPQuaternion quaternion)
         {
-            TSMatrix result;
-            TSMatrix.CreateFromQuaternion(ref quaternion,out result);
+            FPMatrix result;
+            FPMatrix.CreateFromQuaternion(ref quaternion,out result);
             return result;
         }
 
@@ -497,7 +497,7 @@ namespace KBEngine
         /// </summary>
         /// <param name="quaternion">The quaternion the matrix should be created from.</param>
         /// <param name="result">JMatrix representing an orientation.</param>
-        public static void CreateFromQuaternion(ref TSQuaternion quaternion, out TSMatrix result)
+        public static void CreateFromQuaternion(ref FPQuaternion quaternion, out FPMatrix result)
         {
             FP num9 = quaternion.x * quaternion.x;
             FP num8 = quaternion.y * quaternion.y;
@@ -526,10 +526,10 @@ namespace KBEngine
         /// <param name="matrix">The matrix which should be transposed.</param>
         /// <returns>The transposed JMatrix.</returns>
         #region public static JMatrix Transpose(JMatrix matrix)
-        public static TSMatrix Transpose(TSMatrix matrix)
+        public static FPMatrix Transpose(FPMatrix matrix)
         {
-            TSMatrix result;
-            TSMatrix.Transpose(ref matrix, out result);
+            FPMatrix result;
+            FPMatrix.Transpose(ref matrix, out result);
             return result;
         }
 
@@ -538,7 +538,7 @@ namespace KBEngine
         /// </summary>
         /// <param name="matrix">The matrix which should be transposed.</param>
         /// <param name="result">The transposed JMatrix.</param>
-        public static void Transpose(ref TSMatrix matrix, out TSMatrix result)
+        public static void Transpose(ref FPMatrix matrix, out FPMatrix result)
         {
             result.M11 = matrix.M11;
             result.M12 = matrix.M21;
@@ -559,9 +559,9 @@ namespace KBEngine
         /// <param name="value2">The second matrix.</param>
         /// <returns>The product of both values.</returns>
         #region public static JMatrix operator *(JMatrix value1,JMatrix value2)
-        public static TSMatrix operator *(TSMatrix value1,TSMatrix value2)
+        public static FPMatrix operator *(FPMatrix value1,FPMatrix value2)
         {
-            TSMatrix result; TSMatrix.Multiply(ref value1, ref value2, out result);
+            FPMatrix result; FPMatrix.Multiply(ref value1, ref value2, out result);
             return result;
         }
         #endregion
@@ -579,9 +579,9 @@ namespace KBEngine
         /// <param name="value2">The second matrix.</param>
         /// <returns>The sum of both values.</returns>
         #region public static JMatrix operator +(JMatrix value1, JMatrix value2)
-        public static TSMatrix operator +(TSMatrix value1, TSMatrix value2)
+        public static FPMatrix operator +(FPMatrix value1, FPMatrix value2)
         {
-            TSMatrix result; TSMatrix.Add(ref value1, ref value2, out result);
+            FPMatrix result; FPMatrix.Add(ref value1, ref value2, out result);
             return result;
         }
         #endregion
@@ -593,15 +593,15 @@ namespace KBEngine
         /// <param name="value2">The second matrix.</param>
         /// <returns>The difference of both values.</returns>
         #region public static JMatrix operator -(JMatrix value1, JMatrix value2)
-        public static TSMatrix operator -(TSMatrix value1, TSMatrix value2)
+        public static FPMatrix operator -(FPMatrix value1, FPMatrix value2)
         {
-            TSMatrix result; TSMatrix.Multiply(ref value2, -FP.One, out value2);
-            TSMatrix.Add(ref value1, ref value2, out result);
+            FPMatrix result; FPMatrix.Multiply(ref value2, -FP.One, out value2);
+            FPMatrix.Add(ref value1, ref value2, out result);
             return result;
         }
         #endregion
 
-        public static bool operator == (TSMatrix value1, TSMatrix value2) {
+        public static bool operator == (FPMatrix value1, FPMatrix value2) {
             return value1.M11 == value2.M11 &&
                 value1.M12 == value2.M12 &&
                 value1.M13 == value2.M13 &&
@@ -613,7 +613,7 @@ namespace KBEngine
                 value1.M33 == value2.M33;
         }
 
-        public static bool operator != (TSMatrix value1, TSMatrix value2) {
+        public static bool operator != (FPMatrix value1, FPMatrix value2) {
             return value1.M11 != value2.M11 ||
                 value1.M12 != value2.M12 ||
                 value1.M13 != value2.M13 ||
@@ -626,8 +626,8 @@ namespace KBEngine
         }
 
         public override bool Equals(object obj) {
-            if (!(obj is TSMatrix)) return false;
-            TSMatrix other = (TSMatrix) obj;
+            if (!(obj is FPMatrix)) return false;
+            FPMatrix other = (FPMatrix) obj;
 
             return this.M11 == other.M11 &&
                 this.M12 == other.M12 &&
@@ -659,7 +659,7 @@ namespace KBEngine
         /// <param name="angle">The angle.</param>
         /// <param name="result">The resulting rotation matrix</param>
         #region public static void CreateFromAxisAngle(ref JVector axis, FP angle, out JMatrix result)
-        public static void CreateFromAxisAngle(ref TSVector axis, FP angle, out TSMatrix result)
+        public static void CreateFromAxisAngle(ref FPVector axis, FP angle, out FPMatrix result)
         {
             FP x = axis.x;
             FP y = axis.y;
@@ -689,9 +689,9 @@ namespace KBEngine
         /// <param name="axis">The axis.</param>
         /// <param name="angle">The angle.</param>
         /// <returns>The resulting rotation matrix</returns>
-        public static TSMatrix AngleAxis(FP angle, TSVector axis)
+        public static FPMatrix AngleAxis(FP angle, FPVector axis)
         {
-            TSMatrix result; CreateFromAxisAngle(ref axis, angle, out result);
+            FPMatrix result; CreateFromAxisAngle(ref axis, angle, out result);
             return result;
         }
 

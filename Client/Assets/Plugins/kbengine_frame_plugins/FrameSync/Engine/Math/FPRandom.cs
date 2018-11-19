@@ -5,7 +5,7 @@ namespace KBEngine {
     /**
      *  @brief Generates random numbers based on a deterministic approach.
      **/
-    public class TSRandom {
+    public class FPRandom {
         // From http://www.codeproject.com/Articles/164087/Random-Number-Generation
         // Class TSRandom generates random numbers
         // from a uniform distribution using the Mersenne
@@ -23,7 +23,7 @@ namespace KBEngine {
         /**
          *  @brief Static instance of {@link TSRandom} with seed 1.
          **/
-        public static TSRandom instance;
+        public static FPRandom instance;
 
         internal static void Init() {
             instance = New(1);
@@ -32,8 +32,8 @@ namespace KBEngine {
         /**
          *  @brief Generates a new instance based on a given seed.
          **/
-        public static TSRandom New(int seed) {
-            TSRandom r = new TSRandom(seed);
+        public static FPRandom New(int seed) {
+            FPRandom r = new FPRandom(seed);
 
             StateTracker.AddTracking(r, "mt");
             StateTracker.AddTracking(r, "mti");
@@ -41,15 +41,15 @@ namespace KBEngine {
             return r;
         }
 
-        private TSRandom() {
+        private FPRandom() {
             init_genrand((uint)DateTime.Now.Millisecond);
         }
 
-        private TSRandom(int seed) {
+        private FPRandom(int seed) {
             init_genrand((uint)seed);
         }
 
-        private TSRandom(int[] init) {
+        private FPRandom(int[] init) {
             uint[] initArray = new uint[init.Length];
             for (int i = 0; i < init.Length; ++i)
                 initArray[i] = (uint)init[i];
@@ -134,11 +134,11 @@ namespace KBEngine {
         }
 
         /**
-         *  @brief Returns a random {@link TSVector} representing a point inside a sphere with radius 1.
+         *  @brief Returns a random {@link FPVector} representing a point inside a sphere with radius 1.
          **/
-        public static TSVector insideUnitSphere {
+        public static FPVector insideUnitSphere {
             get {
-                return new TSVector(value, value, value);
+                return new FPVector(value, value, value);
             }
         }
 

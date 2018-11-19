@@ -43,14 +43,14 @@
         /**
         * @brief Set/get body's position.
         **/
-        TSVector TSPosition {
+        FPVector TSPosition {
             get; set;
         }
 
         /**
         * @brief Set/get body's orientation.
         **/
-        TSMatrix TSOrientation {
+        FPMatrix TSOrientation {
             get; set;
         }
 
@@ -71,41 +71,41 @@
         /**
         * @brief Set/get body's linear velocity.
         **/
-        TSVector TSLinearVelocity {
+        FPVector TSLinearVelocity {
             get; set;
         }
 
         /**
         * @brief Set/get body's angular velocity.
         **/
-        TSVector TSAngularVelocity {
+        FPVector TSAngularVelocity {
             get; set;
         }
 
         /**
         * @brief Applies a force to the body's center.
         **/
-        void TSApplyForce(TSVector force);
+        void TSApplyForce(FPVector force);
 
         /**
         * @brief Applies a force to the body at a specific position.
         **/
-        void TSApplyForce(TSVector force, TSVector position);
+        void TSApplyForce(FPVector force, FPVector position);
 
         /**
         * @brief Applies a impulse to the body's center.
         **/
-        void TSApplyImpulse(TSVector force);
+        void TSApplyImpulse(FPVector force);
 
         /**
         * @brief Applies a impulse to the body at a specific position.
         **/
-        void TSApplyImpulse(TSVector force, TSVector position);
+        void TSApplyImpulse(FPVector force, FPVector position);
 
         /**
         * @brief Applies a torque force to the body.
         **/
-        void TSApplyTorque(TSVector force);
+        void TSApplyTorque(FPVector force);
 
     }
 

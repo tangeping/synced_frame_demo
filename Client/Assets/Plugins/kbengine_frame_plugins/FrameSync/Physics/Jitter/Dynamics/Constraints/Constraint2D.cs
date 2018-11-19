@@ -10,11 +10,11 @@
         }			
 
 		public override void PostStep() {
-			TSVector pos = Body1.Position;
+			FPVector pos = Body1.Position;
 			pos.z = 0;
 			Body1.Position = pos;
 
-			TSQuaternion q = TSQuaternion.CreateFromMatrix(Body1.Orientation);
+			FPQuaternion q = FPQuaternion.CreateFromMatrix(Body1.Orientation);
 			q.Normalize();
 			q.x = 0;
 			q.y = 0;
@@ -23,17 +23,17 @@
 				q.z = 0;
 			}
 
-			Body1.Orientation = TSMatrix.CreateFromQuaternion(q);
+			Body1.Orientation = FPMatrix.CreateFromQuaternion(q);
 
 			if (Body1.isStatic) {
 				return;
 			}
 
-			TSVector vel = Body1.LinearVelocity;
+			FPVector vel = Body1.LinearVelocity;
 			vel.z = 0;
 			Body1.LinearVelocity = vel;
 
-            TSVector av = Body1.AngularVelocity;
+            FPVector av = Body1.AngularVelocity;
 			av.x = 0;
 			av.y = 0;
 

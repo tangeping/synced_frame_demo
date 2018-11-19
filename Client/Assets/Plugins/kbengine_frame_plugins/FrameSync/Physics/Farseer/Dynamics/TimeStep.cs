@@ -43,14 +43,14 @@ namespace KBEngine.Physics2D
     /// This is an internal structure.
     public struct Position
     {
-        public TSVector2 c;
+        public FPVector2 c;
         public FP a;
     }
 
     /// This is an internal structure.
     public struct Velocity
     {
-        public TSVector2 v;
+        public FPVector2 v;
         public FP w;
     }
 

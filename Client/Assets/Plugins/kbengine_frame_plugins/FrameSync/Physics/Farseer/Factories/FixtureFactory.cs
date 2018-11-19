@@ -9,7 +9,7 @@ namespace KBEngine.Physics2D
     /// </summary>
     public static class FixtureFactory
     {
-        public static Fixture AttachEdge(TSVector2 start, TSVector2 end, Body body, object userData = null)
+        public static Fixture AttachEdge(FPVector2 start, FPVector2 end, Body body, object userData = null)
         {
             EdgeShape edgeShape = new EdgeShape(start, end);
             return body.CreateFixture(edgeShape, userData);
@@ -27,7 +27,7 @@ namespace KBEngine.Physics2D
             return body.CreateFixture(shape, userData);
         }
 
-        public static Fixture AttachRectangle(FP width, FP height, FP density, TSVector2 offset, Body body, object userData = null)
+        public static Fixture AttachRectangle(FP width, FP height, FP density, FPVector2 offset, Body body, object userData = null)
         {
             Vertices rectangleVertices = PolygonTools.CreateRectangle(width / 2, height / 2);
             rectangleVertices.Translate(ref offset);
@@ -44,7 +44,7 @@ namespace KBEngine.Physics2D
             return body.CreateFixture(circleShape, userData);
         }
 
-        public static Fixture AttachCircle(FP radius, FP density, Body body, TSVector2 offset, object userData = null)
+        public static Fixture AttachCircle(FP radius, FP density, Body body, FPVector2 offset, object userData = null)
         {
             if (radius <= 0)
                 throw new ArgumentOutOfRangeException("radius", "Radius must be more than 0 meters");
@@ -98,7 +98,7 @@ namespace KBEngine.Physics2D
             return res;
         }
 
-        public static Fixture AttachLineArc(FP radians, int sides, FP radius, TSVector2 position, FP angle, bool closed, Body body)
+        public static Fixture AttachLineArc(FP radians, int sides, FP radius, FPVector2 position, FP angle, bool closed, Body body)
         {
             Vertices arc = PolygonTools.CreateArc(radians, sides, radius);
             arc.Rotate((FP.Pi - radians) / 2 + angle);
@@ -107,7 +107,7 @@ namespace KBEngine.Physics2D
             return closed ? AttachLoopShape(arc, body) : AttachChainShape(arc, body);
         }
 
-        public static List<Fixture> AttachSolidArc(FP density, FP radians, int sides, FP radius, TSVector2 position, FP angle, Body body)
+        public static List<Fixture> AttachSolidArc(FP density, FP radians, int sides, FP radius, FPVector2 position, FP angle, Body body)
         {
             Vertices arc = PolygonTools.CreateArc(radians, sides, radius);
             arc.Rotate((FP.Pi - radians) / 2 + angle);

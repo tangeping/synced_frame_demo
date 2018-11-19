@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace KBEngine {
 
-    [CustomPropertyDrawer(typeof(TSVector2))]
-    public class TSVector2Drawer : PropertyDrawer {
+    [CustomPropertyDrawer(typeof(FPVector2))]
+    public class FPVector2Drawer : PropertyDrawer {
 
         private const int INDENT_OFFSET = 15;
         private const int LABEL_WIDTH = 12;

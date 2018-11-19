@@ -101,7 +101,7 @@ namespace KBEngine.Physics3D {
             FP bias;
             FP softnessOverDt;
 
-            TSVector[] jacobian = new TSVector[2];
+            FPVector[] jacobian = new FPVector[2];
 
             bool skipConstraint = false;
 
@@ -111,8 +111,8 @@ namespace KBEngine.Physics3D {
             /// <param name="timestep">The 5simulation timestep</param>
             public override void PrepareForIteration(FP timestep)
             {
-                TSVector dp;
-                TSVector.Subtract(ref body2.position, ref body1.position, out dp);
+                FPVector dp;
+                FPVector.Subtract(ref body2.position, ref body1.position, out dp);
 
                 FP deltaLength = dp.magnitude - distance;
 
@@ -128,7 +128,7 @@ namespace KBEngine.Physics3D {
                 {
                     skipConstraint = false;
 
-                    TSVector n = dp;
+                    FPVector n = dp;
                     if (n.sqrMagnitude != FP.Zero) n.Normalize();
 
                     jacobian[0] = -FP.One * n;
@@ -165,8 +165,8 @@ namespace KBEngine.Physics3D {
             {
                 if (skipConstraint) return;
 
-                FP jv = TSVector.Dot(ref body1.linearVelocity, ref jacobian[0]);
-                jv += TSVector.Dot(ref body2.linearVelocity, ref jacobian[1]);
+                FP jv = FPVector.Dot(ref body1.linearVelocity, ref jacobian[0]);
+                jv += FPVector.Dot(ref body2.linearVelocity, ref jacobian[1]);
 
                 FP softnessScalar = accumulatedImpulse * softnessOverDt;
 
@@ -175,13 +175,13 @@ namespace KBEngine.Physics3D {
                 if (behavior == DistanceBehavior.LimitMinimumDistance)
                 {
                     FP previousAccumulatedImpulse = accumulatedImpulse;
-                    accumulatedImpulse = TSMath.Max(accumulatedImpulse + lambda, 0);
+                    accumulatedImpulse = FPMath.Max(accumulatedImpulse + lambda, 0);
                     lambda = accumulatedImpulse - previousAccumulatedImpulse;
                 }
                 else if (behavior == DistanceBehavior.LimitMaximumDistance)
                 {
                     FP previousAccumulatedImpulse = accumulatedImpulse;
-                    accumulatedImpulse = TSMath.Min(accumulatedImpulse + lambda, 0);
+                    accumulatedImpulse = FPMath.Min(accumulatedImpulse + lambda, 0);
                     lambda = accumulatedImpulse - previousAccumulatedImpulse;
                 }
                 else
@@ -189,18 +189,18 @@ namespace KBEngine.Physics3D {
                     accumulatedImpulse += lambda;
                 }
 
-                TSVector temp;
+                FPVector temp;
 
                 if (!body1.isStatic)
                 {
-                    TSVector.Multiply(ref jacobian[0], lambda * body1.inverseMass, out temp);
-                    TSVector.Add(ref temp, ref body1.linearVelocity, out body1.linearVelocity);
+                    FPVector.Multiply(ref jacobian[0], lambda * body1.inverseMass, out temp);
+                    FPVector.Add(ref temp, ref body1.linearVelocity, out body1.linearVelocity);
                 }
 
                 if (!body2.isStatic)
                 {
-                    TSVector.Multiply(ref jacobian[1], lambda * body2.inverseMass, out temp);
-                    TSVector.Add(ref temp, ref body2.linearVelocity, out body2.linearVelocity);
+                    FPVector.Multiply(ref jacobian[1], lambda * body2.inverseMass, out temp);
+                    FPVector.Add(ref temp, ref body2.linearVelocity, out body2.linearVelocity);
                 }
             }
 
@@ -252,12 +252,12 @@ namespace KBEngine.Physics3D {
                 this.owner = owner;
             }
 
-            public void GetNormal(out TSVector normal)
+            public void GetNormal(out FPVector normal)
             {
-                TSVector sum;
-                TSVector.Subtract(ref owner.points[indices.I1].position, ref owner.points[indices.I0].position, out sum);
-                TSVector.Subtract(ref owner.points[indices.I2].position, ref owner.points[indices.I0].position, out normal);
-                TSVector.Cross(ref sum, ref normal, out normal);
+                FPVector sum;
+                FPVector.Subtract(ref owner.points[indices.I1].position, ref owner.points[indices.I0].position, out sum);
+                FPVector.Subtract(ref owner.points[indices.I2].position, ref owner.points[indices.I0].position, out normal);
+                FPVector.Cross(ref sum, ref normal, out normal);
             }
 
             public void UpdateBoundingBox()
@@ -267,8 +267,8 @@ namespace KBEngine.Physics3D {
                 boundingBox.AddPoint(ref owner.points[indices.I1].position);
                 boundingBox.AddPoint(ref owner.points[indices.I2].position);
 
-                boundingBox.min -= new TSVector(owner.triangleExpansion);
-                boundingBox.max += new TSVector(owner.triangleExpansion);
+                boundingBox.min -= new FPVector(owner.triangleExpansion);
+                boundingBox.max += new FPVector(owner.triangleExpansion);
             }
 
             public FP CalculateArea()
@@ -277,20 +277,20 @@ namespace KBEngine.Physics3D {
                     (owner.points[indices.I2].position - owner.points[indices.I0].position)).magnitude;
             }
 
-            public void SupportMapping(ref TSVector direction, out TSVector result)
+            public void SupportMapping(ref FPVector direction, out FPVector result)
             {
 
-                FP min = TSVector.Dot(ref owner.points[indices.I0].position, ref direction);
-                FP dot = TSVector.Dot(ref owner.points[indices.I1].position, ref direction);
+                FP min = FPVector.Dot(ref owner.points[indices.I0].position, ref direction);
+                FP dot = FPVector.Dot(ref owner.points[indices.I1].position, ref direction);
 
-                TSVector minVertex = owner.points[indices.I0].position;
+                FPVector minVertex = owner.points[indices.I0].position;
 
                 if (dot > min)
                 {
                     min = dot;
                     minVertex = owner.points[indices.I1].position;
                 }
-                dot = TSVector.Dot(ref owner.points[indices.I2].position, ref direction);
+                dot = FPVector.Dot(ref owner.points[indices.I2].position, ref direction);
                 if (dot > min)
                 {
                     min = dot;
@@ -298,20 +298,20 @@ namespace KBEngine.Physics3D {
                 }
 
 
-                TSVector exp;
-                TSVector.Normalize(ref direction, out exp);
+                FPVector exp;
+                FPVector.Normalize(ref direction, out exp);
                 exp *= owner.triangleExpansion;
                 result = minVertex + exp;
 
 
             }
 
-            public void SupportCenter(out TSVector center)
+            public void SupportCenter(out FPVector center)
             {
                 center = owner.points[indices.I0].position;
-                TSVector.Add(ref center, ref owner.points[indices.I1].position, out center);
-                TSVector.Add(ref center, ref owner.points[indices.I2].position, out center);
-                TSVector.Multiply(ref center, FP.One / (3 * FP.One), out center);
+                FPVector.Add(ref center, ref owner.points[indices.I1].position, out center);
+                FPVector.Add(ref center, ref owner.points[indices.I2].position, out center);
+                FPVector.Multiply(ref center, FP.One / (3 * FP.One), out center);
             }
         }
         #endregion
@@ -369,13 +369,13 @@ namespace KBEngine.Physics3D {
         public SoftBody(int sizeX,int sizeY, FP scale)
         {
             List<TriangleVertexIndices> indices = new List<TriangleVertexIndices>();
-            List<TSVector> vertices = new List<TSVector>();
+            List<FPVector> vertices = new List<FPVector>();
 
             for (int i = 0; i < sizeY; i++)
             {
                 for (int e = 0; e < sizeX; e++)
                 {
-                    vertices.Add(new TSVector(i, 0, e) *scale);
+                    vertices.Add(new FPVector(i, 0, e) *scale);
                 }
             }
             
@@ -419,7 +419,7 @@ namespace KBEngine.Physics3D {
 
             foreach (Spring spring in springs)
             {
-                TSVector delta = spring.body1.position - spring.body2.position;
+                FPVector delta = spring.body1.position - spring.body2.position;
 
                 if (delta.z != FP.Zero && delta.x != FP.Zero) spring.SpringType = SpringType.ShearSpring;
                 else spring.SpringType = SpringType.EdgeSpring;
@@ -445,7 +445,7 @@ namespace KBEngine.Physics3D {
             }
         }
 
-        public SoftBody(List<TriangleVertexIndices> indices, List<TSVector> vertices)
+        public SoftBody(List<TriangleVertexIndices> indices, List<FPVector> vertices)
         {
             EdgeSprings = springs.AsReadOnly();
             VertexBodies = points.AsReadOnly();
@@ -490,12 +490,12 @@ namespace KBEngine.Physics3D {
 
             foreach (Triangle t in triangles)
             {
-                TSVector v1 = points[t.indices.I0].position;
-                TSVector v2 = points[t.indices.I1].position;
-                TSVector v3 = points[t.indices.I2].position;
+                FPVector v1 = points[t.indices.I0].position;
+                FPVector v2 = points[t.indices.I1].position;
+                FPVector v3 = points[t.indices.I2].position;
 
-                TSVector cross = (v3 - v1) % (v2 - v1);
-                //TSVector center = (v1 + v2 + v3) * (FP.One / (3 * FP.One));
+                FPVector cross = (v3 - v1) % (v2 - v1);
+                //FPVector center = (v1 + v2 + v3) * (FP.One / (3 * FP.One));
 
                 points[t.indices.I0].AddForce(invVolume * cross * pressure);
                 points[t.indices.I1].AddForce(invVolume * cross * pressure);
@@ -504,28 +504,28 @@ namespace KBEngine.Physics3D {
         }
         #endregion
 
-        public void Translate(TSVector position)
+        public void Translate(FPVector position)
         {
             foreach (MassPoint point in points) point.Position += position;
 
             Update(FP.Epsilon);
         }
 
-        public void AddForce(TSVector force)
+        public void AddForce(FPVector force)
         {
             // TODO
             throw new NotImplementedException();
         }
 
-        public void Rotate(TSMatrix orientation, TSVector center)
+        public void Rotate(FPMatrix orientation, FPVector center)
         {
             for (int i = 0; i < points.Count; i++)
             {
-                points[i].position = TSVector.Transform(points[i].position - center, orientation);
+                points[i].position = FPVector.Transform(points[i].position - center, orientation);
             }
         }
 
-        public TSVector CalculateCenter()
+        public FPVector CalculateCenter()
         {
             // TODO
             throw new NotImplementedException();
@@ -558,7 +558,7 @@ namespace KBEngine.Physics3D {
         {
             if (!selfCollision) return;
 
-            TSVector point, normal;
+            FPVector point, normal;
             FP penetration;
 
             for (int i = 0; i < points.Count; i++)
@@ -573,7 +573,7 @@ namespace KBEngine.Physics3D {
                     if (!(t.VertexBody1 == points[i] || t.VertexBody2 == points[i] || t.VertexBody3 == points[i]))
                     {
                         if (XenoCollide.Detect(points[i].Shape, t, ref points[i].orientation,
-                            ref TSMatrix.InternalIdentity, ref points[i].position, ref TSVector.InternalZero,
+                            ref FPMatrix.InternalIdentity, ref points[i].position, ref FPVector.InternalZero,
                             out point, out normal, out penetration))
                         {
                             int nearest = CollisionSystem.FindNearestTrianglePoint(this, queryList[e], ref point);
@@ -588,7 +588,7 @@ namespace KBEngine.Physics3D {
                     
                 
 
-        private void AddPointsAndSprings(List<TriangleVertexIndices> indices, List<TSVector> vertices)
+        private void AddPointsAndSprings(List<TriangleVertexIndices> indices, List<FPVector> vertices)
         {
             for (int i = 0; i < vertices.Count; i++)
             {
@@ -671,15 +671,15 @@ namespace KBEngine.Physics3D {
                 box.AddPoint(point.position);
             }
 
-            box.min -= new TSVector(TriangleExpansion);
-            box.max += new TSVector(TriangleExpansion);
+            box.min -= new FPVector(TriangleExpansion);
+            box.max += new FPVector(TriangleExpansion);
 
             foreach (Triangle t in triangles)
             {
                 // Update bounding box and move proxy in dynamic tree.
                 t.UpdateBoundingBox();
 
-                TSVector linVel = t.VertexBody1.linearVelocity + 
+                FPVector linVel = t.VertexBody1.linearVelocity + 
                     t.VertexBody2.linearVelocity + 
                     t.VertexBody3.linearVelocity;
 
@@ -687,9 +687,9 @@ namespace KBEngine.Physics3D {
 
                 dynamicTree.MoveProxy(t.dynamicTreeID, ref t.boundingBox, linVel * timestep);
 
-                TSVector v1 = points[t.indices.I0].position;
-                TSVector v2 = points[t.indices.I1].position;
-                TSVector v3 = points[t.indices.I2].position;
+                FPVector v1 = points[t.indices.I0].position;
+                FPVector v2 = points[t.indices.I1].position;
+                FPVector v3 = points[t.indices.I2].position;
 
                 volume -= ((v2.y - v1.y) * (v3.z - v1.z) -
                     (v2.z - v1.z) * (v3.y - v1.y)) * (v1.x + v2.x + v3.x);

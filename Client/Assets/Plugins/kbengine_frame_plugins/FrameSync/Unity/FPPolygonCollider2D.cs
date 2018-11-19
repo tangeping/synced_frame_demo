@@ -10,9 +10,9 @@ namespace KBEngine {
     public class FPPolygonCollider2D : FPCollider2D {
 
         [SerializeField]
-        private TSVector2[] _points;
+        private FPVector2[] _points;
 
-        public TSVector2[] points {
+        public FPVector2[] points {
             get {
                 return _points;
             }
@@ -33,10 +33,10 @@ namespace KBEngine {
             }
 
 
-            TSVector2 lossy2D = new TSVector2(lossyScale.x, lossyScale.y);
+            FPVector2 lossy2D = new FPVector2(lossyScale.x, lossyScale.y);
             KBEngine.Physics2D.Vertices v = new Physics2D.Vertices();
             for (int index = 0, length = _points.Length; index < length; index++) {
-                v.Add(TSVector2.Scale(_points[index], lossy2D));
+                v.Add(FPVector2.Scale(_points[index], lossy2D));
             }
 
             List<KBEngine.Physics2D.Vertices> convexShapeVs = KBEngine.Physics2D.BayazitDecomposer.ConvexPartition(v);
@@ -52,7 +52,7 @@ namespace KBEngine {
             DrawPolygon(_points);
         }
 
-        private void DrawPolygon(TSVector2[] allPoints) {
+        private void DrawPolygon(FPVector2[] allPoints) {
             if (allPoints == null || allPoints.Length == 0) {
                 return;
             }

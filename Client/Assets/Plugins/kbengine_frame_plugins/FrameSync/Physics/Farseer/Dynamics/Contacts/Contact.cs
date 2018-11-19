@@ -174,8 +174,8 @@ namespace KBEngine.Physics2D
             Reset(fA, indexA, fB, indexB);
         }
 
-        public TSVector2 CalculateRelativeVelocity() {
-            TSVector2 result;
+        public FPVector2 CalculateRelativeVelocity() {
+            FPVector2 result;
 
             result.x = FixtureA.Body.LinearVelocity.x - FixtureB.Body.LinearVelocity.x;
             result.y = FixtureA.Body.LinearVelocity.y - FixtureB.Body.LinearVelocity.y;
@@ -186,7 +186,7 @@ namespace KBEngine.Physics2D
         /// <summary>
         /// Gets the world manifold.
         /// </summary>
-        public void GetWorldManifold(out TSVector2 normal, out FixedArray2<TSVector2> points)
+        public void GetWorldManifold(out FPVector2 normal, out FixedArray2<FPVector2> points)
         {
             Body bodyA = FixtureA.Body;
             Body bodyB = FixtureB.Body;

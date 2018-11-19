@@ -183,7 +183,7 @@ namespace KBEngine.Physics2D
             int proxyId = AllocateNode();
 
             // Fatten the aabb.
-            TSVector2 r = new TSVector2(Settings.AABBExtension, Settings.AABBExtension);
+            FPVector2 r = new FPVector2(Settings.AABBExtension, Settings.AABBExtension);
             _nodes[proxyId].AABB.LowerBound = aabb.LowerBound - r;
             _nodes[proxyId].AABB.UpperBound = aabb.UpperBound + r;
             _nodes[proxyId].UserData = userData;
@@ -216,7 +216,7 @@ namespace KBEngine.Physics2D
         /// <param name="aabb">The aabb.</param>
         /// <param name="displacement">The displacement.</param>
         /// <returns>true if the proxy was re-inserted.</returns>
-        public bool MoveProxy(int proxyId, ref AABB aabb, TSVector2 displacement)
+        public bool MoveProxy(int proxyId, ref AABB aabb, FPVector2 displacement)
         {
             Debug.Assert(0 <= proxyId && proxyId < _nodeCapacity);
 
@@ -231,12 +231,12 @@ namespace KBEngine.Physics2D
 
             // Extend AABB.
             AABB b = aabb;
-            TSVector2 r = new TSVector2(Settings.AABBExtension, Settings.AABBExtension);
+            FPVector2 r = new FPVector2(Settings.AABBExtension, Settings.AABBExtension);
             b.LowerBound = b.LowerBound - r;
             b.UpperBound = b.UpperBound + r;
 
             // Predict AABB displacement.
-            TSVector2 d = Settings.AABBMultiplier * displacement;
+            FPVector2 d = Settings.AABBMultiplier * displacement;
 
             if (d.x < 0.0f)
             {
@@ -336,14 +336,14 @@ namespace KBEngine.Physics2D
         /// <param name="input">The ray-cast input data. The ray extends from p1 to p1 + maxFraction * (p2 - p1).</param>
         public void RayCast(Func<RayCastInput, int, FP> callback, ref RayCastInput input)
         {
-            TSVector2 p1 = input.Point1;
-            TSVector2 p2 = input.Point2;
-            TSVector2 r = p2 - p1;
+            FPVector2 p1 = input.Point1;
+            FPVector2 p2 = input.Point2;
+            FPVector2 r = p2 - p1;
             Debug.Assert(r.LengthSquared() > 0.0f);
             r.Normalize();
 
             // v is perpendicular to the segment.
-            TSVector2 absV = MathUtils.Abs(new TSVector2(-r.y, r.x)); //FPE: Inlined the 'v' variable
+            FPVector2 absV = MathUtils.Abs(new FPVector2(-r.y, r.x)); //FPE: Inlined the 'v' variable
 
             // Separating axis for segment (Gino, p80).
             // |dot(v, p1 - c)| > dot(|v|, h)
@@ -353,9 +353,9 @@ namespace KBEngine.Physics2D
             // Build a bounding box for the segment.
             AABB segmentAABB = new AABB();
             {
-                TSVector2 t = p1 + maxFraction * (p2 - p1);
-                TSVector2.Min(ref p1, ref t, out segmentAABB.LowerBound);
-                TSVector2.Max(ref p1, ref t, out segmentAABB.UpperBound);
+                FPVector2 t = p1 + maxFraction * (p2 - p1);
+                FPVector2.Min(ref p1, ref t, out segmentAABB.LowerBound);
+                FPVector2.Max(ref p1, ref t, out segmentAABB.UpperBound);
             }
 
             _raycastStack.Clear();
@@ -378,9 +378,9 @@ namespace KBEngine.Physics2D
 
                 // Separating axis for segment (Gino, p80).
                 // |dot(v, p1 - c)| > dot(|v|, h)
-                TSVector2 c = node.AABB.Center;
-                TSVector2 h = node.AABB.Extents;
-                FP separation = FP.Abs(TSVector2.Dot(new TSVector2(-r.y, r.x), p1 - c)) - TSVector2.Dot(absV, h);
+                FPVector2 c = node.AABB.Center;
+                FPVector2 h = node.AABB.Extents;
+                FP separation = FP.Abs(FPVector2.Dot(new FPVector2(-r.y, r.x), p1 - c)) - FPVector2.Dot(absV, h);
                 if (separation > 0.0f)
                 {
                     continue;
@@ -405,9 +405,9 @@ namespace KBEngine.Physics2D
                     {
                         // Update segment bounding box.
                         maxFraction = value;
-                        TSVector2 t = p1 + maxFraction * (p2 - p1);
-                        segmentAABB.LowerBound = TSVector2.Min(p1, t);
-                        segmentAABB.UpperBound = TSVector2.Max(p1, t);
+                        FPVector2 t = p1 + maxFraction * (p2 - p1);
+                        segmentAABB.LowerBound = FPVector2.Min(p1, t);
+                        segmentAABB.UpperBound = FPVector2.Max(p1, t);
                     }
                 }
                 else
@@ -1019,7 +1019,7 @@ namespace KBEngine.Physics2D
         /// Shift the origin of the nodes
         /// </summary>
         /// <param name="newOrigin">The displacement to use.</param>
-        public void ShiftOrigin(TSVector2 newOrigin)
+        public void ShiftOrigin(FPVector2 newOrigin)
         {
             // Build array of leaves. Free the rest.
             for (int i = 0; i < _nodeCapacity; ++i)

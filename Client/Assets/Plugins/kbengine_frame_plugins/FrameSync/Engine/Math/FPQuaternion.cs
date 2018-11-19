@@ -26,7 +26,7 @@ namespace KBEngine
     /// A Quaternion representing an orientation.
     /// </summary>
     [Serializable]
-    public struct TSQuaternion
+    public struct FPQuaternion
     {
 
         /// <summary>The X component of the quaternion.</summary>
@@ -38,10 +38,10 @@ namespace KBEngine
         /// <summary>The W component of the quaternion.</summary>
         public FP w;
 
-        public static readonly TSQuaternion identity;
+        public static readonly FPQuaternion identity;
 
-        static TSQuaternion() {
-            identity = new TSQuaternion(0, 0, 0, 1);
+        static FPQuaternion() {
+            identity = new FPQuaternion(0, 0, 0, 1);
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace KBEngine
         /// <param name="y">The Y component of the quaternion.</param>
         /// <param name="z">The Z component of the quaternion.</param>
         /// <param name="w">The W component of the quaternion.</param>
-        public TSQuaternion(FP x, FP y, FP z, FP w)
+        public FPQuaternion(FP x, FP y, FP z, FP w)
         {
             this.x = x;
             this.y = y;
@@ -66,14 +66,14 @@ namespace KBEngine
             this.w = new_w;
         }
 
-        public void SetFromToRotation(TSVector fromDirection, TSVector toDirection) {
-            TSQuaternion targetRotation = TSQuaternion.FromToRotation(fromDirection, toDirection);
+        public void SetFromToRotation(FPVector fromDirection, FPVector toDirection) {
+            FPQuaternion targetRotation = FPQuaternion.FromToRotation(fromDirection, toDirection);
             this.Set(targetRotation.x, targetRotation.y, targetRotation.z, targetRotation.w);
         }
 
-        public TSVector eulerAngles {
+        public FPVector eulerAngles {
             get {
-                TSVector result = new TSVector();
+                FPVector result = new FPVector();
 
                 FP ysqr = y * y;
                 FP t0 = -2.0f * (ysqr + z * z) + 1.0f;
@@ -93,9 +93,9 @@ namespace KBEngine
             }
         }
 
-        public static FP Angle(TSQuaternion a, TSQuaternion b) {
-            TSQuaternion aInv = TSQuaternion.Inverse(a);
-            TSQuaternion f = b * aInv;
+        public static FP Angle(FPQuaternion a, FPQuaternion b) {
+            FPQuaternion aInv = FPQuaternion.Inverse(a);
+            FPQuaternion f = b * aInv;
 
             FP angle = FP.Acos(f.w) * 2 * FP.Rad2Deg;
 
@@ -113,23 +113,23 @@ namespace KBEngine
         /// <param name="quaternion2">The second quaternion.</param>
         /// <returns>The sum of both quaternions.</returns>
         #region public static JQuaternion Add(JQuaternion quaternion1, JQuaternion quaternion2)
-        public static TSQuaternion Add(TSQuaternion quaternion1, TSQuaternion quaternion2)
+        public static FPQuaternion Add(FPQuaternion quaternion1, FPQuaternion quaternion2)
         {
-            TSQuaternion result;
-            TSQuaternion.Add(ref quaternion1, ref quaternion2, out result);
+            FPQuaternion result;
+            FPQuaternion.Add(ref quaternion1, ref quaternion2, out result);
             return result;
         }
 
-        public static TSQuaternion LookRotation(TSVector forward) {
-            return CreateFromMatrix(TSMatrix.LookAt(forward, TSVector.up));
+        public static FPQuaternion LookRotation(FPVector forward) {
+            return CreateFromMatrix(FPMatrix.LookAt(forward, FPVector.up));
         }
 
-        public static TSQuaternion LookRotation(TSVector forward, TSVector upwards) {
-            return CreateFromMatrix(TSMatrix.LookAt(forward, upwards));
+        public static FPQuaternion LookRotation(FPVector forward, FPVector upwards) {
+            return CreateFromMatrix(FPMatrix.LookAt(forward, upwards));
         }
 
-        public static TSQuaternion Slerp(TSQuaternion from, TSQuaternion to, FP t) {
-            t = TSMath.Clamp(t, 0, 1);
+        public static FPQuaternion Slerp(FPQuaternion from, FPQuaternion to, FP t) {
+            t = FPMath.Clamp(t, 0, 1);
 
             FP dot = Dot(from, to);
 
@@ -143,7 +143,7 @@ namespace KBEngine
             return Multiply(Multiply(from, FP.Sin((1 - t) * halfTheta)) + Multiply(to, FP.Sin(t * halfTheta)), 1 / FP.Sin(halfTheta));
         }
 
-        public static TSQuaternion RotateTowards(TSQuaternion from, TSQuaternion to, FP maxDegreesDelta) {
+        public static FPQuaternion RotateTowards(FPQuaternion from, FPQuaternion to, FP maxDegreesDelta) {
             FP dot = Dot(from, to);
 
             if (dot < 0.0f) {
@@ -165,28 +165,28 @@ namespace KBEngine
             return Multiply(Multiply(from, FP.Sin((1 - maxDegreesDelta) * halfTheta)) + Multiply(to, FP.Sin(maxDegreesDelta * halfTheta)), 1 / FP.Sin(halfTheta));
         }
 
-        public static TSQuaternion Euler(FP x, FP y, FP z) {
+        public static FPQuaternion Euler(FP x, FP y, FP z) {
             x *= FP.Deg2Rad;
             y *= FP.Deg2Rad;
             z *= FP.Deg2Rad;
 
-            TSQuaternion rotation;
-            TSQuaternion.CreateFromYawPitchRoll(y, x, z, out rotation);
+            FPQuaternion rotation;
+            FPQuaternion.CreateFromYawPitchRoll(y, x, z, out rotation);
 
             return rotation;
         }
 
-        public static TSQuaternion Euler(TSVector eulerAngles) {
+        public static FPQuaternion Euler(FPVector eulerAngles) {
             return Euler(eulerAngles.x, eulerAngles.y, eulerAngles.z);
         }
 
-        public static TSQuaternion AngleAxis(FP angle, TSVector axis) {
+        public static FPQuaternion AngleAxis(FP angle, FPVector axis) {
             axis = axis * FP.Deg2Rad;
             axis.Normalize();
 
             FP halfAngle = angle * FP.Deg2Rad * FP.Half;
 
-            TSQuaternion rotation;
+            FPQuaternion rotation;
             FP sin = FP.Sin(halfAngle);
 
             rotation.x = axis.x * sin;
@@ -197,7 +197,7 @@ namespace KBEngine
             return rotation;
         }
 
-        public static void CreateFromYawPitchRoll(FP yaw, FP pitch, FP roll, out TSQuaternion result)
+        public static void CreateFromYawPitchRoll(FP yaw, FP pitch, FP roll, out FPQuaternion result)
         {
             FP num9 = roll * FP.Half;
             FP num6 = FP.Sin(num9);
@@ -220,7 +220,7 @@ namespace KBEngine
         /// <param name="quaternion1">The first quaternion.</param>
         /// <param name="quaternion2">The second quaternion.</param>
         /// <param name="result">The sum of both quaternions.</param>
-        public static void Add(ref TSQuaternion quaternion1, ref TSQuaternion quaternion2, out TSQuaternion result)
+        public static void Add(ref FPQuaternion quaternion1, ref FPQuaternion quaternion2, out FPQuaternion result)
         {
             result.x = quaternion1.x + quaternion2.x;
             result.y = quaternion1.y + quaternion2.y;
@@ -229,9 +229,9 @@ namespace KBEngine
         }
         #endregion
 
-        public static TSQuaternion Conjugate(TSQuaternion value)
+        public static FPQuaternion Conjugate(FPQuaternion value)
         {
-            TSQuaternion quaternion;
+            FPQuaternion quaternion;
             quaternion.x = -value.x;
             quaternion.y = -value.y;
             quaternion.z = -value.z;
@@ -239,32 +239,32 @@ namespace KBEngine
             return quaternion;
         }
 
-        public static FP Dot(TSQuaternion a, TSQuaternion b) {
+        public static FP Dot(FPQuaternion a, FPQuaternion b) {
             return a.w * b.w + a.x * b.x + a.y * b.y + a.z * b.z;
         }
 
-        public static TSQuaternion Inverse(TSQuaternion rotation) {
+        public static FPQuaternion Inverse(FPQuaternion rotation) {
             FP invNorm = FP.One / ((rotation.x * rotation.x) + (rotation.y * rotation.y) + (rotation.z * rotation.z) + (rotation.w * rotation.w));
-            return TSQuaternion.Multiply(TSQuaternion.Conjugate(rotation), invNorm);
+            return FPQuaternion.Multiply(FPQuaternion.Conjugate(rotation), invNorm);
         }
 
-        public static TSQuaternion FromToRotation(TSVector fromVector, TSVector toVector) {
-            TSVector w = TSVector.Cross(fromVector, toVector);
-            TSQuaternion q = new TSQuaternion(w.x, w.y, w.z, TSVector.Dot(fromVector, toVector));
+        public static FPQuaternion FromToRotation(FPVector fromVector, FPVector toVector) {
+            FPVector w = FPVector.Cross(fromVector, toVector);
+            FPQuaternion q = new FPQuaternion(w.x, w.y, w.z, FPVector.Dot(fromVector, toVector));
             q.w += FP.Sqrt(fromVector.sqrMagnitude * toVector.sqrMagnitude);
             q.Normalize();
 
             return q;
         }
 
-        public static TSQuaternion Lerp(TSQuaternion a, TSQuaternion b, FP t) {
-            t = TSMath.Clamp(t, FP.Zero, FP.One);
+        public static FPQuaternion Lerp(FPQuaternion a, FPQuaternion b, FP t) {
+            t = FPMath.Clamp(t, FP.Zero, FP.One);
 
             return LerpUnclamped(a, b, t);
         }
 
-        public static TSQuaternion LerpUnclamped(TSQuaternion a, TSQuaternion b, FP t) {
-            TSQuaternion result = TSQuaternion.Multiply(a, (1 - t)) + TSQuaternion.Multiply(b, t);
+        public static FPQuaternion LerpUnclamped(FPQuaternion a, FPQuaternion b, FP t) {
+            FPQuaternion result = FPQuaternion.Multiply(a, (1 - t)) + FPQuaternion.Multiply(b, t);
             result.Normalize();
 
             return result;
@@ -277,10 +277,10 @@ namespace KBEngine
         /// <param name="quaternion2">The second quaternion.</param>
         /// <returns>The difference of both quaternions.</returns>
         #region public static JQuaternion Subtract(JQuaternion quaternion1, JQuaternion quaternion2)
-        public static TSQuaternion Subtract(TSQuaternion quaternion1, TSQuaternion quaternion2)
+        public static FPQuaternion Subtract(FPQuaternion quaternion1, FPQuaternion quaternion2)
         {
-            TSQuaternion result;
-            TSQuaternion.Subtract(ref quaternion1, ref quaternion2, out result);
+            FPQuaternion result;
+            FPQuaternion.Subtract(ref quaternion1, ref quaternion2, out result);
             return result;
         }
 
@@ -290,7 +290,7 @@ namespace KBEngine
         /// <param name="quaternion1">The first quaternion.</param>
         /// <param name="quaternion2">The second quaternion.</param>
         /// <param name="result">The difference of both quaternions.</param>
-        public static void Subtract(ref TSQuaternion quaternion1, ref TSQuaternion quaternion2, out TSQuaternion result)
+        public static void Subtract(ref FPQuaternion quaternion1, ref FPQuaternion quaternion2, out FPQuaternion result)
         {
             result.x = quaternion1.x - quaternion2.x;
             result.y = quaternion1.y - quaternion2.y;
@@ -306,10 +306,10 @@ namespace KBEngine
         /// <param name="quaternion2">The second quaternion.</param>
         /// <returns>The product of both quaternions.</returns>
         #region public static JQuaternion Multiply(JQuaternion quaternion1, JQuaternion quaternion2)
-        public static TSQuaternion Multiply(TSQuaternion quaternion1, TSQuaternion quaternion2)
+        public static FPQuaternion Multiply(FPQuaternion quaternion1, FPQuaternion quaternion2)
         {
-            TSQuaternion result;
-            TSQuaternion.Multiply(ref quaternion1, ref quaternion2, out result);
+            FPQuaternion result;
+            FPQuaternion.Multiply(ref quaternion1, ref quaternion2, out result);
             return result;
         }
 
@@ -319,7 +319,7 @@ namespace KBEngine
         /// <param name="quaternion1">The first quaternion.</param>
         /// <param name="quaternion2">The second quaternion.</param>
         /// <param name="result">The product of both quaternions.</param>
-        public static void Multiply(ref TSQuaternion quaternion1, ref TSQuaternion quaternion2, out TSQuaternion result)
+        public static void Multiply(ref FPQuaternion quaternion1, ref FPQuaternion quaternion2, out FPQuaternion result)
         {
             FP x = quaternion1.x;
             FP y = quaternion1.y;
@@ -347,10 +347,10 @@ namespace KBEngine
         /// <param name="scaleFactor">Scale factor.</param>
         /// <returns>The scaled quaternion.</returns>
         #region public static JQuaternion Multiply(JQuaternion quaternion1, FP scaleFactor)
-        public static TSQuaternion Multiply(TSQuaternion quaternion1, FP scaleFactor)
+        public static FPQuaternion Multiply(FPQuaternion quaternion1, FP scaleFactor)
         {
-            TSQuaternion result;
-            TSQuaternion.Multiply(ref quaternion1, scaleFactor, out result);
+            FPQuaternion result;
+            FPQuaternion.Multiply(ref quaternion1, scaleFactor, out result);
             return result;
         }
 
@@ -360,7 +360,7 @@ namespace KBEngine
         /// <param name="quaternion1">The quaternion to scale.</param>
         /// <param name="scaleFactor">Scale factor.</param>
         /// <param name="result">The scaled quaternion.</param>
-        public static void Multiply(ref TSQuaternion quaternion1, FP scaleFactor, out TSQuaternion result)
+        public static void Multiply(ref FPQuaternion quaternion1, FP scaleFactor, out FPQuaternion result)
         {
             result.x = quaternion1.x * scaleFactor;
             result.y = quaternion1.y * scaleFactor;
@@ -390,10 +390,10 @@ namespace KBEngine
         /// <param name="matrix">A matrix representing an orientation.</param>
         /// <returns>JQuaternion representing an orientation.</returns>
         #region public static JQuaternion CreateFromMatrix(JMatrix matrix)
-        public static TSQuaternion CreateFromMatrix(TSMatrix matrix)
+        public static FPQuaternion CreateFromMatrix(FPMatrix matrix)
         {
-            TSQuaternion result;
-            TSQuaternion.CreateFromMatrix(ref matrix, out result);
+            FPQuaternion result;
+            FPQuaternion.CreateFromMatrix(ref matrix, out result);
             return result;
         }
 
@@ -402,7 +402,7 @@ namespace KBEngine
         /// </summary>
         /// <param name="matrix">A matrix representing an orientation.</param>
         /// <param name="result">JQuaternion representing an orientation.</param>
-        public static void CreateFromMatrix(ref TSMatrix matrix, out TSQuaternion result)
+        public static void CreateFromMatrix(ref FPMatrix matrix, out FPQuaternion result)
         {
             FP num8 = (matrix.M11 + matrix.M22) + matrix.M33;
             if (num8 > FP.Zero)
@@ -451,10 +451,10 @@ namespace KBEngine
         /// <param name="value2">The second quaternion.</param>
         /// <returns>The product of both quaternions.</returns>
         #region public static FP operator *(JQuaternion value1, JQuaternion value2)
-        public static TSQuaternion operator *(TSQuaternion value1, TSQuaternion value2)
+        public static FPQuaternion operator *(FPQuaternion value1, FPQuaternion value2)
         {
-            TSQuaternion result;
-            TSQuaternion.Multiply(ref value1, ref value2,out result);
+            FPQuaternion result;
+            FPQuaternion.Multiply(ref value1, ref value2,out result);
             return result;
         }
         #endregion
@@ -466,10 +466,10 @@ namespace KBEngine
         /// <param name="value2">The second quaternion.</param>
         /// <returns>The sum of both quaternions.</returns>
         #region public static FP operator +(JQuaternion value1, JQuaternion value2)
-        public static TSQuaternion operator +(TSQuaternion value1, TSQuaternion value2)
+        public static FPQuaternion operator +(FPQuaternion value1, FPQuaternion value2)
         {
-            TSQuaternion result;
-            TSQuaternion.Add(ref value1, ref value2, out result);
+            FPQuaternion result;
+            FPQuaternion.Add(ref value1, ref value2, out result);
             return result;
         }
         #endregion
@@ -481,18 +481,18 @@ namespace KBEngine
         /// <param name="value2">The second quaternion.</param>
         /// <returns>The difference of both quaternions.</returns>
         #region public static FP operator -(JQuaternion value1, JQuaternion value2)
-        public static TSQuaternion operator -(TSQuaternion value1, TSQuaternion value2)
+        public static FPQuaternion operator -(FPQuaternion value1, FPQuaternion value2)
         {
-            TSQuaternion result;
-            TSQuaternion.Subtract(ref value1, ref value2, out result);
+            FPQuaternion result;
+            FPQuaternion.Subtract(ref value1, ref value2, out result);
             return result;
         }
         #endregion
 
         /**
-         *  @brief Rotates a {@link TSVector} by the {@link TSQuanternion}.
+         *  @brief Rotates a {@link FPVector} by the {@link TSQuanternion}.
          **/
-        public static TSVector operator *(TSQuaternion quat, TSVector vec) {
+        public static FPVector operator *(FPQuaternion quat, FPVector vec) {
             FP num = quat.x * 2f;
             FP num2 = quat.y * 2f;
             FP num3 = quat.z * 2f;
@@ -506,7 +506,7 @@ namespace KBEngine
             FP num11 = quat.w * num2;
             FP num12 = quat.w * num3;
 
-            TSVector result;
+            FPVector result;
             result.x = (1f - (num5 + num6)) * vec.x + (num7 - num12) * vec.y + (num8 + num11) * vec.z;
             result.y = (num7 + num12) * vec.x + (1f - (num4 + num6)) * vec.y + (num9 - num10) * vec.z;
             result.z = (num8 - num11) * vec.x + (num9 + num10) * vec.y + (1f - (num4 + num5)) * vec.z;

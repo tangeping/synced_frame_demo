@@ -50,8 +50,8 @@ namespace KBEngine.Physics2D
                         continue;
                     }
 
-                    TSVector2 r = vertices[ie] - vertices[hull[m]];
-                    TSVector2 v = vertices[j] - vertices[hull[m]];
+                    FPVector2 r = vertices[ie] - vertices[hull[m]];
+                    FPVector2 v = vertices[j] - vertices[hull[m]];
                     FP c = MathUtils.Cross(ref r, ref v);
                     if (c < 0.0f)
                     {

@@ -48,10 +48,10 @@ namespace KBEngine.Physics2D
         private Func<int, bool> _queryAABBCallbackWrapper;
         internal TOIInput _input = new TOIInput();
         internal Fixture _myFixture;
-        private TSVector2 _point1;
-        internal TSVector2 _point2;
+        private FPVector2 _point1;
+        internal FPVector2 _point2;
         internal List<Fixture> _testPointAllFixtures;
-        private Func<Fixture, TSVector2, TSVector2, FP, FP> _rayCastCallback;
+        private Func<Fixture, FPVector2, FPVector2, FP, FP> _rayCastCallback;
         private Func<RayCastInput, int, FP> _rayCastCallbackWrapper;
 
         internal Queue<Contact> _contactPool = new Queue<Contact>(256);
@@ -100,7 +100,7 @@ namespace KBEngine.Physics2D
         /// <summary>
         /// Initializes a new instance of the <see cref="World"/> class.
         /// </summary>
-        public World(TSVector2 gravity)
+        public World(FPVector2 gravity)
         {
             Island = new Island();
             Enabled = true;
@@ -408,7 +408,7 @@ namespace KBEngine.Physics2D
             if (hit)
             {
                 FP fraction = output.Fraction;
-                TSVector2 point = (1.0f - fraction) * rayCastInput.Point1 + fraction * rayCastInput.Point2;
+                FPVector2 point = (1.0f - fraction) * rayCastInput.Point1 + fraction * rayCastInput.Point2;
                 return _rayCastCallback(fixture, point, output.Normal, fraction);
             }
 
@@ -818,7 +818,7 @@ namespace KBEngine.Physics2D
                         FP beta = output.T;
                         if (output.State == TOIOutputState.Touching)
                         {
-                            alpha = KBEngine.TSMath.Min(alpha0 + (1.0f - alpha0) * beta, 1.0f);
+                            alpha = KBEngine.FPMath.Min(alpha0 + (1.0f - alpha0) * beta, 1.0f);
                         }
                         else
                         {
@@ -1041,7 +1041,7 @@ namespace KBEngine.Physics2D
         /// Change the global gravity vector.
         /// </summary>
         /// <value>The gravity.</value>
-        public TSVector2 Gravity;
+        public FPVector2 Gravity;
 
         /// <summary>
         /// Get the contact manager for testing.
@@ -1246,7 +1246,7 @@ namespace KBEngine.Physics2D
             for (int i = 0; i < BodyList.Count; i++)
             {
                 Body body = BodyList[i];
-                body._force = TSVector2.zero;
+                body._force = FPVector2.zero;
                 body._torque = 0.0f;
             }
         }
@@ -1300,7 +1300,7 @@ namespace KBEngine.Physics2D
         /// <param name="callback">A user implemented callback class.</param>
         /// <param name="point1">The ray starting point.</param>
         /// <param name="point2">The ray ending point.</param>
-        public void RayCast(Func<Fixture, TSVector2, TSVector2, FP, FP> callback, TSVector2 point1, TSVector2 point2)
+        public void RayCast(Func<Fixture, FPVector2, FPVector2, FP, FP> callback, FPVector2 point1, FPVector2 point2)
         {
             RayCastInput input = new RayCastInput();
             input.MaxFraction = 1.0f;
@@ -1312,7 +1312,7 @@ namespace KBEngine.Physics2D
             _rayCastCallback = null;
         }
 
-        public List<Fixture> RayCast(TSVector2 point1, TSVector2 point2)
+        public List<Fixture> RayCast(FPVector2 point1, FPVector2 point2)
         {
             List<Fixture> affected = new List<Fixture>();
 
@@ -1363,10 +1363,10 @@ namespace KBEngine.Physics2D
             BreakableBodyList.Remove(breakableBody);
         }
 
-        public Fixture TestPoint(TSVector2 point)
+        public Fixture TestPoint(FPVector2 point)
         {
             AABB aabb;
-            TSVector2 d = new TSVector2(Settings.Epsilon, Settings.Epsilon);
+            FPVector2 d = new FPVector2(Settings.Epsilon, Settings.Epsilon);
             aabb.LowerBound = point - d;
             aabb.UpperBound = point + d;
 
@@ -1397,10 +1397,10 @@ namespace KBEngine.Physics2D
         /// </summary>
         /// <param name="point">The point.</param>
         /// <returns></returns>
-        public List<Fixture> TestPointAll(TSVector2 point)
+        public List<Fixture> TestPointAll(FPVector2 point)
         {
             AABB aabb;
-            TSVector2 d = new TSVector2(Settings.Epsilon, Settings.Epsilon);
+            FPVector2 d = new FPVector2(Settings.Epsilon, Settings.Epsilon);
             aabb.LowerBound = point - d;
             aabb.UpperBound = point + d;
 
@@ -1427,7 +1427,7 @@ namespace KBEngine.Physics2D
         /// The body shift formula is: position -= newOrigin
         /// @param newOrigin the new origin with respect to the old origin
         /// Warning: Calling this method mid-update might cause a crash.
-        public void ShiftOrigin(TSVector2 newOrigin)
+        public void ShiftOrigin(FPVector2 newOrigin)
         {
             foreach (Body b in BodyList)
             {

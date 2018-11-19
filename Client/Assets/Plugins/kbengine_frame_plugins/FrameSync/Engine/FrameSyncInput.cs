@@ -94,33 +94,33 @@ namespace KBEngine {
         }
 
         /**
-        * @brief Adds a TSVector value in player's input.
+        * @brief Adds a FPVector value in player's input.
         **/
-        public static void SetTSVector(byte key, TSVector value) {
+        public static void SetFPVector(byte key, FPVector value) {
             if (currentInputData != null)
-                currentInputData.AddTSVector(key, value);
+                currentInputData.AddFPVector(key, value);
         }
 
         /**
-        * @brief Adds a TSVector2 value in player's input.
+        * @brief Adds a FPVector2 value in player's input.
         **/
-        public static void SetTSVector2(byte key, TSVector2 value) {
+        public static void SetFPVector2(byte key, FPVector2 value) {
             if (currentInputData != null)
-                currentInputData.AddTSVector2(key, value);
+                currentInputData.AddFPVector2(key, value);
         }
 
         /**
-        * @brief Converts a Vector3 to a TSVector and adds its value in player's input.
+        * @brief Converts a Vector3 to a FPVector and adds its value in player's input.
         **/
-        public static void SetTSVector(byte key, UnityEngine.Vector3 value) {
-            SetTSVector(key, value.ToTSVector());
+        public static void SetFPVector(byte key, UnityEngine.Vector3 value) {
+            SetFPVector(key, value.ToFPVector());
         }
 
         /**
-        * @brief Converts a Vector2 to a TSVector and adds its value in player's input.
+        * @brief Converts a Vector2 to a FPVector and adds its value in player's input.
         **/
-        public static void SetTSVector2(byte key, UnityEngine.Vector2 value) {
-            SetTSVector2(key, value.ToTSVector2());
+        public static void SetFPVector2(byte key, UnityEngine.Vector2 value) {
+            SetFPVector2(key, value.ToFPVector2());
         }
 
         public static void SetAllInputs(List<InputDataBase> allInputData) {
@@ -306,51 +306,51 @@ namespace KBEngine {
         }
 
         /**
-        * @brief Returns a TSVector value from player's inputs for the provided key.
+        * @brief Returns a FPVector value from player's inputs for the provided key.
         **/
-        public static TSVector GetTSVector(byte key) {
+        public static FPVector GetFPVector(byte key) {
             if (currentSimulationData == null) {
                 LogInvalidKeyAccess();
-                return TSVector.zero;
+                return FPVector.zero;
             }
 
-            return currentSimulationData.GetTSVector(key);
+            return currentSimulationData.GetFPVector(key);
         }
 
         /**
-        * @brief Returns a TSVector value from a specific player's inputs.
+        * @brief Returns a FPVector value from a specific player's inputs.
         **/
-        public static TSVector GetTSVector(byte ownerId, byte key) {
+        public static FPVector GetFPVector(byte ownerId, byte key) {
             InputData playerData = GetPlayerInput(ownerId);
             if (playerData == null) {
-                return TSVector.zero;
+                return FPVector.zero;
             }
 
-            return playerData.GetTSVector(key);
+            return playerData.GetFPVector(key);
         }
 
         /**
-        * @brief Returns a TSVector2 value from player's inputs for the provided key.
+        * @brief Returns a FPVector2 value from player's inputs for the provided key.
         **/
-        public static TSVector2 GetTSVector2(byte key) {
+        public static FPVector2 GetFPVector2(byte key) {
             if (currentSimulationData == null) {
                 LogInvalidKeyAccess();
-                return TSVector2.zero;
+                return FPVector2.zero;
             }
 
-            return currentSimulationData.GetTSVector2(key);
+            return currentSimulationData.GetFPVector2(key);
         }
 
         /**
-        * @brief Returns a TSVector2 value from a specific player's inputs.
+        * @brief Returns a FPVector2 value from a specific player's inputs.
         **/
-        public static TSVector2 GetTSVector2(byte ownerId, byte key) {
+        public static FPVector2 GetFPVector2(byte ownerId, byte key) {
             InputData playerData = GetPlayerInput(ownerId);
             if (playerData == null) {
-                return TSVector2.zero;
+                return FPVector2.zero;
             }
 
-            return playerData.GetTSVector2(key);
+            return playerData.GetFPVector2(key);
         }
 
         /**
@@ -492,49 +492,49 @@ namespace KBEngine {
         }
 
         /**
-        * @brief Returns true if there is a TSVector for the provided key.
+        * @brief Returns true if there is a FPVector for the provided key.
         **/
-        public static bool HasTSVector(byte key) {
+        public static bool HasFPVector(byte key) {
             if (currentSimulationData == null) {
                 return false;
             }
 
-            return currentSimulationData.HasTSVector(key);
+            return currentSimulationData.HasFPVector(key);
         }
 
         /**
-        * @brief Returns true if there is a TSVector for the provided key for a specific player.
+        * @brief Returns true if there is a FPVector for the provided key for a specific player.
         **/
-        public static bool HasTSVector(byte ownerId, byte key) {
+        public static bool HasFPVector(byte ownerId, byte key) {
             InputData playerData = GetPlayerInput(ownerId);
             if (playerData == null) {
                 return false;
             }
 
-            return playerData.HasTSVector(key);
+            return playerData.HasFPVector(key);
         }
 
         /**
-        * @brief Returns true if there is a TSVector2 for the provided key.
+        * @brief Returns true if there is a FPVector2 for the provided key.
         **/
-        public static bool HasTSVector2(byte key) {
+        public static bool HasFPVector2(byte key) {
             if (currentSimulationData == null) {
                 return false;
             }
 
-            return currentSimulationData.HasTSVector2(key);
+            return currentSimulationData.HasFPVector2(key);
         }
 
         /**
-        * @brief Returns true if there is a TSVector2 for the provided key for a specific player.
+        * @brief Returns true if there is a FPVector2 for the provided key for a specific player.
         **/
-        public static bool HasTSVector2(byte ownerId, byte key) {
+        public static bool HasFPVector2(byte ownerId, byte key) {
             InputData playerData = GetPlayerInput(ownerId);
             if (playerData == null) {
                 return false;
             }
 
-            return playerData.HasTSVector2(key);
+            return playerData.HasFPVector2(key);
         }
 
     }

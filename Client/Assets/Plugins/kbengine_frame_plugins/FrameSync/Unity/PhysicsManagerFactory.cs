@@ -27,7 +27,7 @@
                 instance.SpeculativeContacts = FrameSyncConfig.speculativeContacts3D;
             } else if (FrameSyncConfig.physics2DEnabled) {
                 instance = new Physics2DWorldManager();
-                instance.Gravity = new TSVector(FrameSyncConfig.gravity2D.x, FrameSyncConfig.gravity2D.y, 0);
+                instance.Gravity = new FPVector(FrameSyncConfig.gravity2D.x, FrameSyncConfig.gravity2D.y, 0);
                 instance.SpeculativeContacts = FrameSyncConfig.speculativeContacts2D;
             }
 
@@ -39,7 +39,7 @@
          **/
         internal static void InitTest3D() {
             instance = new PhysicsWorldManager();
-            instance.Gravity = new TSVector(0, -10, 0);
+            instance.Gravity = new FPVector(0, -10, 0);
             instance.LockedTimeStep = 0.02f;
             instance.Init();
         }
@@ -49,7 +49,7 @@
          **/
         internal static void InitTest2D() {
             instance = new Physics2DWorldManager();
-            instance.Gravity = new TSVector(0, -10, 0);
+            instance.Gravity = new FPVector(0, -10, 0);
             instance.LockedTimeStep = 0.02f;
             instance.Init();
         }

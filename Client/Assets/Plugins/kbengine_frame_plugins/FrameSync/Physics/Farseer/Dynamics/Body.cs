@@ -87,8 +87,8 @@ namespace KBEngine.Physics2D
 
         internal bool _enabled = true;
         internal FP _angularVelocity;
-        internal TSVector2 _linearVelocity;
-        internal TSVector2 _force;
+        internal FPVector2 _linearVelocity;
+        internal FPVector2 _force;
         internal FP _invI;
         internal FP _invMass;
         internal FP _sleepTime;
@@ -111,7 +111,7 @@ namespace KBEngine.Physics2D
         public ControllerFilter ControllerFilter;
 
         // TS - public Body(World world, Vector2? position = null, FP rotation = 0, object userdata = null)
-        public Body(World world, TSVector2? position, FP rotation, object userdata = null)
+        public Body(World world, FPVector2? position, FP rotation, object userdata = null)
         {
             FixtureList = new List<Fixture>();
             bodyConstraints = new List<IBodyConstraint>();
@@ -200,7 +200,7 @@ namespace KBEngine.Physics2D
 
                 if (_bodyType != BodyType.Dynamic)
                 {
-                    _linearVelocity = TSVector2.zero;
+                    _linearVelocity = FPVector2.zero;
                     _angularVelocity = 0.0f;
                     _sweep.A0 = _sweep.A;
                     _sweep.C0 = _sweep.C;
@@ -209,7 +209,7 @@ namespace KBEngine.Physics2D
 
                 Awake = true;
 
-                _force = TSVector2.zero;
+                _force = FPVector2.zero;
                 _torque = 0.0f;
 
                 // Delete the attached contacts.
@@ -240,7 +240,7 @@ namespace KBEngine.Physics2D
         /// Get or sets the linear velocity of the center of mass.
         /// </summary>
         /// <value>The linear velocity.</value>
-        public TSVector2 LinearVelocity
+        public FPVector2 LinearVelocity
         {
             set
             {
@@ -249,7 +249,7 @@ namespace KBEngine.Physics2D
                 if (_bodyType == BodyType.Static)
                     return;
 
-                if (TSVector2.Dot(value, value) > 0.0f)
+                if (FPVector2.Dot(value, value) > 0.0f)
                     Awake = true;
 
                 _linearVelocity = value;
@@ -478,7 +478,7 @@ namespace KBEngine.Physics2D
         /// Get the world body origin position.
         /// </summary>
         /// <returns>Return the world position of the body's origin.</returns>
-        public TSVector2 Position
+        public FPVector2 Position
         {
             get { return _xf.p; }
             set
@@ -543,7 +543,7 @@ namespace KBEngine.Physics2D
         /// Get the world position of the center of mass.
         /// </summary>
         /// <value>The world position.</value>
-        public TSVector2 WorldCenter
+        public FPVector2 WorldCenter
         {
             get { return _sweep.C; }
         }
@@ -552,7 +552,7 @@ namespace KBEngine.Physics2D
         /// Get the local position of the center of mass.
         /// </summary>
         /// <value>The local position.</value>
-        public TSVector2 LocalCenter
+        public FPVector2 LocalCenter
         {
             get { return _sweep.LocalCenter; }
             set
@@ -561,13 +561,13 @@ namespace KBEngine.Physics2D
                     return;
 
                 // Move center of mass.
-                TSVector2 oldCenter = _sweep.C;
+                FPVector2 oldCenter = _sweep.C;
                 _sweep.LocalCenter = value;
                 _sweep.C0 = _sweep.C = MathUtils.Mul(ref _xf, ref _sweep.LocalCenter);
 
                 // Update center of mass velocity.
-                TSVector2 a = _sweep.C - oldCenter;
-                _linearVelocity += new TSVector2(-_angularVelocity * a.y, _angularVelocity * a.x);
+                FPVector2 a = _sweep.C - oldCenter;
+                _linearVelocity += new FPVector2(-_angularVelocity * a.y, _angularVelocity * a.x);
             }
         }
 
@@ -603,7 +603,7 @@ namespace KBEngine.Physics2D
         /// <value>The inertia.</value>
         public FP Inertia
         {
-            get { return _inertia + Mass * TSVector2.Dot(_sweep.LocalCenter, _sweep.LocalCenter); }
+            get { return _inertia + Mass * FPVector2.Dot(_sweep.LocalCenter, _sweep.LocalCenter); }
             set
             {
                 Debug.Assert(!FP.IsNaN(value));
@@ -613,7 +613,7 @@ namespace KBEngine.Physics2D
 
                 if (value > 0.0f && !_fixedRotation) //Make an assert
                 {
-                    _inertia = value - Mass * TSVector2.Dot(LocalCenter, LocalCenter);
+                    _inertia = value - Mass * FPVector2.Dot(LocalCenter, LocalCenter);
                     Debug.Assert(_inertia > 0.0f);
                     _invI = 1.0f / _inertia;
                 }
@@ -747,8 +747,8 @@ namespace KBEngine.Physics2D
         {
             _torque = 0;
             _angularVelocity = 0;
-            _force = TSVector2.zero;
-            _linearVelocity = TSVector2.zero;
+            _force = FPVector2.zero;
+            _linearVelocity = FPVector2.zero;
         }
 
         /// <summary>
@@ -822,7 +822,7 @@ namespace KBEngine.Physics2D
         /// </summary>
         /// <param name="position">The world position of the body's local origin.</param>
         /// <param name="rotation">The world rotation in radians.</param>
-        public void SetTransform(ref TSVector2 position, FP rotation)
+        public void SetTransform(ref FPVector2 position, FP rotation)
         {
             SetTransformIgnoreContacts(ref position, rotation);
 
@@ -836,7 +836,7 @@ namespace KBEngine.Physics2D
         /// </summary>
         /// <param name="position">The world position of the body's local origin.</param>
         /// <param name="rotation">The world rotation in radians.</param>
-        public void SetTransform(TSVector2 position, FP rotation)
+        public void SetTransform(FPVector2 position, FP rotation)
         {
             SetTransform(ref position, rotation);
         }
@@ -846,7 +846,7 @@ namespace KBEngine.Physics2D
         /// </summary>
         /// <param name="position">The position.</param>
         /// <param name="angle">The angle.</param>
-        public void SetTransformIgnoreContacts(ref TSVector2 position, FP angle)
+        public void SetTransformIgnoreContacts(ref FPVector2 position, FP angle)
         {
             _xf.q.Set(angle);
             _xf.p = position;
@@ -882,7 +882,7 @@ namespace KBEngine.Physics2D
         /// </summary>
         /// <param name="force">The world force vector, usually in Newtons (N).</param>
         /// <param name="point">The world position of the point of application.</param>
-        public void ApplyForce(TSVector2 force, TSVector2 point)
+        public void ApplyForce(FPVector2 force, FPVector2 point)
         {
             ApplyForce(ref force, ref point);
         }
@@ -891,7 +891,7 @@ namespace KBEngine.Physics2D
         /// Applies a force at the center of mass.
         /// </summary>
         /// <param name="force">The force.</param>
-        public void ApplyForce(ref TSVector2 force)
+        public void ApplyForce(ref FPVector2 force)
         {
             ApplyForce(ref force, ref _xf.p);
         }
@@ -900,7 +900,7 @@ namespace KBEngine.Physics2D
         /// Applies a force at the center of mass.
         /// </summary>
         /// <param name="force">The force.</param>
-        public void ApplyForce(TSVector2 force)
+        public void ApplyForce(FPVector2 force)
         {
             ApplyForce(ref force, ref _xf.p);
         }
@@ -912,7 +912,7 @@ namespace KBEngine.Physics2D
         /// </summary>
         /// <param name="force">The world force vector, usually in Newtons (N).</param>
         /// <param name="point">The world position of the point of application.</param>
-        public void ApplyForce(ref TSVector2 force, ref TSVector2 point)
+        public void ApplyForce(ref FPVector2 force, ref FPVector2 point)
         {
             Debug.Assert(!FP.IsNaN(force.x));
             Debug.Assert(!FP.IsNaN(force.y));
@@ -957,7 +957,7 @@ namespace KBEngine.Physics2D
         /// This wakes up the body.
         /// </summary>
         /// <param name="impulse">The world impulse vector, usually in N-seconds or kg-m/s.</param>
-        public void ApplyLinearImpulse(TSVector2 impulse)
+        public void ApplyLinearImpulse(FPVector2 impulse)
         {
             ApplyLinearImpulse(ref impulse);
         }
@@ -970,7 +970,7 @@ namespace KBEngine.Physics2D
         /// </summary>
         /// <param name="impulse">The world impulse vector, usually in N-seconds or kg-m/s.</param>
         /// <param name="point">The world position of the point of application.</param>
-        public void ApplyLinearImpulse(TSVector2 impulse, TSVector2 point)
+        public void ApplyLinearImpulse(FPVector2 impulse, FPVector2 point)
         {
             ApplyLinearImpulse(ref impulse, ref point);
         }
@@ -980,7 +980,7 @@ namespace KBEngine.Physics2D
         /// This wakes up the body.
         /// </summary>
         /// <param name="impulse">The world impulse vector, usually in N-seconds or kg-m/s.</param>
-        public void ApplyLinearImpulse(ref TSVector2 impulse)
+        public void ApplyLinearImpulse(ref FPVector2 impulse)
         {
             if (_bodyType != BodyType.Dynamic)
             {
@@ -1001,7 +1001,7 @@ namespace KBEngine.Physics2D
         /// </summary>
         /// <param name="impulse">The world impulse vector, usually in N-seconds or kg-m/s.</param>
         /// <param name="point">The world position of the point of application.</param>
-        public void ApplyLinearImpulse(ref TSVector2 impulse, ref TSVector2 point)
+        public void ApplyLinearImpulse(ref FPVector2 impulse, ref FPVector2 point)
         {
             if (_bodyType != BodyType.Dynamic)
                 return;
@@ -1044,7 +1044,7 @@ namespace KBEngine.Physics2D
             _invMass = 0.0f;
             _inertia = 0.0f;
             _invI = 0.0f;
-            _sweep.LocalCenter = TSVector2.zero;
+            _sweep.LocalCenter = FPVector2.zero;
 
             // Kinematic bodies have zero mass.
             if (BodyType == BodyType.Kinematic)
@@ -1058,7 +1058,7 @@ namespace KBEngine.Physics2D
             Debug.Assert(BodyType == BodyType.Dynamic || BodyType == BodyType.Static);
 
             // Accumulate mass over all fixtures.
-            TSVector2 localCenter = TSVector2.zero;
+            FPVector2 localCenter = FPVector2.zero;
             foreach (Fixture f in FixtureList)
             {
                 if (f.Shape._density == 0)
@@ -1095,7 +1095,7 @@ namespace KBEngine.Physics2D
             if (_inertia > 0.0f && !_fixedRotation)
             {
                 // Center the inertia about the center of mass.
-                _inertia -= _mass * TSVector2.Dot(localCenter, localCenter);
+                _inertia -= _mass * FPVector2.Dot(localCenter, localCenter);
 
                 Debug.Assert(_inertia > 0.0f);
                 _invI = 1.0f / _inertia;
@@ -1107,13 +1107,13 @@ namespace KBEngine.Physics2D
             }
 
             // Move center of mass.
-            TSVector2 oldCenter = _sweep.C;
+            FPVector2 oldCenter = _sweep.C;
             _sweep.LocalCenter = localCenter;
             _sweep.C0 = _sweep.C = MathUtils.Mul(ref _xf, ref _sweep.LocalCenter);
 
             // Update center of mass velocity.
-            TSVector2 a = _sweep.C - oldCenter;
-            _linearVelocity += new TSVector2(-_angularVelocity * a.y, _angularVelocity * a.x);
+            FPVector2 a = _sweep.C - oldCenter;
+            _linearVelocity += new FPVector2(-_angularVelocity * a.y, _angularVelocity * a.x);
         }
 
         /// <summary>
@@ -1121,7 +1121,7 @@ namespace KBEngine.Physics2D
         /// </summary>
         /// <param name="localPoint">A point on the body measured relative the the body's origin.</param>
         /// <returns>The same point expressed in world coordinates.</returns>
-        public TSVector2 GetWorldPoint(ref TSVector2 localPoint)
+        public FPVector2 GetWorldPoint(ref FPVector2 localPoint)
         {
             return MathUtils.Mul(ref _xf, ref localPoint);
         }
@@ -1131,7 +1131,7 @@ namespace KBEngine.Physics2D
         /// </summary>
         /// <param name="localPoint">A point on the body measured relative the the body's origin.</param>
         /// <returns>The same point expressed in world coordinates.</returns>
-        public TSVector2 GetWorldPoint(TSVector2 localPoint)
+        public FPVector2 GetWorldPoint(FPVector2 localPoint)
         {
             return GetWorldPoint(ref localPoint);
         }
@@ -1142,7 +1142,7 @@ namespace KBEngine.Physics2D
         /// </summary>
         /// <param name="localVector">A vector fixed in the body.</param>
         /// <returns>The same vector expressed in world coordinates.</returns>
-        public TSVector2 GetWorldVector(ref TSVector2 localVector)
+        public FPVector2 GetWorldVector(ref FPVector2 localVector)
         {
             return MathUtils.Mul(_xf.q, localVector);
         }
@@ -1152,7 +1152,7 @@ namespace KBEngine.Physics2D
         /// </summary>
         /// <param name="localVector">A vector fixed in the body.</param>
         /// <returns>The same vector expressed in world coordinates.</returns>
-        public TSVector2 GetWorldVector(TSVector2 localVector)
+        public FPVector2 GetWorldVector(FPVector2 localVector)
         {
             return GetWorldVector(ref localVector);
         }
@@ -1163,7 +1163,7 @@ namespace KBEngine.Physics2D
         /// </summary>
         /// <param name="worldPoint">A point in world coordinates.</param>
         /// <returns>The corresponding local point relative to the body's origin.</returns>
-        public TSVector2 GetLocalPoint(ref TSVector2 worldPoint)
+        public FPVector2 GetLocalPoint(ref FPVector2 worldPoint)
         {
             return MathUtils.MulT(ref _xf, worldPoint);
         }
@@ -1173,7 +1173,7 @@ namespace KBEngine.Physics2D
         /// </summary>
         /// <param name="worldPoint">A point in world coordinates.</param>
         /// <returns>The corresponding local point relative to the body's origin.</returns>
-        public TSVector2 GetLocalPoint(TSVector2 worldPoint)
+        public FPVector2 GetLocalPoint(FPVector2 worldPoint)
         {
             return GetLocalPoint(ref worldPoint);
         }
@@ -1184,7 +1184,7 @@ namespace KBEngine.Physics2D
         /// </summary>
         /// <param name="worldVector">A vector in world coordinates.</param>
         /// <returns>The corresponding local vector.</returns>
-        public TSVector2 GetLocalVector(ref TSVector2 worldVector)
+        public FPVector2 GetLocalVector(ref FPVector2 worldVector)
         {
             return MathUtils.MulT(_xf.q, worldVector);
         }
@@ -1195,7 +1195,7 @@ namespace KBEngine.Physics2D
         /// </summary>
         /// <param name="worldVector">A vector in world coordinates.</param>
         /// <returns>The corresponding local vector.</returns>
-        public TSVector2 GetLocalVector(TSVector2 worldVector)
+        public FPVector2 GetLocalVector(FPVector2 worldVector)
         {
             return GetLocalVector(ref worldVector);
         }
@@ -1205,7 +1205,7 @@ namespace KBEngine.Physics2D
         /// </summary>
         /// <param name="worldPoint">A point in world coordinates.</param>
         /// <returns>The world velocity of a point.</returns>
-        public TSVector2 GetLinearVelocityFromWorldPoint(TSVector2 worldPoint)
+        public FPVector2 GetLinearVelocityFromWorldPoint(FPVector2 worldPoint)
         {
             return GetLinearVelocityFromWorldPoint(ref worldPoint);
         }
@@ -1215,10 +1215,10 @@ namespace KBEngine.Physics2D
         /// </summary>
         /// <param name="worldPoint">A point in world coordinates.</param>
         /// <returns>The world velocity of a point.</returns>
-        public TSVector2 GetLinearVelocityFromWorldPoint(ref TSVector2 worldPoint)
+        public FPVector2 GetLinearVelocityFromWorldPoint(ref FPVector2 worldPoint)
         {
             return _linearVelocity +
-                   new TSVector2(-_angularVelocity * (worldPoint.y - _sweep.C.y),
+                   new FPVector2(-_angularVelocity * (worldPoint.y - _sweep.C.y),
                                _angularVelocity * (worldPoint.x - _sweep.C.x));
         }
 
@@ -1227,7 +1227,7 @@ namespace KBEngine.Physics2D
         /// </summary>
         /// <param name="localPoint">A point in local coordinates.</param>
         /// <returns>The world velocity of a point.</returns>
-        public TSVector2 GetLinearVelocityFromLocalPoint(TSVector2 localPoint)
+        public FPVector2 GetLinearVelocityFromLocalPoint(FPVector2 localPoint)
         {
             return GetLinearVelocityFromLocalPoint(ref localPoint);
         }
@@ -1237,7 +1237,7 @@ namespace KBEngine.Physics2D
         /// </summary>
         /// <param name="localPoint">A point in local coordinates.</param>
         /// <returns>The world velocity of a point.</returns>
-        public TSVector2 GetLinearVelocityFromLocalPoint(ref TSVector2 localPoint)
+        public FPVector2 GetLinearVelocityFromLocalPoint(ref FPVector2 localPoint)
         {
             return GetLinearVelocityFromWorldPoint(GetWorldPoint(ref localPoint));
         }
@@ -1376,7 +1376,7 @@ namespace KBEngine.Physics2D
             }
         }
 
-        public TSVector2 TSLinearVelocity {
+        public FPVector2 TSLinearVelocity {
             get {
                 return LinearVelocity;
             }
@@ -1416,7 +1416,7 @@ namespace KBEngine.Physics2D
             }
         }
 
-        public TSVector2 TSPosition {
+        public FPVector2 TSPosition {
             get {
                 return Position;
             }
@@ -1546,23 +1546,23 @@ namespace KBEngine.Physics2D
             return Position + "|" + Rotation;
         }
 
-        public void TSApplyForce(TSVector2 force) {
+        public void TSApplyForce(FPVector2 force) {
             this.ApplyForce(force);
         }
 
-        public void TSApplyForce(TSVector2 force, TSVector2 position) {
+        public void TSApplyForce(FPVector2 force, FPVector2 position) {
             this.ApplyForce(force, position);
         }
 
-        public void TSApplyImpulse(TSVector2 force) {
+        public void TSApplyImpulse(FPVector2 force) {
             this.ApplyLinearImpulse(force, force);
         }
 
-        public void TSApplyImpulse(TSVector2 force, TSVector2 position) {
+        public void TSApplyImpulse(FPVector2 force, FPVector2 position) {
             this.ApplyLinearImpulse(force, position);
         }
 
-        public void TSApplyTorque(TSVector2 force) {
+        public void TSApplyTorque(FPVector2 force) {
             throw new NotImplementedException();
         }
 

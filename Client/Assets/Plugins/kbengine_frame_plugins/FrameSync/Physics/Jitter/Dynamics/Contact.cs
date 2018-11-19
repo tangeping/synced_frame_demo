@@ -55,11 +55,11 @@ namespace KBEngine.Physics3D {
 
 		public RigidBody body1, body2;
 
-		public TSVector normal, tangent;
+		public FPVector normal, tangent;
 
-		public TSVector realRelPos1, realRelPos2;
-		public TSVector relativePos1, relativePos2;
-		public TSVector p1, p2;
+		public FPVector realRelPos1, realRelPos2;
+		public FPVector relativePos1, relativePos2;
+		public FPVector p1, p2;
 
 		public FP accumulatedNormalImpulse = FP.Zero;
 		public FP accumulatedTangentImpulse = FP.Zero;
@@ -130,29 +130,29 @@ namespace KBEngine.Physics3D {
         /// <summary>
         /// The collision position in world space of body1.
         /// </summary>
-        public TSVector Position1 { get { return p1; } }
+        public FPVector Position1 { get { return p1; } }
 
         /// <summary>
         /// The collision position in world space of body2.
         /// </summary>
-        public TSVector Position2 { get { return p2; } }
+        public FPVector Position2 { get { return p2; } }
 
         /// <summary>
         /// The contact tangent.
         /// </summary>
-        public TSVector Tangent { get { return tangent; } }
+        public FPVector Tangent { get { return tangent; } }
 
         /// <summary>
         /// The contact normal.
         /// </summary>
-        public TSVector Normal { get { return normal; } }
+        public FPVector Normal { get { return normal; } }
         #endregion
 
         /// <summary>
         /// Calculates relative velocity of body contact points on the bodies.
         /// </summary>
         /// <param name="relVel">The relative velocity of body contact points on the bodies.</param>
-        public TSVector CalculateRelativeVelocity()
+        public FPVector CalculateRelativeVelocity()
         {
             FP x, y, z;
 
@@ -160,7 +160,7 @@ namespace KBEngine.Physics3D {
             y = (body2.angularVelocity.z * relativePos2.x) - (body2.angularVelocity.x * relativePos2.z) + body2.linearVelocity.y;
             z = (body2.angularVelocity.x * relativePos2.y) - (body2.angularVelocity.y * relativePos2.x) + body2.linearVelocity.z;
 
-            TSVector relVel;
+            FPVector relVel;
             relVel.x = x - (body1.angularVelocity.y * relativePos1.z) + (body1.angularVelocity.z * relativePos1.y) - body1.linearVelocity.x;
             relVel.y = y - (body1.angularVelocity.z * relativePos1.x) + (body1.angularVelocity.x * relativePos1.z) - body1.linearVelocity.y;
             relVel.z = z - (body1.angularVelocity.x * relativePos1.y) + (body1.angularVelocity.y * relativePos1.x) - body1.linearVelocity.z;
@@ -223,7 +223,7 @@ namespace KBEngine.Physics3D {
             tangentImpulse = accumulatedTangentImpulse - oldTangentImpulse;
 
             // Apply contact impulse
-            TSVector impulse;
+            FPVector impulse;
             impulse.x = normal.x * normalImpulse + tangent.x * tangentImpulse;
             impulse.y = normal.y * normalImpulse + tangent.y * tangentImpulse;
             impulse.z = normal.z * normalImpulse + tangent.z * tangentImpulse;
@@ -308,34 +308,34 @@ namespace KBEngine.Physics3D {
         {
             if (body1IsMassPoint)
             {
-                TSVector.Add(ref realRelPos1, ref body1.position, out p1);
+                FPVector.Add(ref realRelPos1, ref body1.position, out p1);
             }
             else
             {
-                TSVector.Transform(ref realRelPos1, ref body1.orientation, out p1);
-                TSVector.Add(ref p1, ref body1.position, out p1);
+                FPVector.Transform(ref realRelPos1, ref body1.orientation, out p1);
+                FPVector.Add(ref p1, ref body1.position, out p1);
             }
 
             if (body2IsMassPoint)
             {
-                TSVector.Add(ref realRelPos2, ref body2.position, out p2);
+                FPVector.Add(ref realRelPos2, ref body2.position, out p2);
             }
             else
             {
-                TSVector.Transform(ref realRelPos2, ref body2.orientation, out p2);
-                TSVector.Add(ref p2, ref body2.position, out p2);
+                FPVector.Transform(ref realRelPos2, ref body2.orientation, out p2);
+                FPVector.Add(ref p2, ref body2.position, out p2);
             }
 
 
-            TSVector dist; TSVector.Subtract(ref p1, ref p2, out dist);
-            penetration = TSVector.Dot(ref dist, ref normal);
+            FPVector dist; FPVector.Subtract(ref p1, ref p2, out dist);
+            penetration = FPVector.Dot(ref dist, ref normal);
         }
 
         /// <summary>
         /// An impulse is applied an both contact points.
         /// </summary>
         /// <param name="impulse">The impulse to apply.</param>
-        public void ApplyImpulse(ref TSVector impulse)
+        public void ApplyImpulse(ref FPVector impulse)
         {
             #region INLINE - HighFrequency
             //JVector temp;
@@ -403,7 +403,7 @@ namespace KBEngine.Physics3D {
             #endregion
         }
 
-        public void ApplyImpulse(TSVector impulse)
+        public void ApplyImpulse(FPVector impulse)
         {
             #region INLINE - HighFrequency
             //JVector temp;
@@ -489,7 +489,7 @@ namespace KBEngine.Physics3D {
 
             FP kNormal = FP.Zero;
 
-            TSVector rantra = TSVector.zero;
+            FPVector rantra = FPVector.zero;
             if (!treatBody1AsStatic)
             {
                 kNormal += body1.inverseMass;
@@ -518,7 +518,7 @@ namespace KBEngine.Physics3D {
                 }
             }
 
-            TSVector rbntrb = TSVector.zero;
+            FPVector rbntrb = FPVector.zero;
             if (!treatBody2AsStatic)
             {
                 kNormal += body2.inverseMass;
@@ -627,8 +627,8 @@ namespace KBEngine.Physics3D {
                 }
             }
 
-            if (!treatBody1AsStatic) kTangent += TSVector.Dot(ref rantra, ref tangent);
-            if (!treatBody2AsStatic) kTangent += TSVector.Dot(ref rbntrb, ref tangent);
+            if (!treatBody1AsStatic) kTangent += FPVector.Dot(ref rantra, ref tangent);
+            if (!treatBody2AsStatic) kTangent += FPVector.Dot(ref rbntrb, ref tangent);
             massTangent = FP.One / kTangent;
 
             restitutionBias = lostSpeculativeBounce;
@@ -639,8 +639,8 @@ namespace KBEngine.Physics3D {
 
             if (Penetration > settings.allowedPenetration)
             {
-                restitutionBias = settings.bias * (FP.One / timestep) * TSMath.Max(FP.Zero, Penetration - settings.allowedPenetration);
-                restitutionBias = TSMath.Clamp(restitutionBias, FP.Zero, settings.maximumBias);
+                restitutionBias = settings.bias * (FP.One / timestep) * FPMath.Max(FP.Zero, Penetration - settings.allowedPenetration);
+                restitutionBias = FPMath.Clamp(restitutionBias, FP.Zero, settings.maximumBias);
               //  body1IsMassPoint = body2IsMassPoint = false;
             }
       
@@ -659,7 +659,7 @@ namespace KBEngine.Physics3D {
                 else friction = staticFriction;
             }
 
-            TSVector impulse;
+            FPVector impulse;
 
             // Simultaneos solving and restitution is simply not possible
             // so fake it a bit by just applying restitution impulse when there
@@ -669,7 +669,7 @@ namespace KBEngine.Physics3D {
                 restitutionBias = TSMath.Max(-restitution * relNormalVel, restitutionBias);
             }*/
 
-            restitutionBias = TSMath.Max(-restitution * relNormalVel, restitutionBias);
+            restitutionBias = FPMath.Max(-restitution * relNormalVel, restitutionBias);
 
             // Speculative Contacts!
             // if the penetration is negative (which means the bodies are not already in contact, but they will
@@ -779,7 +779,7 @@ namespace KBEngine.Physics3D {
         /// <param name="point2">The collision point in worldspace</param>
         /// <param name="n">The normal pointing to body2.</param>
         /// <param name="penetration">The estimated penetration depth.</param>
-        public void Initialize(RigidBody body1, RigidBody body2, ref TSVector point1, ref TSVector point2, ref TSVector n,
+        public void Initialize(RigidBody body1, RigidBody body2, ref FPVector point1, ref FPVector point2, ref FPVector n,
             FP penetration, bool newContact, ContactSettings settings)
         {
             this.body1 = body1;  this.body2 = body2;
@@ -788,10 +788,10 @@ namespace KBEngine.Physics3D {
 
             this.newContact = newContact;
 
-            TSVector.Subtract(ref p1, ref body1.position, out relativePos1);
-            TSVector.Subtract(ref p2, ref body2.position, out relativePos2);
-            TSVector.Transform(ref relativePos1, ref body1.invOrientation, out realRelPos1);
-            TSVector.Transform(ref relativePos2, ref body2.invOrientation, out realRelPos2);
+            FPVector.Subtract(ref p1, ref body1.position, out relativePos1);
+            FPVector.Subtract(ref p2, ref body2.position, out relativePos2);
+            FPVector.Transform(ref relativePos1, ref body1.invOrientation, out realRelPos1);
+            FPVector.Transform(ref relativePos2, ref body2.invOrientation, out realRelPos2);
 
             this.initialPen = penetration;
             this.penetration = penetration;
@@ -813,14 +813,14 @@ namespace KBEngine.Physics3D {
                 switch (settings.MaterialCoefficientMixing)
                 {
                     case ContactSettings.MaterialCoefficientMixingType.TakeMaximum:
-                        staticFriction = TSMath.Max(body1.staticFriction, body2.staticFriction);
-                        dynamicFriction = TSMath.Max(body1.staticFriction, body2.staticFriction);
-                        restitution = TSMath.Max(body1.restitution, body2.restitution);
+                        staticFriction = FPMath.Max(body1.staticFriction, body2.staticFriction);
+                        dynamicFriction = FPMath.Max(body1.staticFriction, body2.staticFriction);
+                        restitution = FPMath.Max(body1.restitution, body2.restitution);
                         break;
                     case ContactSettings.MaterialCoefficientMixingType.TakeMinimum:
-                        staticFriction = TSMath.Min(body1.staticFriction, body2.staticFriction);
-                        dynamicFriction = TSMath.Min(body1.staticFriction, body2.staticFriction);
-                        restitution = TSMath.Min(body1.restitution, body2.restitution);
+                        staticFriction = FPMath.Min(body1.staticFriction, body2.staticFriction);
+                        dynamicFriction = FPMath.Min(body1.staticFriction, body2.staticFriction);
+                        restitution = FPMath.Min(body1.restitution, body2.restitution);
                         break;
                     case ContactSettings.MaterialCoefficientMixingType.UseAverage:
                         staticFriction = (body1.staticFriction + body2.staticFriction) * FP.Half;

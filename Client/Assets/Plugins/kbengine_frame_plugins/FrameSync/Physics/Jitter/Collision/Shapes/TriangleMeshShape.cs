@@ -93,7 +93,7 @@ namespace KBEngine.Physics3D {
             return potentialTriangles.Count;
         }
 
-        public override void MakeHull(ref List<TSVector> triangleList, int generationThreshold)
+        public override void MakeHull(ref List<FPVector> triangleList, int generationThreshold)
         {
             TSBBox large = TSBBox.LargeBox;
 
@@ -115,13 +115,13 @@ namespace KBEngine.Physics3D {
         /// <param name="rayOrigin"></param>
         /// <param name="rayDelta"></param>
         /// <returns></returns>
-        public override int Prepare(ref TSVector rayOrigin, ref TSVector rayDelta)
+        public override int Prepare(ref FPVector rayOrigin, ref FPVector rayDelta)
         {
             potentialTriangles.Clear();
 
             #region Expand Spherical
-            TSVector expDelta;
-            TSVector.Normalize(ref rayDelta, out expDelta);
+            FPVector expDelta;
+            FPVector.Normalize(ref rayDelta, out expDelta);
             expDelta = rayDelta + expDelta * sphericalExpansion;
             #endregion
 
@@ -130,7 +130,7 @@ namespace KBEngine.Physics3D {
             return potentialTriangles.Count;
         }
 
-        TSVector[] vecs = new TSVector[3];
+        FPVector[] vecs = new FPVector[3];
 
         /// <summary>
         /// SupportMapping. Finds the point in the shape furthest away from the given direction.
@@ -139,21 +139,21 @@ namespace KBEngine.Physics3D {
         /// </summary>
         /// <param name="direction">The direction.</param>
         /// <param name="result">The result.</param>
-        public override void SupportMapping(ref TSVector direction, out TSVector result)
+        public override void SupportMapping(ref FPVector direction, out FPVector result)
         {
-            TSVector exp;
-            TSVector.Normalize(ref direction, out exp);
+            FPVector exp;
+            FPVector.Normalize(ref direction, out exp);
             exp *= sphericalExpansion;
 
-            FP min = TSVector.Dot(ref vecs[0], ref direction);
+            FP min = FPVector.Dot(ref vecs[0], ref direction);
             int minIndex = 0;
-            FP dot = TSVector.Dot(ref vecs[1], ref direction);
+            FP dot = FPVector.Dot(ref vecs[1], ref direction);
             if (dot > min)
             {
                 min = dot;
                 minIndex = 1;
             }
-            dot = TSVector.Dot(ref vecs[2], ref direction);
+            dot = FPVector.Dot(ref vecs[2], ref direction);
             if (dot > min)
             {
                 min = dot;
@@ -169,7 +169,7 @@ namespace KBEngine.Physics3D {
         /// </summary>
         /// <param name="orientation">The orientation of the shape.</param>
         /// <param name="box">The axis aligned bounding box of the shape.</param>
-        public override void GetBoundingBox(ref TSMatrix orientation, out TSBBox box)
+        public override void GetBoundingBox(ref FPMatrix orientation, out TSBBox box)
         {
             box = octree.rootNodeBox;
 
@@ -199,24 +199,24 @@ namespace KBEngine.Physics3D {
             vecs[1] = octree.GetVertex(octree.tris[potentialTriangles[index]].I1);
             vecs[2] = octree.GetVertex(octree.tris[potentialTriangles[index]].I2);
 
-            TSVector sum = vecs[0];
-            TSVector.Add(ref sum, ref vecs[1], out sum);
-            TSVector.Add(ref sum, ref vecs[2], out sum);
-            TSVector.Multiply(ref sum, FP.One / (3 * FP.One), out sum);
+            FPVector sum = vecs[0];
+            FPVector.Add(ref sum, ref vecs[1], out sum);
+            FPVector.Add(ref sum, ref vecs[2], out sum);
+            FPVector.Multiply(ref sum, FP.One / (3 * FP.One), out sum);
 
       
             geomCen = sum;
 
-            TSVector.Subtract(ref vecs[1], ref vecs[0], out sum);
-            TSVector.Subtract(ref vecs[2], ref vecs[0], out normal);
-            TSVector.Cross(ref sum, ref normal, out normal);
+            FPVector.Subtract(ref vecs[1], ref vecs[0], out sum);
+            FPVector.Subtract(ref vecs[2], ref vecs[0], out normal);
+            FPVector.Cross(ref sum, ref normal, out normal);
 
             if (flipNormal) normal.Negate();
         }
 
-        private TSVector normal = TSVector.up;
+        private FPVector normal = FPVector.up;
 
-        public void CollisionNormal(out TSVector normal)
+        public void CollisionNormal(out FPVector normal)
         {
             normal = this.normal;
         }

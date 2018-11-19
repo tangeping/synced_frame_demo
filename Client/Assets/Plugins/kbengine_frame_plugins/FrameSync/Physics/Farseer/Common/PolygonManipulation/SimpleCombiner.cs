@@ -51,9 +51,9 @@ namespace KBEngine.Physics2D
 
                 //Check here for degenerate triangles
                 Vertices triangle = triangles[i];
-                TSVector2 a = triangle[0];
-                TSVector2 b = triangle[1];
-                TSVector2 c = triangle[2];
+                FPVector2 a = triangle[0];
+                FPVector2 b = triangle[1];
+                FPVector2 c = triangle[2];
 
                 if ((a.x == b.x && a.y == b.y) || (b.x == c.x && b.y == c.y) || (a.x == c.x && a.y == c.y))
                     covered[i] = true;

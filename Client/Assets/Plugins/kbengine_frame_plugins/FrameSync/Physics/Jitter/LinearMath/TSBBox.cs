@@ -46,12 +46,12 @@ namespace KBEngine
         /// <summary>
         /// The maximum point of the box.
         /// </summary>
-        public TSVector min;
+        public FPVector min;
 
         /// <summary>
         /// The minimum point of the box.
         /// </summary>
-        public TSVector max;
+        public FPVector max;
 
         /// <summary>
         /// Returns the largest box possible.
@@ -65,10 +65,10 @@ namespace KBEngine
 
         static TSBBox()
         {
-            LargeBox.min = new TSVector(FP.MinValue);
-            LargeBox.max = new TSVector(FP.MaxValue);
-            SmallBox.min = new TSVector(FP.MaxValue);
-            SmallBox.max = new TSVector(FP.MinValue);
+            LargeBox.min = new FPVector(FP.MinValue);
+            LargeBox.max = new FPVector(FP.MaxValue);
+            SmallBox.min = new FPVector(FP.MaxValue);
+            SmallBox.max = new FPVector(FP.MinValue);
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace KBEngine
         /// </summary>
         /// <param name="min">The minimum point of the box.</param>
         /// <param name="max">The maximum point of the box.</param>
-        public TSBBox(TSVector min, TSVector max)
+        public TSBBox(FPVector min, FPVector max)
         {
             this.min = min;
             this.max = max;
@@ -88,37 +88,37 @@ namespace KBEngine
         /// <param name="position"></param>
         /// <param name="orientation"></param>
         /// <param name="result"></param>
-        internal void InverseTransform(ref TSVector position, ref TSMatrix orientation)
+        internal void InverseTransform(ref FPVector position, ref FPMatrix orientation)
         {
-            TSVector.Subtract(ref max, ref position, out max);
-            TSVector.Subtract(ref min, ref position, out min);
+            FPVector.Subtract(ref max, ref position, out max);
+            FPVector.Subtract(ref min, ref position, out min);
 
-            TSVector center;
-            TSVector.Add(ref max, ref min, out center);
+            FPVector center;
+            FPVector.Add(ref max, ref min, out center);
             center.x *= FP.Half; center.y *= FP.Half; center.z *= FP.Half;
 
-            TSVector halfExtents;
-            TSVector.Subtract(ref max, ref min, out halfExtents);
+            FPVector halfExtents;
+            FPVector.Subtract(ref max, ref min, out halfExtents);
             halfExtents.x *= FP.Half; halfExtents.y *= FP.Half; halfExtents.z *= FP.Half;
 
-            TSVector.TransposedTransform(ref center, ref orientation, out center);
+            FPVector.TransposedTransform(ref center, ref orientation, out center);
 
-            TSMatrix abs; TSMath.Absolute(ref orientation, out abs);
-            TSVector.TransposedTransform(ref halfExtents, ref abs, out halfExtents);
+            FPMatrix abs; FPMath.Absolute(ref orientation, out abs);
+            FPVector.TransposedTransform(ref halfExtents, ref abs, out halfExtents);
 
-            TSVector.Add(ref center, ref halfExtents, out max);
-            TSVector.Subtract(ref center, ref halfExtents, out min);
+            FPVector.Add(ref center, ref halfExtents, out max);
+            FPVector.Subtract(ref center, ref halfExtents, out min);
         }
 
-        public void Transform(ref TSMatrix orientation)
+        public void Transform(ref FPMatrix orientation)
         {
-            TSVector halfExtents = FP.Half * (max - min);
-            TSVector center = FP.Half * (max + min);
+            FPVector halfExtents = FP.Half * (max - min);
+            FPVector center = FP.Half * (max + min);
 
-            TSVector.Transform(ref center, ref orientation, out center);
+            FPVector.Transform(ref center, ref orientation, out center);
 
-            TSMatrix abs; TSMath.Absolute(ref orientation, out abs);
-            TSVector.Transform(ref halfExtents, ref abs, out halfExtents);
+            FPMatrix abs; FPMath.Absolute(ref orientation, out abs);
+            FPVector.Transform(ref halfExtents, ref abs, out halfExtents);
 
             max = center + halfExtents;
             min = center - halfExtents;
@@ -134,7 +134,7 @@ namespace KBEngine
         private bool Intersect1D(FP start, FP dir, FP min, FP max,
             ref FP enter,ref FP exit)
         {
-            if (dir * dir < TSMath.Epsilon * TSMath.Epsilon) return (start >= min && start <= max);
+            if (dir * dir < FPMath.Epsilon * FPMath.Epsilon) return (start >= min && start <= max);
 
             FP t0 = (min - start) / dir;
             FP t1 = (max - start) / dir;
@@ -149,7 +149,7 @@ namespace KBEngine
         }
 
 
-        public bool SegmentIntersect(ref TSVector origin,ref TSVector direction)
+        public bool SegmentIntersect(ref FPVector origin,ref FPVector direction)
         {
             FP enter = FP.Zero, exit = FP.One;
 
@@ -165,7 +165,7 @@ namespace KBEngine
             return true;
         }
 
-        public bool RayIntersect(ref TSVector origin, ref TSVector direction)
+        public bool RayIntersect(ref FPVector origin, ref FPVector direction)
         {
             FP enter = FP.Zero, exit = FP.MaxValue;
 
@@ -181,12 +181,12 @@ namespace KBEngine
             return true;
         }
 
-        public bool SegmentIntersect(TSVector origin, TSVector direction)
+        public bool SegmentIntersect(FPVector origin, FPVector direction)
         {
             return SegmentIntersect(ref origin, ref direction);
         }
 
-        public bool RayIntersect(TSVector origin, TSVector direction)
+        public bool RayIntersect(FPVector origin, FPVector direction)
         {
             return RayIntersect(ref origin, ref direction);
         }
@@ -196,7 +196,7 @@ namespace KBEngine
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
-        public ContainmentType Contains(TSVector point)
+        public ContainmentType Contains(FPVector point)
         {
             return this.Contains(ref point);
         }
@@ -207,7 +207,7 @@ namespace KBEngine
         /// </summary>
         /// <param name="point">A point in space.</param>
         /// <returns>The ContainmentType of the point.</returns>
-        public ContainmentType Contains(ref TSVector point)
+        public ContainmentType Contains(ref FPVector point)
         {
             return ((((this.min.x <= point.x) && (point.x <= this.max.x)) &&
                 ((this.min.y <= point.y) && (point.y <= this.max.y))) &&
@@ -222,7 +222,7 @@ namespace KBEngine
         /// <returns>An array of 8 JVector entries.</returns>
         #region public void GetCorners(JVector[] corners)
 
-        public void GetCorners(TSVector[] corners)
+        public void GetCorners(FPVector[] corners)
         {
             corners[0].Set(this.min.x, this.max.y, this.max.z);
             corners[1].Set(this.max.x, this.max.y, this.max.z);
@@ -237,15 +237,15 @@ namespace KBEngine
         #endregion
 
 
-        public void AddPoint(TSVector point)
+        public void AddPoint(FPVector point)
         {
             AddPoint(ref point);
         }
 
-        public void AddPoint(ref TSVector point)
+        public void AddPoint(ref FPVector point)
         {
-            TSVector.Max(ref this.max, ref point, out this.max);
-            TSVector.Min(ref this.min, ref point, out this.min);
+            FPVector.Max(ref this.max, ref point, out this.max);
+            FPVector.Min(ref this.min, ref point, out this.min);
         }
 
         /// <summary>
@@ -256,15 +256,15 @@ namespace KBEngine
         /// <returns>The resulting bounding box containing all points.</returns>
         #region public static JBBox CreateFromPoints(JVector[] points)
 
-        public static TSBBox CreateFromPoints(TSVector[] points)
+        public static TSBBox CreateFromPoints(FPVector[] points)
         {
-            TSVector vector3 = new TSVector(FP.MaxValue);
-            TSVector vector2 = new TSVector(FP.MinValue);
+            FPVector vector3 = new FPVector(FP.MaxValue);
+            FPVector vector2 = new FPVector(FP.MinValue);
 
             for (int i = 0; i < points.Length; i++)
             {
-                TSVector.Min(ref vector3, ref points[i], out vector3);
-                TSVector.Max(ref vector2, ref points[i], out vector2);
+                FPVector.Min(ref vector3, ref points[i], out vector3);
+                FPVector.Max(ref vector2, ref points[i], out vector2);
             }
             return new TSBBox(vector3, vector2);
         }
@@ -303,8 +303,8 @@ namespace KBEngine
 
         #endregion
 
-		public static TSBBox CreateFromCenter(TSVector center, TSVector size) {
-			TSVector half = size * FP.Half;
+		public static TSBBox CreateFromCenter(FPVector center, FPVector size) {
+			FPVector half = size * FP.Half;
 			return new TSBBox (center - half, center + half);
 		}
 
@@ -331,25 +331,25 @@ namespace KBEngine
         /// <param name="result">A JBBox containing the two given boxes.</param>
         public static void CreateMerged(ref TSBBox original, ref TSBBox additional, out TSBBox result)
         {
-            TSVector vector;
-            TSVector vector2;
-            TSVector.Min(ref original.min, ref additional.min, out vector2);
-            TSVector.Max(ref original.max, ref additional.max, out vector);
+            FPVector vector;
+            FPVector vector2;
+            FPVector.Min(ref original.min, ref additional.min, out vector2);
+            FPVector.Max(ref original.max, ref additional.max, out vector);
             result.min = vector2;
             result.max = vector;
         }
 
         #endregion
 
-        public TSVector center { get { return (min + max) * (FP.Half); } }
+        public FPVector center { get { return (min + max) * (FP.Half); } }
 
-        public TSVector size {
+        public FPVector size {
             get {
                 return (max - min);
             }
         }
 
-        public TSVector extents {
+        public FPVector extents {
             get {
                 return size * FP.Half;
             }

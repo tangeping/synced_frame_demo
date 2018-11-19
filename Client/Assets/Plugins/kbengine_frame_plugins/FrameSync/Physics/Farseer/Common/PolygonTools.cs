@@ -8,7 +8,7 @@ namespace KBEngine.Physics2D
     public static class PolygonTools
     {
 
-        public static void TransformVertices(Vertices vertices, TSVector2 center, FP angle) {
+        public static void TransformVertices(Vertices vertices, FPVector2 center, FP angle) {
             Transform xf = new Transform();
             xf.p = center;
             xf.q.Set(angle);
@@ -27,10 +27,10 @@ namespace KBEngine.Physics2D
         public static Vertices CreateRectangle(FP hx, FP hy)
         {
             Vertices vertices = new Vertices(4);
-            vertices.Add(new TSVector2(-hx, -hy));
-            vertices.Add(new TSVector2(hx, -hy));
-            vertices.Add(new TSVector2(hx, hy));
-            vertices.Add(new TSVector2(-hx, hy));
+            vertices.Add(new FPVector2(-hx, -hy));
+            vertices.Add(new FPVector2(hx, -hy));
+            vertices.Add(new FPVector2(hx, hy));
+            vertices.Add(new FPVector2(-hx, hy));
 
             return vertices;
         }
@@ -42,7 +42,7 @@ namespace KBEngine.Physics2D
         /// <param name="hy">the half-height.</param>
         /// <param name="center">the center of the box in local coordinates.</param>
         /// <param name="angle">the rotation of the box in local coordinates.</param>
-        public static Vertices CreateRectangle(FP hx, FP hy, TSVector2 center, FP angle)
+        public static Vertices CreateRectangle(FP hx, FP hy, FPVector2 center, FP angle)
         {
             Vertices vertices = CreateRectangle(hx, hy);
 
@@ -84,17 +84,17 @@ namespace KBEngine.Physics2D
             Vertices vertices = new Vertices();
             if (segments == 0)
             {
-                vertices.Add(new TSVector2(width * .5f - xRadius, -height * .5f));
-                vertices.Add(new TSVector2(width * .5f, -height * .5f + yRadius));
+                vertices.Add(new FPVector2(width * .5f - xRadius, -height * .5f));
+                vertices.Add(new FPVector2(width * .5f, -height * .5f + yRadius));
 
-                vertices.Add(new TSVector2(width * .5f, height * .5f - yRadius));
-                vertices.Add(new TSVector2(width * .5f - xRadius, height * .5f));
+                vertices.Add(new FPVector2(width * .5f, height * .5f - yRadius));
+                vertices.Add(new FPVector2(width * .5f - xRadius, height * .5f));
 
-                vertices.Add(new TSVector2(-width * .5f + xRadius, height * .5f));
-                vertices.Add(new TSVector2(-width * .5f, height * .5f - yRadius));
+                vertices.Add(new FPVector2(-width * .5f + xRadius, height * .5f));
+                vertices.Add(new FPVector2(-width * .5f, height * .5f - yRadius));
 
-                vertices.Add(new TSVector2(-width * .5f, -height * .5f + yRadius));
-                vertices.Add(new TSVector2(-width * .5f + xRadius, -height * .5f));
+                vertices.Add(new FPVector2(-width * .5f, -height * .5f + yRadius));
+                vertices.Add(new FPVector2(-width * .5f + xRadius, -height * .5f));
             }
             else
             {
@@ -103,8 +103,8 @@ namespace KBEngine.Physics2D
                 FP stepSize = FP.PiTimes2 / (numberOfEdges - 4);
                 int perPhase = numberOfEdges / 4;
 
-                TSVector2 posOffset = new TSVector2(width / 2 - xRadius, height / 2 - yRadius);
-                vertices.Add(posOffset + new TSVector2(xRadius, -yRadius + yRadius));
+                FPVector2 posOffset = new FPVector2(width / 2 - xRadius, height / 2 - yRadius);
+                vertices.Add(posOffset + new FPVector2(xRadius, -yRadius + yRadius));
                 short phase = 0;
                 for (int i = 1; i < numberOfEdges; i++)
                 {
@@ -119,7 +119,7 @@ namespace KBEngine.Physics2D
                         phase--;
                     }
 
-                    vertices.Add(posOffset + new TSVector2(xRadius * FP.Cos(stepSize * -(i + phase)),
+                    vertices.Add(posOffset + new FPVector2(xRadius * FP.Cos(stepSize * -(i + phase)),
                                                          -yRadius * FP.Sin(stepSize * -(i + phase))));
                 }
             }
@@ -132,7 +132,7 @@ namespace KBEngine.Physics2D
         /// </summary>
         /// <param name="start">The first point.</param>
         /// <param name="end">The second point.</param>
-        public static Vertices CreateLine(TSVector2 start, TSVector2 end)
+        public static Vertices CreateLine(FPVector2 start, FPVector2 end)
         {
             Vertices vertices = new Vertices(2);
             vertices.Add(start);
@@ -165,9 +165,9 @@ namespace KBEngine.Physics2D
 
             FP stepSize = FP.PiTimes2 / numberOfEdges;
 
-            vertices.Add(new TSVector2(xRadius, 0));
+            vertices.Add(new FPVector2(xRadius, 0));
             for (int i = numberOfEdges - 1; i > 0; --i)
-                vertices.Add(new TSVector2(xRadius * FP.Cos(stepSize * i),
+                vertices.Add(new FPVector2(xRadius * FP.Cos(stepSize * i),
                                          -yRadius * FP.Sin(stepSize * i)));
 
             return vertices;
@@ -184,7 +184,7 @@ namespace KBEngine.Physics2D
             FP stepSize = radians / sides;
             for (int i = sides - 1; i > 0; i--)
             {
-                vertices.Add(new TSVector2(radius * FP.Cos(stepSize * i),
+                vertices.Add(new FPVector2(radius * FP.Cos(stepSize * i),
                                          radius * FP.Sin(stepSize * i)));
             }
 
@@ -254,28 +254,28 @@ namespace KBEngine.Physics2D
             FP newHeight = (height - topRadius - bottomRadius) * 0.5f;
 
             // top
-            vertices.Add(new TSVector2(topRadius, newHeight));
+            vertices.Add(new FPVector2(topRadius, newHeight));
 
             FP stepSize = FP.Pi / topEdges;
             for (int i = 1; i < topEdges; i++)
             {
-                vertices.Add(new TSVector2(topRadius * FP.Cos(stepSize * i),
+                vertices.Add(new FPVector2(topRadius * FP.Cos(stepSize * i),
                                          topRadius * FP.Sin(stepSize * i) + newHeight));
             }
 
-            vertices.Add(new TSVector2(-topRadius, newHeight));
+            vertices.Add(new FPVector2(-topRadius, newHeight));
 
             // bottom
-            vertices.Add(new TSVector2(-bottomRadius, -newHeight));
+            vertices.Add(new FPVector2(-bottomRadius, -newHeight));
 
             stepSize = FP.Pi / bottomEdges;
             for (int i = 1; i < bottomEdges; i++)
             {
-                vertices.Add(new TSVector2(-bottomRadius * FP.Cos(stepSize * i),
+                vertices.Add(new FPVector2(-bottomRadius * FP.Cos(stepSize * i),
                                          -bottomRadius * FP.Sin(stepSize * i) - newHeight));
             }
 
-            vertices.Add(new TSVector2(bottomRadius, -newHeight));
+            vertices.Add(new FPVector2(bottomRadius, -newHeight));
 
             return vertices;
         }
@@ -294,7 +294,7 @@ namespace KBEngine.Physics2D
 
             FP stepSize = FP.PiTimes2 / numberOfTeeth;
             tipPercentage /= 100f;
-            TSMath.Clamp(tipPercentage, 0f, 1f);
+            FPMath.Clamp(tipPercentage, 0f, 1f);
             FP toothTipStepSize = (stepSize / 2f) * tipPercentage;
 
             FP toothAngleStepSize = (stepSize - (toothTipStepSize * 2f)) / 2f;
@@ -304,24 +304,24 @@ namespace KBEngine.Physics2D
                 if (toothTipStepSize > 0f)
                 {
                     vertices.Add(
-                        new TSVector2(radius *
+                        new FPVector2(radius *
                                     FP.Cos(stepSize * i + toothAngleStepSize * 2f + toothTipStepSize),
                                     -radius *
                                     FP.Sin(stepSize * i + toothAngleStepSize * 2f + toothTipStepSize)));
 
                     vertices.Add(
-                        new TSVector2((radius + toothHeight) *
+                        new FPVector2((radius + toothHeight) *
                                     FP.Cos(stepSize * i + toothAngleStepSize + toothTipStepSize),
                                     -(radius + toothHeight) *
                                     FP.Sin(stepSize * i + toothAngleStepSize + toothTipStepSize)));
                 }
 
-                vertices.Add(new TSVector2((radius + toothHeight) *
+                vertices.Add(new FPVector2((radius + toothHeight) *
                                          FP.Cos(stepSize * i + toothAngleStepSize),
                                          -(radius + toothHeight) *
                                          FP.Sin(stepSize * i + toothAngleStepSize)));
 
-                vertices.Add(new TSVector2(radius * FP.Cos(stepSize * i),
+                vertices.Add(new FPVector2(radius * FP.Cos(stepSize * i),
                                          -radius * FP.Sin(stepSize * i)));
             }
 

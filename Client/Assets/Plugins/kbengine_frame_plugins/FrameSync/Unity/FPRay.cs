@@ -6,10 +6,10 @@
     **/
     public class FPRay
 	{
-		public TSVector direction;
-		public TSVector origin;
+		public FPVector direction;
+		public FPVector origin;
 
-		public FPRay (TSVector origin, TSVector direction)
+		public FPRay (FPVector origin, FPVector direction)
 		{
 			this.origin = origin;
 			this.direction = direction;

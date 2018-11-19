@@ -13,7 +13,7 @@ namespace KBEngine.Physics2D
 
         void RemoveProxy(int proxyId);
 
-        void MoveProxy(int proxyId, ref AABB aabb, TSVector2 displacement);
+        void MoveProxy(int proxyId, ref AABB aabb, FPVector2 displacement);
 
         FixtureProxy GetProxy(int proxyId);
 
@@ -25,6 +25,6 @@ namespace KBEngine.Physics2D
 
         void RayCast(Func<RayCastInput, int, FP> callback, ref RayCastInput input);
 
-        void ShiftOrigin(TSVector2 newOrigin);
+        void ShiftOrigin(FPVector2 newOrigin);
     }
 }

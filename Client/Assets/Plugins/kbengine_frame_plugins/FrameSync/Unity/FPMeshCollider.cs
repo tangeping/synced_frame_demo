@@ -30,12 +30,12 @@ namespace KBEngine {
             }
         }
 
-        private List<TSVector> vertices;
+        private List<FPVector> vertices;
 
         /**
          *  @brief A list of all mesh's vertices. 
          **/
-        public List<TSVector> Vertices {
+        public List<FPVector> Vertices {
             get {
                 if (vertices == null)
                     vertices = GetVertices();
@@ -82,8 +82,8 @@ namespace KBEngine {
             return result;
         }
 
-        private List<TSVector> GetVertices() {
-            var result = mesh.vertices.Select(p => new TSVector(p.x * lossyScale.x, p.y * lossyScale.y, p.z * lossyScale.z)).ToList();
+        private List<FPVector> GetVertices() {
+            var result = mesh.vertices.Select(p => new FPVector(p.x * lossyScale.x, p.y * lossyScale.y, p.z * lossyScale.z)).ToList();
             return result;
         }
 

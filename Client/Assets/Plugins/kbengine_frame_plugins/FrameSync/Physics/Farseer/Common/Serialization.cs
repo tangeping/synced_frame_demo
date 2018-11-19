@@ -65,7 +65,7 @@ namespace KBEngine.Physics2D
                         PolygonShape poly = (PolygonShape)shape;
 
                         _writer.WriteStartElement("Vertices");
-                        foreach (TSVector2 v in poly.Vertices)
+                        foreach (FPVector2 v in poly.Vertices)
                             WriteElement("Vertex", v);
                         _writer.WriteEndElement();
 
@@ -84,7 +84,7 @@ namespace KBEngine.Physics2D
                         ChainShape chain = (ChainShape)shape;
 
                         _writer.WriteStartElement("Vertices");
-                        foreach (TSVector2 v in chain.Vertices)
+                        foreach (FPVector2 v in chain.Vertices)
                             WriteElement("Vertex", v);
                         _writer.WriteEndElement();
 
@@ -315,7 +315,7 @@ namespace KBEngine.Physics2D
             _writer.WriteEndElement();
         }
 
-        private static void WriteElement(string name, TSVector2 vec)
+        private static void WriteElement(string name, FPVector2 vec)
         {
             _writer.WriteElementString(name, vec.x + " " + vec.y);
         }
@@ -470,7 +470,7 @@ namespace KBEngine.Physics2D
     {
         internal static World Deserialize(Stream stream)
         {
-            World world = new World(TSVector2.zero);
+            World world = new World(FPVector2.zero);
             Deserialize(world, stream);
             return world;
         }
@@ -546,7 +546,7 @@ namespace KBEngine.Physics2D
                                         {
                                             case "vertices":
                                                 {
-                                                    List<TSVector2> verts = new List<TSVector2>(sn.Elements.Count);
+                                                    List<FPVector2> verts = new List<FPVector2>(sn.Elements.Count);
 
                                                     foreach (XMLFragmentElement vert in sn.Elements)
                                                         verts.Add(ReadVector(vert));
@@ -608,7 +608,7 @@ namespace KBEngine.Physics2D
                                         {
                                             case "vertices":
                                                 {
-                                                    List<TSVector2> verts = new List<TSVector2>(sn.Elements.Count);
+                                                    List<FPVector2> verts = new List<FPVector2>(sn.Elements.Count);
 
                                                     foreach (XMLFragmentElement vert in sn.Elements)
                                                         verts.Add(ReadVector(vert));
@@ -724,7 +724,7 @@ namespace KBEngine.Physics2D
                                     break;
                                 case "angle":
                                     {
-                                        TSVector2 position = body.Position;
+                                        FPVector2 position = body.Position;
                                         body.SetTransformIgnoreContacts(ref position, float.Parse(sn.Value));
                                     }
                                     break;
@@ -752,7 +752,7 @@ namespace KBEngine.Physics2D
                                 case "position":
                                     {
                                         FP rotation = body.Rotation;
-                                        TSVector2 position = ReadVector(sn);
+                                        FPVector2 position = ReadVector(sn);
                                         body.SetTransformIgnoreContacts(ref position, rotation);
                                     }
                                     break;
@@ -1135,10 +1135,10 @@ namespace KBEngine.Physics2D
             world.ProcessChanges();
         }
 
-        private static TSVector2 ReadVector(XMLFragmentElement node)
+        private static FPVector2 ReadVector(XMLFragmentElement node)
         {
             string[] values = node.Value.Split(' ');
-            return new TSVector2(float.Parse(values[0]), float.Parse(values[1]));
+            return new FPVector2(float.Parse(values[0]), float.Parse(values[1]));
         }
 
         private static object ReadSimpleType(XMLFragmentElement node, Type type, bool outer)

@@ -15,10 +15,10 @@ namespace KBEngine.Physics2D
         /// <param name="exitPoint">The exit point - The end point</param>
         /// <param name="first">The first collection of vertexes</param>
         /// <param name="second">The second collection of vertexes</param>
-        public static void SplitShape(Fixture fixture, TSVector2 entryPoint, TSVector2 exitPoint, out Vertices first, out Vertices second)
+        public static void SplitShape(Fixture fixture, FPVector2 entryPoint, FPVector2 exitPoint, out Vertices first, out Vertices second)
         {
-            TSVector2 localEntryPoint = fixture.Body.GetLocalPoint(ref entryPoint);
-            TSVector2 localExitPoint = fixture.Body.GetLocalPoint(ref exitPoint);
+            FPVector2 localEntryPoint = fixture.Body.GetLocalPoint(ref entryPoint);
+            FPVector2 localExitPoint = fixture.Body.GetLocalPoint(ref exitPoint);
 
             PolygonShape shape = fixture.Shape as PolygonShape;
 
@@ -31,13 +31,13 @@ namespace KBEngine.Physics2D
             }
 
             //Offset the entry and exit points if they are too close to the vertices
-            foreach (TSVector2 vertex in shape.Vertices)
+            foreach (FPVector2 vertex in shape.Vertices)
             {
                 if (vertex.Equals(localEntryPoint))
-                    localEntryPoint -= new TSVector2(0, Settings.Epsilon);
+                    localEntryPoint -= new FPVector2(0, Settings.Epsilon);
 
                 if (vertex.Equals(localExitPoint))
-                    localExitPoint += new TSVector2(0, Settings.Epsilon);
+                    localExitPoint += new FPVector2(0, Settings.Epsilon);
             }
 
             Vertices vertices = new Vertices(shape.Vertices);
@@ -54,7 +54,7 @@ namespace KBEngine.Physics2D
             {
                 int n;
                 //Find out if this vertex is on the old or new shape.
-                if (TSVector2.Dot(MathUtils.Cross(localExitPoint - localEntryPoint, 1), vertices[i] - localEntryPoint) > Settings.Epsilon)
+                if (FPVector2.Dot(MathUtils.Cross(localExitPoint - localEntryPoint, 1), vertices[i] - localEntryPoint) > Settings.Epsilon)
                     n = 0;
                 else
                     n = 1;
@@ -98,7 +98,7 @@ namespace KBEngine.Physics2D
 
             for (int n = 0; n < 2; n++)
             {
-                TSVector2 offset;
+                FPVector2 offset;
                 if (cutAdded[n] > 0)
                 {
                     offset = (newPolygon[n][cutAdded[n] - 1] - newPolygon[n][cutAdded[n]]);
@@ -110,7 +110,7 @@ namespace KBEngine.Physics2D
                 offset.Normalize();
 
                 if (!offset.IsValid())
-                    offset = TSVector2.one;
+                    offset = FPVector2.one;
 
                 newPolygon[n][cutAdded[n]] += Settings.Epsilon * offset;
 
@@ -125,7 +125,7 @@ namespace KBEngine.Physics2D
                 offset.Normalize();
 
                 if (!offset.IsValid())
-                    offset = TSVector2.one;
+                    offset = FPVector2.one;
 
                 newPolygon[n][cutAdded[n] + 1] += Settings.Epsilon * offset;
             }
@@ -142,11 +142,11 @@ namespace KBEngine.Physics2D
         /// <param name="start">The startpoint.</param>
         /// <param name="end">The endpoint.</param>
         /// <returns>True if the cut was performed.</returns>
-        public static bool Cut(World world, TSVector2 start, TSVector2 end)
+        public static bool Cut(World world, FPVector2 start, FPVector2 end)
         {
             List<Fixture> fixtures = new List<Fixture>();
-            List<TSVector2> entryPoints = new List<TSVector2>();
-            List<TSVector2> exitPoints = new List<TSVector2>();
+            List<FPVector2> entryPoints = new List<FPVector2>();
+            List<FPVector2> exitPoints = new List<FPVector2>();
 
             //We don't support cutting when the start or end is inside a shape.
             if (world.TestPoint(start) != null || world.TestPoint(end) != null)

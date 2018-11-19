@@ -25,7 +25,7 @@ using System.Collections.Generic;
 namespace KBEngine.Physics3D {
     public class MinkowskiSumShape : Shape
     {
-        TSVector shifted;
+        FPVector shifted;
         List<Shape> shapes = new List<Shape>();
 
         public MinkowskiSumShape(IEnumerable<Shape> shapes)
@@ -60,7 +60,7 @@ namespace KBEngine.Physics3D {
             return result;
         }
 
-        public TSVector Shift()
+        public FPVector Shift()
         {
             return -1 * this.shifted;
         }
@@ -70,17 +70,17 @@ namespace KBEngine.Physics3D {
             this.mass = Shape.CalculateMassInertia(this, out shifted, out inertia);
         }
 
-        public override void SupportMapping(ref TSVector direction, out TSVector result)
+        public override void SupportMapping(ref FPVector direction, out FPVector result)
         {
-            TSVector temp1, temp2 = TSVector.zero;
+            FPVector temp1, temp2 = FPVector.zero;
 
             for (int i = 0; i < shapes.Count; i++)
             {
                 shapes[i].SupportMapping(ref direction, out temp1);
-                TSVector.Add(ref temp1, ref temp2, out temp2);
+                FPVector.Add(ref temp1, ref temp2, out temp2);
             }
 
-            TSVector.Subtract(ref temp2, ref shifted, out result);
+            FPVector.Subtract(ref temp2, ref shifted, out result);
         }
 
     }

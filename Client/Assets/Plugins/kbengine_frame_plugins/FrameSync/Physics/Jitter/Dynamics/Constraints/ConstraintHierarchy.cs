@@ -7,9 +7,9 @@
 
 		private RigidBody child;
 
-		private TSVector childOffset;
+		private FPVector childOffset;
 
-		public ConstraintHierarchy(IBody parent, IBody child, TSVector childOffset) : base((RigidBody) parent, (RigidBody) child) {
+		public ConstraintHierarchy(IBody parent, IBody child, FPVector childOffset) : base((RigidBody) parent, (RigidBody) child) {
 			this.parent = (RigidBody) parent;
 			this.child = (RigidBody) child;
 

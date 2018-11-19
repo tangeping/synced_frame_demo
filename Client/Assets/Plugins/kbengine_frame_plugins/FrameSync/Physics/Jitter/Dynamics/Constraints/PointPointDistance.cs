@@ -31,8 +31,8 @@ namespace KBEngine.Physics3D {
             LimitMinimumDistance,
         }
 
-        private TSVector localAnchor1, localAnchor2;
-        private TSVector r1, r2;
+        private FPVector localAnchor1, localAnchor2;
+        private FPVector r1, r2;
 
         private FP biasFactor = FP.EN1;
         private FP softness = FP.EN2;
@@ -49,14 +49,14 @@ namespace KBEngine.Physics3D {
         /// The distance is given by the initial distance between both anchor points.</param>
         /// <param name="anchor2">The anchor point of the second body in world space.
         /// The distance is given by the initial distance between both anchor points.</param>
-        public PointPointDistance(RigidBody body1, RigidBody body2, TSVector anchor1,TSVector anchor2)
+        public PointPointDistance(RigidBody body1, RigidBody body2, FPVector anchor1,FPVector anchor2)
             : base(body1, body2)
         {
-            TSVector.Subtract(ref anchor1, ref body1.position, out localAnchor1);
-            TSVector.Subtract(ref anchor2, ref body2.position, out localAnchor2);
+            FPVector.Subtract(ref anchor1, ref body1.position, out localAnchor1);
+            FPVector.Subtract(ref anchor2, ref body2.position, out localAnchor2);
 
-            TSVector.Transform(ref localAnchor1, ref body1.invOrientation, out localAnchor1);
-            TSVector.Transform(ref localAnchor2, ref body2.invOrientation, out localAnchor2);
+            FPVector.Transform(ref localAnchor1, ref body1.invOrientation, out localAnchor1);
+            FPVector.Transform(ref localAnchor2, ref body2.invOrientation, out localAnchor2);
 
             distance = (anchor1 - anchor2).magnitude;
         }
@@ -76,12 +76,12 @@ namespace KBEngine.Physics3D {
         /// <summary>
         /// The anchor point of body1 in local (body) coordinates.
         /// </summary>
-        public TSVector LocalAnchor1 { get { return localAnchor1; } set { localAnchor1 = value; } }
+        public FPVector LocalAnchor1 { get { return localAnchor1; } set { localAnchor1 = value; } }
 
         /// <summary>
         /// The anchor point of body2 in local (body) coordinates.
         /// </summary>
-        public TSVector LocalAnchor2 { get { return localAnchor2; } set { localAnchor2 = value; } }
+        public FPVector LocalAnchor2 { get { return localAnchor2; } set { localAnchor2 = value; } }
 
         /// <summary>
         /// Defines how big the applied impulses can get.
@@ -98,7 +98,7 @@ namespace KBEngine.Physics3D {
         FP bias;
         FP softnessOverDt;
         
-        TSVector[] jacobian = new TSVector[4];
+        FPVector[] jacobian = new FPVector[4];
 
         bool skipConstraint = false;
 
@@ -108,14 +108,14 @@ namespace KBEngine.Physics3D {
         /// <param name="timestep">The 5simulation timestep</param>
         public override void PrepareForIteration(FP timestep)
         {
-            TSVector.Transform(ref localAnchor1, ref body1.orientation, out r1);
-            TSVector.Transform(ref localAnchor2, ref body2.orientation, out r2);
+            FPVector.Transform(ref localAnchor1, ref body1.orientation, out r1);
+            FPVector.Transform(ref localAnchor2, ref body2.orientation, out r2);
 
-            TSVector p1, p2, dp;
-            TSVector.Add(ref body1.position, ref r1, out p1);
-            TSVector.Add(ref body2.position, ref r2, out p2);
+            FPVector p1, p2, dp;
+            FPVector.Add(ref body1.position, ref r1, out p1);
+            FPVector.Add(ref body2.position, ref r2, out p2);
 
-            TSVector.Subtract(ref p2, ref p1, out dp);
+            FPVector.Subtract(ref p2, ref p1, out dp);
 
             FP deltaLength = dp.magnitude - distance;
 
@@ -131,7 +131,7 @@ namespace KBEngine.Physics3D {
             {
                 skipConstraint = false;
 
-                TSVector n = p2 - p1;
+                FPVector n = p2 - p1;
                 if (n.sqrMagnitude != FP.Zero) n.Normalize();
 
                 jacobian[0] = -FP.One * n;
@@ -140,8 +140,8 @@ namespace KBEngine.Physics3D {
                 jacobian[3] = (r2 % n);
 
                 effectiveMass = body1.inverseMass + body2.inverseMass
-                    + TSVector.Transform(jacobian[1], body1.invInertiaWorld) * jacobian[1]
-                    + TSVector.Transform(jacobian[3], body2.invInertiaWorld) * jacobian[3];
+                    + FPVector.Transform(jacobian[1], body1.invInertiaWorld) * jacobian[1]
+                    + FPVector.Transform(jacobian[3], body2.invInertiaWorld) * jacobian[3];
 
                 softnessOverDt = softness / timestep;
                 effectiveMass += softnessOverDt;
@@ -153,13 +153,13 @@ namespace KBEngine.Physics3D {
                 if (!body1.isStatic)
                 {
                     body1.linearVelocity += body1.inverseMass * accumulatedImpulse * jacobian[0];
-                    body1.angularVelocity += TSVector.Transform(accumulatedImpulse * jacobian[1], body1.invInertiaWorld);
+                    body1.angularVelocity += FPVector.Transform(accumulatedImpulse * jacobian[1], body1.invInertiaWorld);
                 }
 
                 if (!body2.isStatic)
                 {
                     body2.linearVelocity += body2.inverseMass * accumulatedImpulse * jacobian[2];
-                    body2.angularVelocity += TSVector.Transform(accumulatedImpulse * jacobian[3], body2.invInertiaWorld);
+                    body2.angularVelocity += FPVector.Transform(accumulatedImpulse * jacobian[3], body2.invInertiaWorld);
                 }
             }
             
@@ -185,13 +185,13 @@ namespace KBEngine.Physics3D {
             if (behavior == DistanceBehavior.LimitMinimumDistance)
             {
                 FP previousAccumulatedImpulse = accumulatedImpulse;
-                accumulatedImpulse = TSMath.Max(accumulatedImpulse + lambda, 0);
+                accumulatedImpulse = FPMath.Max(accumulatedImpulse + lambda, 0);
                 lambda = accumulatedImpulse - previousAccumulatedImpulse;
             }
             else if (behavior == DistanceBehavior.LimitMaximumDistance)
             {
                 FP previousAccumulatedImpulse = accumulatedImpulse;
-                accumulatedImpulse = TSMath.Min(accumulatedImpulse + lambda, 0);
+                accumulatedImpulse = FPMath.Min(accumulatedImpulse + lambda, 0);
                 lambda = accumulatedImpulse - previousAccumulatedImpulse;
             }
             else
@@ -202,13 +202,13 @@ namespace KBEngine.Physics3D {
             if (!body1.isStatic)
             {
                 body1.linearVelocity += body1.inverseMass * lambda * jacobian[0];
-                body1.angularVelocity += TSVector.Transform(lambda * jacobian[1], body1.invInertiaWorld);
+                body1.angularVelocity += FPVector.Transform(lambda * jacobian[1], body1.invInertiaWorld);
             }
 
             if (!body2.isStatic)
             {
                 body2.linearVelocity += body2.inverseMass * lambda * jacobian[2];
-                body2.angularVelocity += TSVector.Transform(lambda * jacobian[3], body2.invInertiaWorld);
+                body2.angularVelocity += FPVector.Transform(lambda * jacobian[3], body2.invInertiaWorld);
             }
         }
 

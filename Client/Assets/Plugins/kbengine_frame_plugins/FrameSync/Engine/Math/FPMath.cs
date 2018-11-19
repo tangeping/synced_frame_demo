@@ -22,7 +22,7 @@ namespace KBEngine {
     /// <summary>
     /// Contains common math operations.
     /// </summary>
-    public sealed class TSMath {
+    public sealed class FPMath {
 
         /// <summary>
         /// PI constant.
@@ -120,7 +120,7 @@ namespace KBEngine {
         /// <param name="matrix">The matrix.</param>
         /// <param name="result">The absolute matrix.</param>
         #region public static void Absolute(ref JMatrix matrix,out JMatrix result)
-        public static void Absolute(ref TSMatrix matrix, out TSMatrix result) {
+        public static void Absolute(ref FPMatrix matrix, out FPMatrix result) {
             result.M11 = FP.Abs(matrix.M11);
             result.M12 = FP.Abs(matrix.M12);
             result.M13 = FP.Abs(matrix.M13);

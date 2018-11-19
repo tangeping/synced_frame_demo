@@ -169,19 +169,19 @@ namespace KBEngine {
         /**
          *  @brief Applies the provided force in the body. 
          *  
-         *  @param force A {@link TSVector2} representing the force to be applied.
+         *  @param force A {@link FPVector2} representing the force to be applied.
          **/
-        public void AddForce(TSVector2 force) {
+        public void AddForce(FPVector2 force) {
             AddForce(force, ForceMode.Force);
         }
 
         /**
          *  @brief Applies the provided force in the body. 
          *  
-         *  @param force A {@link TSVector2} representing the force to be applied.
+         *  @param force A {@link FPVector2} representing the force to be applied.
          *  @param mode Indicates how the force should be applied.
          **/
-        public void AddForce(TSVector2 force, ForceMode mode) {
+        public void AddForce(FPVector2 force, ForceMode mode) {
             if (mode == ForceMode.Force) {
                 tsCollider.Body.TSApplyForce(force);
             } else if (mode == ForceMode.Impulse) {
@@ -192,20 +192,20 @@ namespace KBEngine {
         /**
          *  @brief Applies the provided force in the body. 
          *  
-         *  @param force A {@link TSVector2} representing the force to be applied.
+         *  @param force A {@link FPVector2} representing the force to be applied.
          *  @param position Indicates the location where the force should hit.
          **/
-        public void AddForceAtPosition(TSVector2 force, TSVector2 position) {
+        public void AddForceAtPosition(FPVector2 force, FPVector2 position) {
             AddForceAtPosition(force, position, ForceMode.Impulse);
         }
 
         /**
          *  @brief Applies the provided force in the body. 
          *  
-         *  @param force A {@link TSVector2} representing the force to be applied.
+         *  @param force A {@link FPVector2} representing the force to be applied.
          *  @param position Indicates the location where the force should hit.
          **/
-        public void AddForceAtPosition(TSVector2 force, TSVector2 position, ForceMode mode) {
+        public void AddForceAtPosition(FPVector2 force, FPVector2 position, ForceMode mode) {
             if (mode == ForceMode.Force) {
                 tsCollider.Body.TSApplyForce(force, position);
             } else if (mode == ForceMode.Impulse) {
@@ -216,24 +216,24 @@ namespace KBEngine {
         /**
          *  @brief Returns the velocity of the body at some position in world space. 
          **/
-        public TSVector2 GetPointVelocity(TSVector2 worldPoint) {
-            TSVector directionPoint = (position - tsCollider.Body.TSPosition).ToTSVector();
-            return TSVector.Cross(new TSVector(0, 0, tsCollider.Body.TSAngularVelocity), directionPoint).ToTSVector2() + tsCollider.Body.TSLinearVelocity;
+        public FPVector2 GetPointVelocity(FPVector2 worldPoint) {
+            FPVector directionPoint = (position - tsCollider.Body.TSPosition).ToFPVector();
+            return FPVector.Cross(new FPVector(0, 0, tsCollider.Body.TSAngularVelocity), directionPoint).ToFPVector2() + tsCollider.Body.TSLinearVelocity;
         }
 
         /**
          *  @brief Simulates the provided tourque in the body. 
          *  
-         *  @param torque A {@link TSVector2} representing the torque to be applied.
+         *  @param torque A {@link FPVector2} representing the torque to be applied.
          **/
-        public void AddTorque(TSVector2 torque) {
+        public void AddTorque(FPVector2 torque) {
             tsCollider.Body.TSApplyTorque(torque);
         }
 
         /**
          *  @brief Moves the body to a new position. 
          **/
-        public void MovePosition(TSVector2 position) {
+        public void MovePosition(FPVector2 position) {
             this.position = position;
         }
 
@@ -247,7 +247,7 @@ namespace KBEngine {
         /**
         *  @brief Position of the body. 
         **/
-        public TSVector2 position {
+        public FPVector2 position {
             get {
                 return FPTransform.position;
             }
@@ -273,7 +273,7 @@ namespace KBEngine {
         /**
         *  @brief LinearVelocity of the body. 
         **/
-        public TSVector2 velocity {
+        public FPVector2 velocity {
             get {
                 return tsCollider.Body.TSLinearVelocity;
             }

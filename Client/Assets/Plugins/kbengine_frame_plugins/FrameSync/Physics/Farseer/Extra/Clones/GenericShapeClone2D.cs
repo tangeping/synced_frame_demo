@@ -11,7 +11,7 @@
 
         private MassData massData;
 
-        private TSVector2 _position;
+        private FPVector2 _position;
 
         private Vertices _vertices;
         private Vertices _normals;

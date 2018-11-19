@@ -7,9 +7,9 @@
 
 		private Body child;
 
-		private TSVector2 childOffset;
+		private FPVector2 childOffset;
 
-		public ConstraintHierarchy2D(Body parent, Body child, TSVector2 childOffset) {
+		public ConstraintHierarchy2D(Body parent, Body child, FPVector2 childOffset) {
 			this.parent = parent;
 			this.child = child;
 
@@ -17,7 +17,7 @@
 		}
 
 		public void PostStep() {
-            TSVector2 newPos = childOffset + parent.Position;
+            FPVector2 newPos = childOffset + parent.Position;
             child.SetTransformIgnoreContacts(ref newPos, child.Rotation);
 		}
 

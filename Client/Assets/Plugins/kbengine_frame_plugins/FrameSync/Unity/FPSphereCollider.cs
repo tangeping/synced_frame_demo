@@ -42,13 +42,13 @@ namespace KBEngine {
                 CircleCollider2D circleCollider2D = GetComponent<CircleCollider2D>();
 
                 radius = circleCollider2D.radius;
-                Center = new TSVector(circleCollider2D.offset.x, circleCollider2D.offset.y, 0);
+                Center = new FPVector(circleCollider2D.offset.x, circleCollider2D.offset.y, 0);
                 isTrigger = circleCollider2D.isTrigger;
             } else if (GetComponent<SphereCollider>() != null) {
                 SphereCollider sphereCollider = GetComponent<SphereCollider>();
 
                 radius = sphereCollider.radius;
-                Center = sphereCollider.center.ToTSVector();
+                Center = sphereCollider.center.ToFPVector();
                 isTrigger = sphereCollider.isTrigger;
             }
         }

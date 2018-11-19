@@ -44,24 +44,24 @@ namespace KBEngine.Physics2D
     /// </summary>
     public class FixedMouseJoint : Joint2D
     {
-        private TSVector2 _worldAnchor;
+        private FPVector2 _worldAnchor;
         private FP _frequency;
         private FP _dampingRatio;
         private FP _beta;
 
         // Solver shared
-        private TSVector2 _impulse;
+        private FPVector2 _impulse;
         private FP _maxForce;
         private FP _gamma;
 
         // Solver temp
         private int _indexA;
-        private TSVector2 _rA;
-        private TSVector2 _localCenterA;
+        private FPVector2 _rA;
+        private FPVector2 _localCenterA;
         private FP _invMassA;
         private FP _invIA;
         private Mat22 _mass;
-        private TSVector2 _C;
+        private FPVector2 _C;
 
         /// <summary>
         /// This requires a world target point,
@@ -69,7 +69,7 @@ namespace KBEngine.Physics2D
         /// </summary>
         /// <param name="body">The body.</param>
         /// <param name="worldAnchor">The target.</param>
-        public FixedMouseJoint(Body body, TSVector2 worldAnchor)
+        public FixedMouseJoint(Body body, FPVector2 worldAnchor)
             : base(body)
         {
             JointType = JointType.FixedMouse;
@@ -86,15 +86,15 @@ namespace KBEngine.Physics2D
         /// <summary>
         /// The local anchor point on BodyA
         /// </summary>
-        public TSVector2 LocalAnchorA { get; set; }
+        public FPVector2 LocalAnchorA { get; set; }
 
-        public override TSVector2 WorldAnchorA
+        public override FPVector2 WorldAnchorA
         {
             get { return BodyA.GetWorldPoint(LocalAnchorA); }
             set { LocalAnchorA = BodyA.GetLocalPoint(value); }
         }
 
-        public override TSVector2 WorldAnchorB
+        public override FPVector2 WorldAnchorB
         {
             get { return _worldAnchor; }
             set
@@ -145,7 +145,7 @@ namespace KBEngine.Physics2D
             }
         }
 
-        public override TSVector2 GetReactionForce(FP invDt)
+        public override FPVector2 GetReactionForce(FP invDt)
         {
             return invDt * _impulse;
         }
@@ -162,9 +162,9 @@ namespace KBEngine.Physics2D
             _invMassA = BodyA._invMass;
             _invIA = BodyA._invI;
 
-            TSVector2 cA = data.positions[_indexA].c;
+            FPVector2 cA = data.positions[_indexA].c;
             FP aA = data.positions[_indexA].a;
-            TSVector2 vA = data.velocities[_indexA].v;
+            FPVector2 vA = data.velocities[_indexA].v;
             FP wA = data.velocities[_indexA].w;
 
             Rot qA = new Rot(aA);
@@ -220,7 +220,7 @@ namespace KBEngine.Physics2D
             }
             else
             {
-                _impulse = TSVector2.zero;
+                _impulse = FPVector2.zero;
             }
 
             data.velocities[_indexA].v = vA;
@@ -229,14 +229,14 @@ namespace KBEngine.Physics2D
 
         internal override void SolveVelocityConstraints(ref SolverData data)
         {
-            TSVector2 vA = data.velocities[_indexA].v;
+            FPVector2 vA = data.velocities[_indexA].v;
             FP wA = data.velocities[_indexA].w;
 
             // Cdot = v + cross(w, r)
-            TSVector2 Cdot = vA + MathUtils.Cross(wA, _rA);
-            TSVector2 impulse = MathUtils.Mul(ref _mass, -(Cdot + _C + _gamma * _impulse));
+            FPVector2 Cdot = vA + MathUtils.Cross(wA, _rA);
+            FPVector2 impulse = MathUtils.Mul(ref _mass, -(Cdot + _C + _gamma * _impulse));
 
-            TSVector2 oldImpulse = _impulse;
+            FPVector2 oldImpulse = _impulse;
             _impulse += impulse;
             FP maxImpulse = data.step.dt * MaxForce;
             if (_impulse.LengthSquared() > maxImpulse * maxImpulse)

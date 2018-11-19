@@ -41,11 +41,11 @@ namespace KBEngine.Physics3D {
     {
 
         // internal values so we can access them fast  without calling properties.
-        internal TSMatrix inertia = TSMatrix.Identity;
+        internal FPMatrix inertia = FPMatrix.Identity;
         internal FP mass = FP.One;
 
         internal TSBBox boundingBox = TSBBox.LargeBox;
-        internal TSVector geomCen = TSVector.zero;
+        internal FPVector geomCen = FPVector.zero;
 
         /// <summary>
         /// Gets called when the shape changes one of the parameters.
@@ -62,7 +62,7 @@ namespace KBEngine.Physics3D {
         /// <summary>
         /// Returns the inertia of the untransformed shape.
         /// </summary>
-        public TSMatrix Inertia { get { return inertia; } protected set { inertia = value; } }
+        public FPMatrix Inertia { get { return inertia; } protected set { inertia = value; } }
 
 
         /// <summary>
@@ -90,9 +90,9 @@ namespace KBEngine.Physics3D {
 
         private struct ClipTriangle
         {
-            public TSVector n1;
-            public TSVector n2;
-            public TSVector n3;
+            public FPVector n1;
+            public FPVector n2;
+            public FPVector n3;
             public int generation;
         };
 
@@ -104,7 +104,7 @@ namespace KBEngine.Physics3D {
         /// </remarks>
         /// <param name="triangleList"></param>
         /// <param name="generationThreshold"></param>
-        public virtual void MakeHull(ref List<TSVector> triangleList, int generationThreshold)
+        public virtual void MakeHull(ref List<FPVector> triangleList, int generationThreshold)
         {
             FP distanceThreshold = FP.Zero;
 
@@ -112,16 +112,16 @@ namespace KBEngine.Physics3D {
 
             Stack<ClipTriangle> activeTriList = new Stack<ClipTriangle>();
 
-            TSVector[] v = new TSVector[] // 6 Array
+            FPVector[] v = new FPVector[] // 6 Array
 		    {
-			new TSVector( -1,  0,  0 ),
-			new TSVector(  1,  0,  0 ),
+			new FPVector( -1,  0,  0 ),
+			new FPVector(  1,  0,  0 ),
 
-			new TSVector(  0, -1,  0 ),
-			new TSVector(  0,  1,  0 ),
+			new FPVector(  0, -1,  0 ),
+			new FPVector(  0,  1,  0 ),
 
-			new TSVector(  0,  0, -1 ),
-			new TSVector(  0,  0,  1 ),
+			new FPVector(  0,  0, -1 ),
+			new FPVector(  0,  0,  1 ),
 		    };
 
             int[,] kTriangleVerts = new int[8, 3] // 8 x 3 Array
@@ -152,15 +152,15 @@ namespace KBEngine.Physics3D {
             {
                 ClipTriangle tri = activeTriList.Pop();
 
-                TSVector p1; SupportMapping(ref tri.n1, out p1);
-                TSVector p2; SupportMapping(ref tri.n2, out p2);
-                TSVector p3; SupportMapping(ref tri.n3, out p3);
+                FPVector p1; SupportMapping(ref tri.n1, out p1);
+                FPVector p2; SupportMapping(ref tri.n2, out p2);
+                FPVector p3; SupportMapping(ref tri.n3, out p3);
 
                 FP d1 = (p2 - p1).sqrMagnitude;
                 FP d2 = (p3 - p2).sqrMagnitude;
                 FP d3 = (p1 - p3).sqrMagnitude;
 
-                if (TSMath.Max(TSMath.Max(d1, d2), d3) > distanceThreshold && tri.generation < generationThreshold)
+                if (FPMath.Max(FPMath.Max(d1, d2), d3) > distanceThreshold && tri.generation < generationThreshold)
                 {
                     ClipTriangle tri1 = new ClipTriangle();
                     ClipTriangle tri2 = new ClipTriangle();
@@ -176,7 +176,7 @@ namespace KBEngine.Physics3D {
                     tri2.n2 = tri.n2;
                     tri3.n3 = tri.n3;
 
-                    TSVector n = FP.Half * (tri.n1 + tri.n2);
+                    FPVector n = FP.Half * (tri.n1 + tri.n2);
                     n.Normalize();
 
                     tri1.n2 = n;
@@ -204,7 +204,7 @@ namespace KBEngine.Physics3D {
                 }
                 else
                 {
-                    if (((p3 - p1) % (p2 - p1)).sqrMagnitude > TSMath.Epsilon)
+                    if (((p3 - p1) % (p2 - p1)).sqrMagnitude > FPMath.Epsilon)
                     {
                         triangleList.Add(p1);
                         triangleList.Add(p2);
@@ -221,12 +221,12 @@ namespace KBEngine.Physics3D {
         /// </summary>
         /// <param name="orientation">The orientation of the shape.</param>
         /// <param name="box">The resulting axis aligned bounding box.</param>
-        public virtual void GetBoundingBox(ref TSMatrix orientation, out TSBBox box)
+        public virtual void GetBoundingBox(ref FPMatrix orientation, out TSBBox box)
         {
             // I don't think that this can be done faster.
             // 6 is the minimum number of SupportMap calls.
 
-            TSVector vec = TSVector.zero;
+            FPVector vec = FPVector.zero;
 
             vec.Set(orientation.M11, orientation.M21, orientation.M31);
             SupportMapping(ref vec, out vec);
@@ -261,7 +261,7 @@ namespace KBEngine.Physics3D {
         /// </summary>
         public virtual void UpdateShape()
         {
-            GetBoundingBox(ref TSMatrix.InternalIdentity, out boundingBox);
+            GetBoundingBox(ref FPMatrix.InternalIdentity, out boundingBox);
 
             CalculateMassInertia();
             RaiseShapeUpdated();
@@ -275,30 +275,30 @@ namespace KBEngine.Physics3D {
         /// <param name="inertia">Returns the inertia relative to the center of mass, not to the origin</param>
         /// <returns></returns>
         #region  public static FP CalculateMassInertia(Shape shape, out JVector centerOfMass, out JMatrix inertia)
-        public static FP CalculateMassInertia(Shape shape, out TSVector centerOfMass,
-            out TSMatrix inertia)
+        public static FP CalculateMassInertia(Shape shape, out FPVector centerOfMass,
+            out FPMatrix inertia)
         {
             FP mass = FP.Zero;
-            centerOfMass = TSVector.zero; inertia = TSMatrix.Zero;
+            centerOfMass = FPVector.zero; inertia = FPMatrix.Zero;
 
             if (shape is Multishape) throw new ArgumentException("Can't calculate inertia of multishapes.", "shape");
 
             // build a triangle hull around the shape
-            List<TSVector> hullTriangles = new List<TSVector>();
+            List<FPVector> hullTriangles = new List<FPVector>();
             shape.MakeHull(ref hullTriangles, 3);
 
             // create inertia of tetrahedron with vertices at
             // (0,0,0) (1,0,0) (0,1,0) (0,0,1)
             FP a = FP.One / (60 * FP.One), b = FP.One / (120 * FP.One);
-            TSMatrix C = new TSMatrix(a, b, b, b, a, b, b, b, a);
+            FPMatrix C = new FPMatrix(a, b, b, b, a, b, b, b, a);
 
             for (int i = 0; i < hullTriangles.Count; i += 3)
             {
-                TSVector column0 = hullTriangles[i + 0];
-                TSVector column1 = hullTriangles[i + 1];
-                TSVector column2 = hullTriangles[i + 2];
+                FPVector column0 = hullTriangles[i + 0];
+                FPVector column1 = hullTriangles[i + 1];
+                FPVector column2 = hullTriangles[i + 2];
 
-                TSMatrix A = new TSMatrix(column0.x, column1.x, column2.x,
+                FPMatrix A = new FPMatrix(column0.x, column1.x, column2.x,
                     column0.y, column1.y, column2.y,
                     column0.z, column1.z, column2.z);
 
@@ -306,9 +306,9 @@ namespace KBEngine.Physics3D {
 
                 // now transform this canonical tetrahedron to the target tetrahedron
                 // inertia by a linear transformation A
-                TSMatrix tetrahedronInertia = TSMatrix.Multiply(A * C * TSMatrix.Transpose(A), detA);
+                FPMatrix tetrahedronInertia = FPMatrix.Multiply(A * C * FPMatrix.Transpose(A), detA);
 
-                TSVector tetrahedronCOM = (FP.One / (4 * FP.One)) * (hullTriangles[i + 0] + hullTriangles[i + 1] + hullTriangles[i + 2]);
+                FPVector tetrahedronCOM = (FP.One / (4 * FP.One)) * (hullTriangles[i + 0] + hullTriangles[i + 1] + hullTriangles[i + 2]);
                 FP tetrahedronMass = (FP.One / (6 * FP.One)) * detA;
 
                 inertia += tetrahedronInertia;
@@ -316,7 +316,7 @@ namespace KBEngine.Physics3D {
                 mass += tetrahedronMass;
             }
 
-            inertia = TSMatrix.Multiply(TSMatrix.Identity, inertia.Trace()) - inertia;
+            inertia = FPMatrix.Multiply(FPMatrix.Identity, inertia.Trace()) - inertia;
             centerOfMass = centerOfMass * (FP.One / mass);
 
             FP x = centerOfMass.x;
@@ -324,12 +324,12 @@ namespace KBEngine.Physics3D {
             FP z = centerOfMass.z;
 
             // now translate the inertia by the center of mass
-            TSMatrix t = new TSMatrix(
+            FPMatrix t = new FPMatrix(
                 -mass * (y * y + z * z), mass * x * y, mass * x * z,
                 mass * y * x, -mass * (z * z + x * x), mass * y * z,
                 mass * z * x, mass * z * y, -mass * (x * x + y * y));
 
-            TSMatrix.Add(ref inertia, ref t, out inertia);
+            FPMatrix.Add(ref inertia, ref t, out inertia);
 
             return mass;
         }
@@ -352,13 +352,13 @@ namespace KBEngine.Physics3D {
         /// </summary>
         /// <param name="direction">The direction.</param>
         /// <param name="result">The result.</param>
-        public abstract void SupportMapping(ref TSVector direction, out TSVector result);
+        public abstract void SupportMapping(ref FPVector direction, out FPVector result);
 
         /// <summary>
         /// The center of the SupportMap.
         /// </summary>
         /// <param name="geomCenter">The center of the SupportMap.</param>
-        public void SupportCenter(out TSVector geomCenter)
+        public void SupportCenter(out FPVector geomCenter)
         {
             geomCenter = this.geomCen;
         }

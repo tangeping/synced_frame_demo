@@ -66,13 +66,13 @@ namespace KBEngine.Physics2D
         private Body _bodyD;
 
         // Solver shared
-        private TSVector2 _localAnchorA;
-        private TSVector2 _localAnchorB;
-        private TSVector2 _localAnchorC;
-        private TSVector2 _localAnchorD;
+        private FPVector2 _localAnchorA;
+        private FPVector2 _localAnchorB;
+        private FPVector2 _localAnchorC;
+        private FPVector2 _localAnchorD;
 
-        private TSVector2 _localAxisC;
-        private TSVector2 _localAxisD;
+        private FPVector2 _localAxisC;
+        private FPVector2 _localAxisD;
 
         private FP _referenceAngleA;
         private FP _referenceAngleB;
@@ -84,10 +84,10 @@ namespace KBEngine.Physics2D
 
         // Solver temp
         private int _indexA, _indexB, _indexC, _indexD;
-        private TSVector2 _lcA, _lcB, _lcC, _lcD;
+        private FPVector2 _lcA, _lcB, _lcC, _lcD;
         private FP _mA, _mB, _mC, _mD;
         private FP _iA, _iB, _iC, _iD;
-        private TSVector2 _JvAC, _JvBD;
+        private FPVector2 _JvAC, _JvBD;
         private FP _JwA, _JwB, _JwC, _JwD;
         private FP _mass;
 
@@ -135,7 +135,7 @@ namespace KBEngine.Physics2D
                 _localAnchorC = revolute.LocalAnchorA;
                 _localAnchorA = revolute.LocalAnchorB;
                 _referenceAngleA = revolute.ReferenceAngle;
-                _localAxisC = TSVector2.zero;
+                _localAxisC = FPVector2.zero;
 
                 coordinateA = aA - aC - _referenceAngleA;
             }
@@ -147,9 +147,9 @@ namespace KBEngine.Physics2D
                 _referenceAngleA = prismatic.ReferenceAngle;
                 _localAxisC = prismatic.LocalXAxis;
 
-                TSVector2 pC = _localAnchorC;
-                TSVector2 pA = MathUtils.MulT(xfC.q, MathUtils.Mul(xfA.q, _localAnchorA) + (xfA.p - xfC.p));
-                coordinateA = TSVector2.Dot(pA - pC, _localAxisC);
+                FPVector2 pC = _localAnchorC;
+                FPVector2 pA = MathUtils.MulT(xfC.q, MathUtils.Mul(xfA.q, _localAnchorA) + (xfA.p - xfC.p));
+                coordinateA = FPVector2.Dot(pA - pC, _localAxisC);
             }
 
             _bodyD = JointB.BodyA;
@@ -167,7 +167,7 @@ namespace KBEngine.Physics2D
                 _localAnchorD = revolute.LocalAnchorA;
                 _localAnchorB = revolute.LocalAnchorB;
                 _referenceAngleB = revolute.ReferenceAngle;
-                _localAxisD = TSVector2.zero;
+                _localAxisD = FPVector2.zero;
 
                 coordinateB = aB - aD - _referenceAngleB;
             }
@@ -179,9 +179,9 @@ namespace KBEngine.Physics2D
                 _referenceAngleB = prismatic.ReferenceAngle;
                 _localAxisD = prismatic.LocalXAxis;
 
-                TSVector2 pD = _localAnchorD;
-                TSVector2 pB = MathUtils.MulT(xfD.q, MathUtils.Mul(xfB.q, _localAnchorB) + (xfB.p - xfD.p));
-                coordinateB = TSVector2.Dot(pB - pD, _localAxisD);
+                FPVector2 pD = _localAnchorD;
+                FPVector2 pB = MathUtils.MulT(xfD.q, MathUtils.Mul(xfB.q, _localAnchorB) + (xfB.p - xfD.p));
+                coordinateB = FPVector2.Dot(pB - pD, _localAxisD);
             }
 
             _ratio = ratio;
@@ -189,13 +189,13 @@ namespace KBEngine.Physics2D
             _impulse = 0.0f;
         }
 
-        public override TSVector2 WorldAnchorA
+        public override FPVector2 WorldAnchorA
         {
             get { return _bodyA.GetWorldPoint(_localAnchorA); }
             set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
         }
 
-        public override TSVector2 WorldAnchorB
+        public override FPVector2 WorldAnchorB
         {
             get { return _bodyB.GetWorldPoint(_localAnchorB); }
             set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
@@ -224,9 +224,9 @@ namespace KBEngine.Physics2D
         /// </summary>
         public Joint2D JointB { get; private set; }
 
-        public override TSVector2 GetReactionForce(FP invDt)
+        public override FPVector2 GetReactionForce(FP invDt)
         {
-            TSVector2 P = _impulse * _JvAC;
+            FPVector2 P = _impulse * _JvAC;
             return invDt * P;
         }
 
@@ -256,19 +256,19 @@ namespace KBEngine.Physics2D
             _iD = _bodyD._invI;
 
             FP aA = data.positions[_indexA].a;
-            TSVector2 vA = data.velocities[_indexA].v;
+            FPVector2 vA = data.velocities[_indexA].v;
             FP wA = data.velocities[_indexA].w;
 
             FP aB = data.positions[_indexB].a;
-            TSVector2 vB = data.velocities[_indexB].v;
+            FPVector2 vB = data.velocities[_indexB].v;
             FP wB = data.velocities[_indexB].w;
 
             FP aC = data.positions[_indexC].a;
-            TSVector2 vC = data.velocities[_indexC].v;
+            FPVector2 vC = data.velocities[_indexC].v;
             FP wC = data.velocities[_indexC].w;
 
             FP aD = data.positions[_indexD].a;
-            TSVector2 vD = data.velocities[_indexD].v;
+            FPVector2 vD = data.velocities[_indexD].v;
             FP wD = data.velocities[_indexD].w;
 
             Rot qA = new Rot(aA), qB = new Rot(aB), qC = new Rot(aC), qD = new Rot(aD);
@@ -277,16 +277,16 @@ namespace KBEngine.Physics2D
 
             if (_typeA == JointType.Revolute)
             {
-                _JvAC = TSVector2.zero;
+                _JvAC = FPVector2.zero;
                 _JwA = 1.0f;
                 _JwC = 1.0f;
                 _mass += _iA + _iC;
             }
             else
             {
-                TSVector2 u = MathUtils.Mul(qC, _localAxisC);
-                TSVector2 rC = MathUtils.Mul(qC, _localAnchorC - _lcC);
-                TSVector2 rA = MathUtils.Mul(qA, _localAnchorA - _lcA);
+                FPVector2 u = MathUtils.Mul(qC, _localAxisC);
+                FPVector2 rC = MathUtils.Mul(qC, _localAnchorC - _lcC);
+                FPVector2 rA = MathUtils.Mul(qA, _localAnchorA - _lcA);
                 _JvAC = u;
                 _JwC = MathUtils.Cross(rC, u);
                 _JwA = MathUtils.Cross(rA, u);
@@ -295,16 +295,16 @@ namespace KBEngine.Physics2D
 
             if (_typeB == JointType.Revolute)
             {
-                _JvBD = TSVector2.zero;
+                _JvBD = FPVector2.zero;
                 _JwB = _ratio;
                 _JwD = _ratio;
                 _mass += _ratio * _ratio * (_iB + _iD);
             }
             else
             {
-                TSVector2 u = MathUtils.Mul(qD, _localAxisD);
-                TSVector2 rD = MathUtils.Mul(qD, _localAnchorD - _lcD);
-                TSVector2 rB = MathUtils.Mul(qB, _localAnchorB - _lcB);
+                FPVector2 u = MathUtils.Mul(qD, _localAxisD);
+                FPVector2 rD = MathUtils.Mul(qD, _localAnchorD - _lcD);
+                FPVector2 rB = MathUtils.Mul(qB, _localAnchorB - _lcB);
                 _JvBD = _ratio * u;
                 _JwD = _ratio * MathUtils.Cross(rD, u);
                 _JwB = _ratio * MathUtils.Cross(rB, u);
@@ -342,16 +342,16 @@ namespace KBEngine.Physics2D
 
         internal override void SolveVelocityConstraints(ref SolverData data)
         {
-            TSVector2 vA = data.velocities[_indexA].v;
+            FPVector2 vA = data.velocities[_indexA].v;
             FP wA = data.velocities[_indexA].w;
-            TSVector2 vB = data.velocities[_indexB].v;
+            FPVector2 vB = data.velocities[_indexB].v;
             FP wB = data.velocities[_indexB].w;
-            TSVector2 vC = data.velocities[_indexC].v;
+            FPVector2 vC = data.velocities[_indexC].v;
             FP wC = data.velocities[_indexC].w;
-            TSVector2 vD = data.velocities[_indexD].v;
+            FPVector2 vD = data.velocities[_indexD].v;
             FP wD = data.velocities[_indexD].w;
 
-            FP Cdot = TSVector2.Dot(_JvAC, vA - vC) + TSVector2.Dot(_JvBD, vB - vD);
+            FP Cdot = FPVector2.Dot(_JvAC, vA - vC) + FPVector2.Dot(_JvBD, vB - vD);
             Cdot += (_JwA * wA - _JwC * wC) + (_JwB * wB - _JwD * wD);
 
             FP impulse = -_mass * Cdot;
@@ -378,13 +378,13 @@ namespace KBEngine.Physics2D
 
         internal override bool SolvePositionConstraints(ref SolverData data)
         {
-            TSVector2 cA = data.positions[_indexA].c;
+            FPVector2 cA = data.positions[_indexA].c;
             FP aA = data.positions[_indexA].a;
-            TSVector2 cB = data.positions[_indexB].c;
+            FPVector2 cB = data.positions[_indexB].c;
             FP aB = data.positions[_indexB].a;
-            TSVector2 cC = data.positions[_indexC].c;
+            FPVector2 cC = data.positions[_indexC].c;
             FP aC = data.positions[_indexC].a;
-            TSVector2 cD = data.positions[_indexD].c;
+            FPVector2 cD = data.positions[_indexD].c;
             FP aD = data.positions[_indexD].a;
 
             Rot qA = new Rot(aA), qB = new Rot(aB), qC = new Rot(aC), qD = new Rot(aD);
@@ -393,13 +393,13 @@ namespace KBEngine.Physics2D
 
             FP coordinateA, coordinateB;
 
-            TSVector2 JvAC, JvBD;
+            FPVector2 JvAC, JvBD;
             FP JwA, JwB, JwC, JwD;
             FP mass = 0.0f;
 
             if (_typeA == JointType.Revolute)
             {
-                JvAC = TSVector2.zero;
+                JvAC = FPVector2.zero;
                 JwA = 1.0f;
                 JwC = 1.0f;
                 mass += _iA + _iC;
@@ -408,22 +408,22 @@ namespace KBEngine.Physics2D
             }
             else
             {
-                TSVector2 u = MathUtils.Mul(qC, _localAxisC);
-                TSVector2 rC = MathUtils.Mul(qC, _localAnchorC - _lcC);
-                TSVector2 rA = MathUtils.Mul(qA, _localAnchorA - _lcA);
+                FPVector2 u = MathUtils.Mul(qC, _localAxisC);
+                FPVector2 rC = MathUtils.Mul(qC, _localAnchorC - _lcC);
+                FPVector2 rA = MathUtils.Mul(qA, _localAnchorA - _lcA);
                 JvAC = u;
                 JwC = MathUtils.Cross(rC, u);
                 JwA = MathUtils.Cross(rA, u);
                 mass += _mC + _mA + _iC * JwC * JwC + _iA * JwA * JwA;
 
-                TSVector2 pC = _localAnchorC - _lcC;
-                TSVector2 pA = MathUtils.MulT(qC, rA + (cA - cC));
-                coordinateA = TSVector2.Dot(pA - pC, _localAxisC);
+                FPVector2 pC = _localAnchorC - _lcC;
+                FPVector2 pA = MathUtils.MulT(qC, rA + (cA - cC));
+                coordinateA = FPVector2.Dot(pA - pC, _localAxisC);
             }
 
             if (_typeB == JointType.Revolute)
             {
-                JvBD = TSVector2.zero;
+                JvBD = FPVector2.zero;
                 JwB = _ratio;
                 JwD = _ratio;
                 mass += _ratio * _ratio * (_iB + _iD);
@@ -432,17 +432,17 @@ namespace KBEngine.Physics2D
             }
             else
             {
-                TSVector2 u = MathUtils.Mul(qD, _localAxisD);
-                TSVector2 rD = MathUtils.Mul(qD, _localAnchorD - _lcD);
-                TSVector2 rB = MathUtils.Mul(qB, _localAnchorB - _lcB);
+                FPVector2 u = MathUtils.Mul(qD, _localAxisD);
+                FPVector2 rD = MathUtils.Mul(qD, _localAnchorD - _lcD);
+                FPVector2 rB = MathUtils.Mul(qB, _localAnchorB - _lcB);
                 JvBD = _ratio * u;
                 JwD = _ratio * MathUtils.Cross(rD, u);
                 JwB = _ratio * MathUtils.Cross(rB, u);
                 mass += _ratio * _ratio * (_mD + _mB) + _iD * JwD * JwD + _iB * JwB * JwB;
 
-                TSVector2 pD = _localAnchorD - _lcD;
-                TSVector2 pB = MathUtils.MulT(qD, rB + (cB - cD));
-                coordinateB = TSVector2.Dot(pB - pD, _localAxisD);
+                FPVector2 pD = _localAnchorD - _lcD;
+                FPVector2 pB = MathUtils.MulT(qD, rB + (cB - cD));
+                coordinateB = FPVector2.Dot(pB - pD, _localAxisD);
             }
 
             FP C = (coordinateA + _ratio * coordinateB) - _constant;

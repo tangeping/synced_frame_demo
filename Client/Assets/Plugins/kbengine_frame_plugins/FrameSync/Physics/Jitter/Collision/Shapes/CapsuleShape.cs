@@ -58,8 +58,8 @@ namespace KBEngine.Physics3D {
         /// </summary>
         public override void CalculateMassInertia()
         {
-            FP massSphere = ( (3 * FP.One) / (4 * FP.One)) * TSMath.Pi * radius * radius * radius;
-            FP massCylinder = TSMath.Pi * radius * radius * length;
+            FP massSphere = ( (3 * FP.One) / (4 * FP.One)) * FPMath.Pi * radius * radius * radius;
+            FP massCylinder = FPMath.Pi * radius * radius * length;
 
             mass = massCylinder + massSphere;
 
@@ -80,14 +80,14 @@ namespace KBEngine.Physics3D {
         /// </summary>
         /// <param name="direction">The direction.</param>
         /// <param name="result">The result.</param>
-        public override void SupportMapping(ref TSVector direction, out TSVector result)
+        public override void SupportMapping(ref FPVector direction, out FPVector result)
         {
             FP r = FP.Sqrt(direction.x * direction.x + direction.z * direction.z);
 
             if (FP.Abs(direction.y) > FP.Zero)
             {
-                TSVector dir; TSVector.Normalize(ref direction, out dir);
-                TSVector.Multiply(ref dir, radius, out result);
+                FPVector dir; FPVector.Normalize(ref direction, out dir);
+                FPVector.Multiply(ref dir, radius, out result);
                 result.y += FP.Sign(direction.y) * FP.Half * length;              
             }
             else if (r > FP.Zero)

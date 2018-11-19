@@ -102,13 +102,13 @@ namespace KBEngine.Physics2D
         /// </summary>
         /// <param name="direction">The direction.</param>
         /// <returns></returns>
-        public int GetSupport(TSVector2 direction)
+        public int GetSupport(FPVector2 direction)
         {
             int bestIndex = 0;
-            FP bestValue = TSVector2.Dot(Vertices[0], direction);
+            FP bestValue = FPVector2.Dot(Vertices[0], direction);
             for (int i = 1; i < Vertices.Count; ++i)
             {
-                FP value = TSVector2.Dot(Vertices[i], direction);
+                FP value = FPVector2.Dot(Vertices[i], direction);
                 if (value > bestValue)
                 {
                     bestIndex = i;
@@ -124,13 +124,13 @@ namespace KBEngine.Physics2D
         /// </summary>
         /// <param name="direction">The direction.</param>
         /// <returns></returns>
-        public TSVector2 GetSupportVertex(TSVector2 direction)
+        public FPVector2 GetSupportVertex(FPVector2 direction)
         {
             int bestIndex = 0;
-            FP bestValue = TSVector2.Dot(Vertices[0], direction);
+            FP bestValue = FPVector2.Dot(Vertices[0], direction);
             for (int i = 1; i < Vertices.Count; ++i)
             {
-                FP value = TSVector2.Dot(Vertices[i], direction);
+                FP value = FPVector2.Dot(Vertices[i], direction);
                 if (value > bestValue)
                 {
                     bestIndex = i;
@@ -194,12 +194,12 @@ namespace KBEngine.Physics2D
         /// <summary>
         /// Closest point on shapeA
         /// </summary>
-        public TSVector2 PointA;
+        public FPVector2 PointA;
 
         /// <summary>
         /// Closest point on shapeB
         /// </summary>
-        public TSVector2 PointB;
+        public FPVector2 PointB;
     }
 
     internal struct SimplexVertex
@@ -222,17 +222,17 @@ namespace KBEngine.Physics2D
         /// <summary>
         /// wB - wA
         /// </summary>
-        public TSVector2 W;
+        public FPVector2 W;
 
         /// <summary>
         /// Support point in proxyA
         /// </summary>
-        public TSVector2 WA;
+        public FPVector2 WA;
 
         /// <summary>
         /// Support point in proxyB
         /// </summary>
-        public TSVector2 WB;
+        public FPVector2 WB;
     }
 
     internal struct Simplex
@@ -251,8 +251,8 @@ namespace KBEngine.Physics2D
                 SimplexVertex v = V[i];
                 v.IndexA = cache.IndexA[i];
                 v.IndexB = cache.IndexB[i];
-                TSVector2 wALocal = proxyA.Vertices[v.IndexA];
-                TSVector2 wBLocal = proxyB.Vertices[v.IndexB];
+                FPVector2 wALocal = proxyA.Vertices[v.IndexA];
+                FPVector2 wBLocal = proxyB.Vertices[v.IndexB];
                 v.WA = MathUtils.Mul(ref transformA, wALocal);
                 v.WB = MathUtils.Mul(ref transformB, wBLocal);
                 v.W = v.WB - v.WA;
@@ -279,8 +279,8 @@ namespace KBEngine.Physics2D
                 SimplexVertex v = V[0];
                 v.IndexA = 0;
                 v.IndexB = 0;
-                TSVector2 wALocal = proxyA.Vertices[0];
-                TSVector2 wBLocal = proxyB.Vertices[0];
+                FPVector2 wALocal = proxyA.Vertices[0];
+                FPVector2 wBLocal = proxyB.Vertices[0];
                 v.WA = MathUtils.Mul(ref transformA, wALocal);
                 v.WB = MathUtils.Mul(ref transformB, wBLocal);
                 v.W = v.WB - v.WA;
@@ -301,7 +301,7 @@ namespace KBEngine.Physics2D
             }
         }
 
-        internal TSVector2 GetSearchDirection()
+        internal FPVector2 GetSearchDirection()
         {
             switch (Count)
             {
@@ -310,33 +310,33 @@ namespace KBEngine.Physics2D
 
                 case 2:
                     {
-                        TSVector2 e12 = V[1].W - V[0].W;
+                        FPVector2 e12 = V[1].W - V[0].W;
                         FP sgn = MathUtils.Cross(e12, -V[0].W);
                         if (sgn > 0.0f)
                         {
                             // Origin is left of e12.
-                            return new TSVector2(-e12.y, e12.x);
+                            return new FPVector2(-e12.y, e12.x);
                         }
                         else
                         {
                             // Origin is right of e12.
-                            return new TSVector2(e12.y, -e12.x);
+                            return new FPVector2(e12.y, -e12.x);
                         }
                     }
 
                 default:
                     Debug.Assert(false);
-                    return TSVector2.zero;
+                    return FPVector2.zero;
             }
         }
 
-        internal TSVector2 GetClosestPoint()
+        internal FPVector2 GetClosestPoint()
         {
             switch (Count)
             {
                 case 0:
                     Debug.Assert(false);
-                    return TSVector2.zero;
+                    return FPVector2.zero;
 
                 case 1:
                     return V[0].W;
@@ -345,21 +345,21 @@ namespace KBEngine.Physics2D
                     return V[0].A * V[0].W + V[1].A * V[1].W;
 
                 case 3:
-                    return TSVector2.zero;
+                    return FPVector2.zero;
 
                 default:
                     Debug.Assert(false);
-                    return TSVector2.zero;
+                    return FPVector2.zero;
             }
         }
 
-        internal void GetWitnessPoints(out TSVector2 pA, out TSVector2 pB)
+        internal void GetWitnessPoints(out FPVector2 pA, out FPVector2 pB)
         {
             switch (Count)
             {
                 case 0:
-                    pA = TSVector2.zero;
-                    pB = TSVector2.zero;
+                    pA = FPVector2.zero;
+                    pB = FPVector2.zero;
                     Debug.Assert(false);
                     break;
 
@@ -431,12 +431,12 @@ namespace KBEngine.Physics2D
 
         internal void Solve2()
         {
-            TSVector2 w1 = V[0].W;
-            TSVector2 w2 = V[1].W;
-            TSVector2 e12 = w2 - w1;
+            FPVector2 w1 = V[0].W;
+            FPVector2 w2 = V[1].W;
+            FPVector2 e12 = w2 - w1;
 
             // w1 region
-            FP d12_2 = -TSVector2.Dot(w1, e12);
+            FP d12_2 = -FPVector2.Dot(w1, e12);
             if (d12_2 <= 0.0f)
             {
                 // a2 <= 0, so we clamp it to 0
@@ -448,7 +448,7 @@ namespace KBEngine.Physics2D
             }
 
             // w2 region
-            FP d12_1 = TSVector2.Dot(w2, e12);
+            FP d12_1 = FPVector2.Dot(w2, e12);
             if (d12_1 <= 0.0f)
             {
                 // a1 <= 0, so we clamp it to 0
@@ -478,17 +478,17 @@ namespace KBEngine.Physics2D
         // - inside the triangle
         internal void Solve3()
         {
-            TSVector2 w1 = V[0].W;
-            TSVector2 w2 = V[1].W;
-            TSVector2 w3 = V[2].W;
+            FPVector2 w1 = V[0].W;
+            FPVector2 w2 = V[1].W;
+            FPVector2 w3 = V[2].W;
 
             // Edge12
             // [1      1     ][a1] = [1]
             // [w1.e12 w2.e12][a2] = [0]
             // a3 = 0
-            TSVector2 e12 = w2 - w1;
-            FP w1e12 = TSVector2.Dot(w1, e12);
-            FP w2e12 = TSVector2.Dot(w2, e12);
+            FPVector2 e12 = w2 - w1;
+            FP w1e12 = FPVector2.Dot(w1, e12);
+            FP w2e12 = FPVector2.Dot(w2, e12);
             FP d12_1 = w2e12;
             FP d12_2 = -w1e12;
 
@@ -496,9 +496,9 @@ namespace KBEngine.Physics2D
             // [1      1     ][a1] = [1]
             // [w1.e13 w3.e13][a3] = [0]
             // a2 = 0
-            TSVector2 e13 = w3 - w1;
-            FP w1e13 = TSVector2.Dot(w1, e13);
-            FP w3e13 = TSVector2.Dot(w3, e13);
+            FPVector2 e13 = w3 - w1;
+            FP w1e13 = FPVector2.Dot(w1, e13);
+            FP w3e13 = FPVector2.Dot(w3, e13);
             FP d13_1 = w3e13;
             FP d13_2 = -w1e13;
 
@@ -506,9 +506,9 @@ namespace KBEngine.Physics2D
             // [1      1     ][a2] = [1]
             // [w2.e23 w3.e23][a3] = [0]
             // a1 = 0
-            TSVector2 e23 = w3 - w2;
-            FP w2e23 = TSVector2.Dot(w2, e23);
-            FP w3e23 = TSVector2.Dot(w3, e23);
+            FPVector2 e23 = w3 - w2;
+            FP w2e23 = FPVector2.Dot(w2, e23);
+            FP w3e23 = FPVector2.Dot(w3, e23);
             FP d23_1 = w3e23;
             FP d23_2 = -w2e23;
 
@@ -700,7 +700,7 @@ namespace KBEngine.Physics2D
                 //distanceSqr1 = distanceSqr2;
 
                 // Get search direction.
-                TSVector2 d = simplex.GetSearchDirection();
+                FPVector2 d = simplex.GetSearchDirection();
 
                 // Ensure the search direction is numerically fit.
                 if (d.LengthSquared() < Settings.EpsilonSqr)
@@ -773,7 +773,7 @@ namespace KBEngine.Physics2D
                     // Shapes are still no overlapped.
                     // Move the witness points to the outer surface.
                     output.Distance -= rA + rB;
-                    TSVector2 normal = output.PointB - output.PointA;
+                    FPVector2 normal = output.PointB - output.PointA;
                     normal.Normalize();
                     output.PointA += rA * normal;
                     output.PointB -= rB * normal;
@@ -782,7 +782,7 @@ namespace KBEngine.Physics2D
                 {
                     // Shapes are overlapped when radii are considered.
                     // Move the witness points to the middle.
-                    TSVector2 p = 0.5f * (output.PointA + output.PointB);
+                    FPVector2 p = 0.5f * (output.PointA + output.PointB);
                     output.PointA = p;
                     output.PointB = p;
                     output.Distance = 0.0f;

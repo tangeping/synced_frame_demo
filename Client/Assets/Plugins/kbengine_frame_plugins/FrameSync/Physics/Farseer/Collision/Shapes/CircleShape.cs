@@ -30,7 +30,7 @@ namespace KBEngine.Physics2D
     /// </summary>
     public class CircleShape : Shape
     {
-        internal TSVector2 _position;
+        internal FPVector2 _position;
 
         /// <summary>
         /// Create a new circle with the desired radius and density.
@@ -44,7 +44,7 @@ namespace KBEngine.Physics2D
             Debug.Assert(density >= 0);
 
             ShapeType = ShapeType.Circle;
-            _position = TSVector2.zero;
+            _position = FPVector2.zero;
             Radius = radius; // The Radius property cache 2radius and calls ComputeProperties(). So no need to call ComputeProperties() here.
         }
 
@@ -53,7 +53,7 @@ namespace KBEngine.Physics2D
         {
             ShapeType = ShapeType.Circle;
             _radius = 0.0f;
-            _position = TSVector2.zero;
+            _position = FPVector2.zero;
         }
 
         public override int ChildCount
@@ -64,7 +64,7 @@ namespace KBEngine.Physics2D
         /// <summary>
         /// Get or set the position of the circle
         /// </summary>
-        public TSVector2 Position
+        public FPVector2 Position
         {
             get { return _position; }
             set
@@ -74,11 +74,11 @@ namespace KBEngine.Physics2D
             }
         }
 
-        public override bool TestPoint(ref Transform transform, ref TSVector2 point)
+        public override bool TestPoint(ref Transform transform, ref FPVector2 point)
         {
-            TSVector2 center = transform.p + MathUtils.Mul(transform.q, Position);
-            TSVector2 d = point - center;
-            return TSVector2.Dot(d, d) <= _2radius;
+            FPVector2 center = transform.p + MathUtils.Mul(transform.q, Position);
+            FPVector2 d = point - center;
+            return FPVector2.Dot(d, d) <= _2radius;
         }
 
         public override bool RayCast(out RayCastOutput output, ref RayCastInput input, ref Transform transform, int childIndex)
@@ -90,14 +90,14 @@ namespace KBEngine.Physics2D
 
             output = new RayCastOutput();
 
-            TSVector2 position = transform.p + MathUtils.Mul(transform.q, Position);
-            TSVector2 s = input.Point1 - position;
-            FP b = TSVector2.Dot(s, s) - _2radius;
+            FPVector2 position = transform.p + MathUtils.Mul(transform.q, Position);
+            FPVector2 s = input.Point1 - position;
+            FP b = FPVector2.Dot(s, s) - _2radius;
 
             // Solve quadratic equation.
-            TSVector2 r = input.Point2 - input.Point1;
-            FP c = TSVector2.Dot(s, r);
-            FP rr = TSVector2.Dot(r, r);
+            FPVector2 r = input.Point2 - input.Point1;
+            FP c = FPVector2.Dot(s, r);
+            FP rr = FPVector2.Dot(r, r);
             FP sigma = c * c - rr * b;
 
             // Check for negative discriminant and short segment.
@@ -126,9 +126,9 @@ namespace KBEngine.Physics2D
 
         public override void ComputeAABB(out AABB aabb, ref Transform transform, int childIndex)
         {
-            TSVector2 p = transform.p + MathUtils.Mul(transform.q, Position);
-            aabb.LowerBound = new TSVector2(p.x - Radius, p.y - Radius);
-            aabb.UpperBound = new TSVector2(p.x + Radius, p.y + Radius);
+            FPVector2 p = transform.p + MathUtils.Mul(transform.q, Position);
+            aabb.LowerBound = new FPVector2(p.x - Radius, p.y - Radius);
+            aabb.UpperBound = new FPVector2(p.x + Radius, p.y + Radius);
         }
 
         protected override sealed void ComputeProperties()
@@ -139,15 +139,15 @@ namespace KBEngine.Physics2D
             MassData.Centroid = Position;
 
             // inertia about the local origin
-            MassData.Inertia = MassData.Mass * (0.5f * _2radius + TSVector2.Dot(Position, Position));
+            MassData.Inertia = MassData.Mass * (0.5f * _2radius + FPVector2.Dot(Position, Position));
         }
 
-        public override FP ComputeSubmergedArea(ref TSVector2 normal, FP offset, ref Transform xf, out TSVector2 sc)
+        public override FP ComputeSubmergedArea(ref FPVector2 normal, FP offset, ref Transform xf, out FPVector2 sc)
         {
-            sc = TSVector2.zero;
+            sc = FPVector2.zero;
 
-            TSVector2 p = MathUtils.Mul(ref xf, Position);
-            FP l = -(TSVector2.Dot(normal, p) - offset);
+            FPVector2 p = MathUtils.Mul(ref xf, Position);
+            FP l = -(FPVector2.Dot(normal, p) - offset);
             if (l < -Radius + Settings.Epsilon)
             {
                 //Completely dry
@@ -162,7 +162,7 @@ namespace KBEngine.Physics2D
 
             //Magic
             FP l2 = l * l;
-            FP area = _2radius * (FP)((TSMath.Asin((l / Radius)) + TSMath.PiOver2) + l * TSMath.Sqrt(_2radius - l2));
+            FP area = _2radius * (FP)((FPMath.Asin((l / Radius)) + FPMath.PiOver2) + l * FPMath.Sqrt(_2radius - l2));
             // TODO - PORT
             //FP com = -2.0f / 3.0f * (FP)Math.Pow(_2radius - l2, 1.5f) / area;
             FP com = new FP(-2) / new FP(3) * (FP)Math.Pow((_2radius - l2).AsFloat(), 1.5f) / area;

@@ -19,7 +19,7 @@ namespace KBEngine.Physics2D
         /// <summary>
         /// All the points that makes up the curve
         /// </summary>
-        public List<TSVector2> ControlPoints;
+        public List<FPVector2> ControlPoints;
 
         private FP _deltaT;
 
@@ -28,16 +28,16 @@ namespace KBEngine.Physics2D
         /// </summary>
         public Path()
         {
-            ControlPoints = new List<TSVector2>();
+            ControlPoints = new List<FPVector2>();
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Path"/> class.
         /// </summary>
         /// <param name="vertices">The vertices to created the path from.</param>
-        public Path(TSVector2[] vertices)
+        public Path(FPVector2[] vertices)
         {
-            ControlPoints = new List<TSVector2>(vertices.Length);
+            ControlPoints = new List<FPVector2>(vertices.Length);
 
             for (int i = 0; i < vertices.Length; i++)
             {
@@ -49,9 +49,9 @@ namespace KBEngine.Physics2D
         /// Initializes a new instance of the <see cref="Path"/> class.
         /// </summary>
         /// <param name="vertices">The vertices to created the path from.</param>
-        public Path(IList<TSVector2> vertices)
+        public Path(IList<FPVector2> vertices)
         {
-            ControlPoints = new List<TSVector2>(vertices.Count);
+            ControlPoints = new List<FPVector2>(vertices.Count);
             for (int i = 0; i < vertices.Count; i++)
             {
                 Add(vertices[i]);
@@ -96,20 +96,20 @@ namespace KBEngine.Physics2D
         /// Translates the control points by the specified vector.
         /// </summary>
         /// <param name="vector">The vector.</param>
-        public void Translate(ref TSVector2 vector)
+        public void Translate(ref FPVector2 vector)
         {
             for (int i = 0; i < ControlPoints.Count; i++)
-                ControlPoints[i] = TSVector2.Add(ControlPoints[i], vector);
+                ControlPoints[i] = FPVector2.Add(ControlPoints[i], vector);
         }
 
         /// <summary>
         /// Scales the control points by the specified vector.
         /// </summary>
         /// <param name="value">The Value.</param>
-        public void Scale(ref TSVector2 value)
+        public void Scale(ref FPVector2 value)
         {
             for (int i = 0; i < ControlPoints.Count; i++)
-                ControlPoints[i] = TSVector2.Multiply(ControlPoints[i], value);
+                ControlPoints[i] = FPVector2.Multiply(ControlPoints[i], value);
         }
 
         public override string ToString()
@@ -147,9 +147,9 @@ namespace KBEngine.Physics2D
             return verts;
         }
 
-        public TSVector2 GetPosition(FP time)
+        public FPVector2 GetPosition(FP time)
         {
-            TSVector2 temp;
+            FPVector2 temp;
 
             if (ControlPoints.Count < 2)
                 throw new Exception("You need at least 2 control points to calculate a position.");
@@ -179,7 +179,7 @@ namespace KBEngine.Physics2D
                 // relative time
                 FP lt = (time - _deltaT * p) / _deltaT;
 
-                temp = TSVector2.CatmullRom(ControlPoints[p0], ControlPoints[p1], ControlPoints[p2], ControlPoints[p3], lt);
+                temp = FPVector2.CatmullRom(ControlPoints[p0], ControlPoints[p1], ControlPoints[p2], ControlPoints[p3], lt);
 
                 RemoveAt(ControlPoints.Count - 1);
             }
@@ -204,7 +204,7 @@ namespace KBEngine.Physics2D
                 // relative time
                 FP lt = (time - _deltaT * p) / _deltaT;
 
-                temp = TSVector2.CatmullRom(ControlPoints[p0], ControlPoints[p1], ControlPoints[p2], ControlPoints[p3], lt);
+                temp = FPVector2.CatmullRom(ControlPoints[p0], ControlPoints[p1], ControlPoints[p2], ControlPoints[p3], lt);
             }
 
             return temp;
@@ -215,16 +215,16 @@ namespace KBEngine.Physics2D
         /// </summary>
         /// <param name="time">The time</param>
         /// <returns>The normal.</returns>
-        public TSVector2 GetPositionNormal(FP time)
+        public FPVector2 GetPositionNormal(FP time)
         {
             FP offsetTime = time + 0.0001f;
 
-            TSVector2 a = GetPosition(time);
-            TSVector2 b = GetPosition(offsetTime);
+            FPVector2 a = GetPosition(time);
+            FPVector2 b = GetPosition(offsetTime);
 
-            TSVector2 output, temp;
+            FPVector2 output, temp;
 
-            TSVector2.Subtract(ref a, ref b, out temp);
+            FPVector2.Subtract(ref a, ref b, out temp);
 
 #if (XBOX360 || WINDOWS_PHONE)
 output = new Vector2();
@@ -232,18 +232,18 @@ output = new Vector2();
             output.x = -temp.y;
             output.y = temp.x;
 
-            TSVector2.Normalize(ref output, out output);
+            FPVector2.Normalize(ref output, out output);
 
             return output;
         }
 
-        public void Add(TSVector2 point)
+        public void Add(FPVector2 point)
         {
             ControlPoints.Add(point);
             _deltaT = 1f / (ControlPoints.Count - 1);
         }
 
-        public void Remove(TSVector2 point)
+        public void Remove(FPVector2 point)
         {
             ControlPoints.Remove(point);
             _deltaT = 1f / (ControlPoints.Count - 1);
@@ -257,23 +257,23 @@ output = new Vector2();
 
         public FP GetLength()
         {
-            List<TSVector2> verts = GetVertices(ControlPoints.Count * 25);
+            List<FPVector2> verts = GetVertices(ControlPoints.Count * 25);
             FP length = 0;
 
             for (int i = 1; i < verts.Count; i++)
             {
-                length += TSVector2.Distance(verts[i - 1], verts[i]);
+                length += FPVector2.Distance(verts[i - 1], verts[i]);
             }
 
             if (Closed)
-                length += TSVector2.Distance(verts[ControlPoints.Count - 1], verts[0]);
+                length += FPVector2.Distance(verts[ControlPoints.Count - 1], verts[0]);
 
             return length;
         }
 
-        public List<TSVector> SubdivideEvenly(int divisions)
+        public List<FPVector> SubdivideEvenly(int divisions)
         {
-            List<TSVector> verts = new List<TSVector>();
+            List<FPVector> verts = new List<FPVector>();
 
             FP length = GetLength();
 
@@ -281,11 +281,11 @@ output = new Vector2();
             FP t = 0.000f;
 
             // we always start at the first control point
-            TSVector2 start = ControlPoints[0];
-            TSVector2 end = GetPosition(t);
+            FPVector2 start = ControlPoints[0];
+            FPVector2 end = GetPosition(t);
 
             // increment t until we are at half the distance
-            while (deltaLength * 0.5f >= TSVector2.Distance(start, end))
+            while (deltaLength * 0.5f >= FPVector2.Distance(start, end))
             {
                 end = GetPosition(t);
                 t += 0.0001f;
@@ -299,13 +299,13 @@ output = new Vector2();
             // for each box
             for (int i = 1; i < divisions; i++)
             {
-                TSVector2 normal = GetPositionNormal(t);
+                FPVector2 normal = GetPositionNormal(t);
                 FP angle = FP.Atan2(normal.y, normal.x);
 
-                verts.Add(new TSVector(end.x, end.y, angle));
+                verts.Add(new FPVector(end.x, end.y, angle));
 
                 // until we reach the correct distance down the curve
-                while (deltaLength >= TSVector2.Distance(start, end))
+                while (deltaLength >= FPVector2.Distance(start, end))
                 {
                     end = GetPosition(t);
                     t += 0.00001f;

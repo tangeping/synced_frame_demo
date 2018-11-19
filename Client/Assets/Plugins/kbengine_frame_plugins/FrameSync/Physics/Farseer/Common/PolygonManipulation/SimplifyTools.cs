@@ -25,9 +25,9 @@ namespace KBEngine.Physics2D
 
             for (int i = 0; i < vertices.Count; i++)
             {
-                TSVector2 prev = vertices.PreviousVertex(i);
-                TSVector2 current = vertices[i];
-                TSVector2 next = vertices.NextVertex(i);
+                FPVector2 prev = vertices.PreviousVertex(i);
+                FPVector2 current = vertices[i];
+                FPVector2 next = vertices.NextVertex(i);
 
                 //If they collinear, continue
                 if (MathUtils.IsCollinear(ref prev, ref current, ref next, collinearityTolerance))
@@ -74,14 +74,14 @@ namespace KBEngine.Physics2D
             if ((i + 1) == j)
                 return;
 
-            TSVector2 a = vertices[i];
-            TSVector2 b = vertices[j];
+            FPVector2 a = vertices[i];
+            FPVector2 b = vertices[j];
 
             FP maxDistance = -1.0;
             int maxIndex = i;
             for (int k = i + 1; k < j; k++)
             {
-                TSVector2 point = vertices[k];
+                FPVector2 point = vertices[k];
 
                 FP distance = LineTools.DistanceBetweenPointAndLineSegment(ref point, ref a, ref b);
 
@@ -186,9 +186,9 @@ namespace KBEngine.Physics2D
         /// <param name="vertices">The vertices.</param>
         public static Vertices MergeIdenticalPoints(Vertices vertices)
         {
-            HashSet<TSVector2> unique = new HashSet<TSVector2>();
+            HashSet<FPVector2> unique = new HashSet<FPVector2>();
 
-            foreach (TSVector2 vertex in vertices)
+            foreach (FPVector2 vertex in vertices)
             {
                 unique.Add(vertex);
             }
@@ -212,8 +212,8 @@ namespace KBEngine.Physics2D
 
             for (int i = 0; i < vertices.Count; i++)
             {
-                TSVector2 current = vertices[i];
-                TSVector2 next = vertices.NextVertex(i);
+                FPVector2 current = vertices[i];
+                FPVector2 next = vertices.NextVertex(i);
 
                 //If they are closer than the distance, continue
                 if ((next - current).LengthSquared() <= distance2)
@@ -271,9 +271,9 @@ namespace KBEngine.Physics2D
                 throw new ArgumentOutOfRangeException("areaTolerance", "must be equal to or greater than zero.");
 
             Vertices simplified = new Vertices(vertices.Count);
-            TSVector2 v3;
-            TSVector2 v1 = vertices[vertices.Count - 2];
-            TSVector2 v2 = vertices[vertices.Count - 1];
+            FPVector2 v3;
+            FPVector2 v1 = vertices[vertices.Count - 2];
+            FPVector2 v2 = vertices[vertices.Count - 1];
             areaTolerance *= 2;
 
             for (int i = 0; i < vertices.Count; ++i, v2 = v3)

@@ -109,7 +109,7 @@ namespace KBEngine.Physics2D
         /// <param name="red">The red value.</param>
         /// <param name="blue">The blue value.</param>
         /// <param name="green">The green value.</param>
-        public abstract void DrawPolygon(TSVector2[] vertices, int count, FP red, FP blue, FP green, bool closed = true);
+        public abstract void DrawPolygon(FPVector2[] vertices, int count, FP red, FP blue, FP green, bool closed = true);
 
         /// <summary>
         /// Draw a solid closed polygon provided in CCW order.
@@ -119,7 +119,7 @@ namespace KBEngine.Physics2D
         /// <param name="red">The red value.</param>
         /// <param name="blue">The blue value.</param>
         /// <param name="green">The green value.</param>
-        public abstract void DrawSolidPolygon(TSVector2[] vertices, int count, FP red, FP blue, FP green);
+        public abstract void DrawSolidPolygon(FPVector2[] vertices, int count, FP red, FP blue, FP green);
 
         /// <summary>
         /// Draw a circle.
@@ -129,7 +129,7 @@ namespace KBEngine.Physics2D
         /// <param name="red">The red value.</param>
         /// <param name="blue">The blue value.</param>
         /// <param name="green">The green value.</param>
-        public abstract void DrawCircle(TSVector2 center, FP radius, FP red, FP blue, FP green);
+        public abstract void DrawCircle(FPVector2 center, FP radius, FP red, FP blue, FP green);
 
         /// <summary>
         /// Draw a solid circle.
@@ -140,7 +140,7 @@ namespace KBEngine.Physics2D
         /// <param name="red">The red value.</param>
         /// <param name="blue">The blue value.</param>
         /// <param name="green">The green value.</param>
-        public abstract void DrawSolidCircle(TSVector2 center, FP radius, TSVector2 axis, FP red, FP blue,
+        public abstract void DrawSolidCircle(FPVector2 center, FP radius, FPVector2 axis, FP red, FP blue,
                                              FP green);
 
         /// <summary>
@@ -151,7 +151,7 @@ namespace KBEngine.Physics2D
         /// <param name="red">The red value.</param>
         /// <param name="blue">The blue value.</param>
         /// <param name="green">The green value.</param>
-        public abstract void DrawSegment(TSVector2 start, TSVector2 end, FP red, FP blue, FP green);
+        public abstract void DrawSegment(FPVector2 start, FPVector2 end, FP red, FP blue, FP green);
 
         /// <summary>
         /// Draw a transform. Choose your own length scale.

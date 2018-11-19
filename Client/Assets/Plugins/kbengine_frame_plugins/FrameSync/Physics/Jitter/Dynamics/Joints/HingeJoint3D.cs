@@ -36,18 +36,18 @@ namespace KBEngine.Physics3D {
         /// <param name="position">The position in world space where both bodies get connected.</param>
         /// <param name="hingeAxis">The axis if the hinge.</param>
         /// 
-        public static void Create(IWorld world, IBody3D body1, IBody3D body2, TSVector position, TSVector hingeAxis) {
+        public static void Create(IWorld world, IBody3D body1, IBody3D body2, FPVector position, FPVector hingeAxis) {
             new HingeJoint3D(world, body1, body2, position, hingeAxis);
         }
 
-        private HingeJoint3D(IWorld world, IBody3D body1, IBody3D body2, TSVector position, TSVector hingeAxis) : base((World) world)
+        private HingeJoint3D(IWorld world, IBody3D body1, IBody3D body2, FPVector position, FPVector hingeAxis) : base((World) world)
         {
             worldPointConstraint = new PointOnPoint[2];
 
             hingeAxis *= FP.Half;
 
-            TSVector pos1 = position; TSVector.Add(ref pos1,ref hingeAxis,out pos1);
-            TSVector pos2 = position; TSVector.Subtract(ref pos2,ref hingeAxis,out pos2);
+            FPVector pos1 = position; FPVector.Add(ref pos1,ref hingeAxis,out pos1);
+            FPVector pos2 = position; FPVector.Subtract(ref pos2,ref hingeAxis,out pos2);
 
             worldPointConstraint[0] = new PointOnPoint((RigidBody)body1, (RigidBody)body2, pos1);
             worldPointConstraint[1] = new PointOnPoint((RigidBody)body1, (RigidBody)body2, pos2);

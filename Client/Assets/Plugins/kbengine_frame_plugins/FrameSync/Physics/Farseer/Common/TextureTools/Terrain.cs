@@ -15,7 +15,7 @@ namespace KBEngine.Physics2D
         /// <summary>
         /// Center of terrain in world units.
         /// </summary>
-        public TSVector2 Center;
+        public FPVector2 Center;
 
         /// <summary>
         /// Width of terrain in world units.
@@ -69,7 +69,7 @@ namespace KBEngine.Physics2D
         private int _xnum;
         private int _ynum;
         private AABB _dirtyArea;
-        private TSVector2 _topLeft;
+        private FPVector2 _topLeft;
 
         /// <summary>
         /// Creates a new terrain.
@@ -91,7 +91,7 @@ namespace KBEngine.Physics2D
         /// <param name="position">The position (center) of the terrain.</param>
         /// <param name="width">The width of the terrain.</param>
         /// <param name="height">The height of the terrain.</param>
-        public Terrain2D(World world, TSVector2 position, FP width, FP height)
+        public Terrain2D(World world, FPVector2 position, FP width, FP height)
         {
             World = world;
             Width = width;
@@ -105,7 +105,7 @@ namespace KBEngine.Physics2D
         public void Initialize()
         {
             // find top left of terrain in world space
-            _topLeft = new TSVector2(Center.x - (Width * 0.5f), Center.y - (-Height * 0.5f));
+            _topLeft = new FPVector2(Center.x - (Width * 0.5f), Center.y - (-Height * 0.5f));
 
             // convert the terrains size to a point cloud size
             _localWidth = Width * PointsPerUnit;
@@ -126,7 +126,7 @@ namespace KBEngine.Physics2D
             _bodyMap = new List<Body>[_xnum, _ynum];
 
             // make sure to mark the dirty area to an infinitely small box
-            _dirtyArea = new AABB(new TSVector2(FP.MaxValue, FP.MaxValue), new TSVector2(FP.MinValue, FP.MinValue));
+            _dirtyArea = new AABB(new FPVector2(FP.MaxValue, FP.MaxValue), new FPVector2(FP.MinValue, FP.MinValue));
         }
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace KBEngine.Physics2D
         /// </summary>
         /// <param name="data"></param>
         /// <param name="offset"></param>
-        public void ApplyData(sbyte[,] data, TSVector2 offset = default(TSVector2))
+        public void ApplyData(sbyte[,] data, FPVector2 offset = default(FPVector2))
         {
             for (int x = 0; x < data.GetUpperBound(0); x++)
             {
@@ -155,11 +155,11 @@ namespace KBEngine.Physics2D
         /// </summary>
         /// <param name="location">World location to modify. Automatically clipped.</param>
         /// <param name="value">-1 = inside terrain, 1 = outside terrain</param>
-        public void ModifyTerrain(TSVector2 location, sbyte value)
+        public void ModifyTerrain(FPVector2 location, sbyte value)
         {
             // find local position
             // make position local to map space
-            TSVector2 p = location - _topLeft;
+            FPVector2 p = location - _topLeft;
 
             // find map position for each axis
             p.x = p.x * _localWidth / Width;
@@ -198,7 +198,7 @@ namespace KBEngine.Physics2D
 
             RemoveOldData(xStart, xEnd, yStart, yEnd);
 
-            _dirtyArea = new AABB(new TSVector2(FP.MaxValue, FP.MaxValue), new TSVector2(FP.MinValue, FP.MinValue));
+            _dirtyArea = new AABB(new FPVector2(FP.MaxValue, FP.MaxValue), new FPVector2(FP.MinValue, FP.MinValue));
         }
 
         private void RemoveOldData(int xStart, int xEnd, int yStart, int yEnd)
@@ -229,13 +229,13 @@ namespace KBEngine.Physics2D
             FP ax = gx * CellSize;
             FP ay = gy * CellSize;
 
-            List<Vertices> polys = MarchingSquares.DetectSquares(new AABB(new TSVector2(ax, ay), new TSVector2(ax + CellSize, ay + CellSize)), SubCellSize, SubCellSize, _terrainMap, Iterations, true);
+            List<Vertices> polys = MarchingSquares.DetectSquares(new AABB(new FPVector2(ax, ay), new FPVector2(ax + CellSize, ay + CellSize)), SubCellSize, SubCellSize, _terrainMap, Iterations, true);
             if (polys.Count == 0) return;
 
             _bodyMap[gx, gy] = new List<Body>();
 
             // create the scale vector
-            TSVector2 scale = new TSVector2(1f / PointsPerUnit, 1f / -PointsPerUnit);
+            FPVector2 scale = new FPVector2(1f / PointsPerUnit, 1f / -PointsPerUnit);
 
             // create physics object for this grid cell
             foreach (Vertices item in polys)

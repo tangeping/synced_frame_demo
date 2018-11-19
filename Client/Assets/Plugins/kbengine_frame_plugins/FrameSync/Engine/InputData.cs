@@ -13,20 +13,20 @@ namespace KBEngine {
     public class SerializableDictionaryByteFP : SerializableDictionary<byte, FP> { }
 
     /**
-    * @brief A concrete class based on {@link SerializableDictionary} with 'byte' as key and 'TSVector' as value.
+    * @brief A concrete class based on {@link SerializableDictionary} with 'byte' as key and 'FPVector' as value.
     * 
     * This is necessary because Unity's json engine doesn't work with generic types.
     **/
     [Serializable]
-    public class SerializableDictionaryByteTSVector : SerializableDictionary<byte, TSVector> { }
+    public class SerializableDictionaryByteFPVector : SerializableDictionary<byte, FPVector> { }
 
     /**
-    * @brief A concrete class based on {@link SerializableDictionary} with 'byte' as key and 'TSVector2' as value.
+    * @brief A concrete class based on {@link SerializableDictionary} with 'byte' as key and 'FPVector2' as value.
     * 
     * This is necessary because Unity's json engine doesn't work with generic types.
     **/
     [Serializable]
-    public class SerializableDictionaryByteTSVector2 : SerializableDictionary<byte, TSVector2> { }
+    public class SerializableDictionaryByteFPVector2 : SerializableDictionary<byte, FPVector2> { }
 
     /**
      * @brief Provides information about a player's inputs.
@@ -65,21 +65,21 @@ namespace KBEngine {
         internal SerializableDictionaryByteByteArray byteArrayTable;
 
         /**
-         * @brief Contains data about TSVector values.
+         * @brief Contains data about FPVector values.
          **/
         [SerializeField]
-        internal SerializableDictionaryByteTSVector tsVectorTable;
+        internal SerializableDictionaryByteFPVector FPVectorTable;
 
         /**
-         * @brief Contains data about TSVector values.
+         * @brief Contains data about FPVector values.
          **/
         [SerializeField]
-        internal SerializableDictionaryByteTSVector2 tsVectorTable2;
+        internal SerializableDictionaryByteFPVector2 FPVectorTable2;
 
         /**
         * @brief Possible types of input data.
         **/
-        private enum Types : byte { Byte = 0, String = 1, Integer = 2, FP = 3, TSVector = 4, TSVector2 = 5, ByteArray = 6 };
+        private enum Types : byte { Byte = 0, String = 1, Integer = 2, FP = 3, FPVector = 4, FPVector2 = 5, ByteArray = 6 };
 
         public InputData() {
             this.stringTable = new SerializableDictionaryByteString ();
@@ -87,8 +87,8 @@ namespace KBEngine {
 			this.intTable = new SerializableDictionaryByteInt ();
             this.fpTable = new SerializableDictionaryByteFP();
             this.byteArrayTable = new SerializableDictionaryByteByteArray();
-            this.tsVectorTable = new SerializableDictionaryByteTSVector();
-            this.tsVectorTable2 = new SerializableDictionaryByteTSVector2();
+            this.FPVectorTable = new SerializableDictionaryByteFPVector();
+            this.FPVectorTable2 = new SerializableDictionaryByteFPVector2();
         }
 
         public override void Serialize(List<byte> bytes) {
@@ -149,23 +149,23 @@ namespace KBEngine {
                 Utils.GetBytes(pair.Value.RawValue, bytes);
             }
 
-            var tsVectorTableEnum = tsVectorTable.GetEnumerator();
-            while (tsVectorTableEnum.MoveNext()) {
-                KeyValuePair<byte, TSVector> pair = tsVectorTableEnum.Current;
+            var FPVectorTableEnum = FPVectorTable.GetEnumerator();
+            while (FPVectorTableEnum.MoveNext()) {
+                KeyValuePair<byte, FPVector> pair = FPVectorTableEnum.Current;
 
                 bytes.Add(pair.Key);
-                bytes.Add((byte)Types.TSVector);
+                bytes.Add((byte)Types.FPVector);
                 Utils.GetBytes(pair.Value.x.RawValue, bytes);
                 Utils.GetBytes(pair.Value.y.RawValue, bytes);
                 Utils.GetBytes(pair.Value.z.RawValue, bytes);
             }
 
-            var tsVector2TableEnum = tsVectorTable2.GetEnumerator();
-            while (tsVector2TableEnum.MoveNext()) {
-                KeyValuePair<byte, TSVector2> pair = tsVector2TableEnum.Current;
+            var FPVector2TableEnum = FPVectorTable2.GetEnumerator();
+            while (FPVector2TableEnum.MoveNext()) {
+                KeyValuePair<byte, FPVector2> pair = FPVector2TableEnum.Current;
 
                 bytes.Add(pair.Key);
-                bytes.Add((byte)Types.TSVector2);
+                bytes.Add((byte)Types.FPVector2);
                 Utils.GetBytes(pair.Value.x.RawValue, bytes);
                 Utils.GetBytes(pair.Value.y.RawValue, bytes);
             }
@@ -218,7 +218,7 @@ namespace KBEngine {
                         offset += sizeof(long);
                         break;
 
-                    case (byte)Types.TSVector:
+                    case (byte)Types.FPVector:
                         FP fpValueX = FP.FromRaw(BitConverter.ToInt64(data, offset));
                         offset += sizeof(long);
 
@@ -228,17 +228,17 @@ namespace KBEngine {
                         FP fpValueZ = FP.FromRaw(BitConverter.ToInt64(data, offset));
                         offset += sizeof(long);
 
-                        AddTSVector(key, new TSVector(fpValueX, fpValueY, fpValueZ));
+                        AddFPVector(key, new FPVector(fpValueX, fpValueY, fpValueZ));
                         break;
 
-                    case (byte)Types.TSVector2:
+                    case (byte)Types.FPVector2:
                         FP fpValueX2 = FP.FromRaw(BitConverter.ToInt64(data, offset));
                         offset += sizeof(long);
 
                         FP fpValueY2 = FP.FromRaw(BitConverter.ToInt64(data, offset));
                         offset += sizeof(long);
 
-                        AddTSVector2(key, new TSVector2(fpValueX2, fpValueY2));
+                        AddFPVector2(key, new FPVector2(fpValueX2, fpValueY2));
                         break;
 
                     default:
@@ -254,8 +254,8 @@ namespace KBEngine {
             this.intTable.Clear();
             this.fpTable.Clear();
             this.byteArrayTable.Clear();
-            this.tsVectorTable.Clear();
-            this.tsVectorTable2.Clear();
+            this.FPVectorTable.Clear();
+            this.FPVectorTable2.Clear();
         }
 
         public override void CopyFrom(InputDataBase fromBase) {
@@ -291,16 +291,16 @@ namespace KBEngine {
                 this.byteArrayTable.Add(kv.Key, kv.Value);
             }
 
-            var tsVectorTableEnum = from.tsVectorTable.GetEnumerator();
-            while (tsVectorTableEnum.MoveNext()) {
-                var kv = tsVectorTableEnum.Current;
-                this.tsVectorTable.Add(kv.Key, kv.Value);
+            var FPVectorTableEnum = from.FPVectorTable.GetEnumerator();
+            while (FPVectorTableEnum.MoveNext()) {
+                var kv = FPVectorTableEnum.Current;
+                this.FPVectorTable.Add(kv.Key, kv.Value);
             }
 
-            var tsVectorTable2Enum = from.tsVectorTable2.GetEnumerator();
-            while (tsVectorTable2Enum.MoveNext()) {
-                var kv = tsVectorTable2Enum.Current;
-                this.tsVectorTable2.Add(kv.Key, kv.Value);
+            var FPVectorTable2Enum = from.FPVectorTable2.GetEnumerator();
+            while (FPVectorTable2Enum.MoveNext()) {
+                var kv = FPVectorTable2Enum.Current;
+                this.FPVectorTable2.Add(kv.Key, kv.Value);
             }
         }
 
@@ -315,8 +315,8 @@ namespace KBEngine {
                 this.intTable.Count != other.intTable.Count ||
                 this.fpTable.Count != other.fpTable.Count ||
                 this.byteArrayTable.Count != other.byteArrayTable.Count ||
-                this.tsVectorTable.Count != other.tsVectorTable.Count ||
-                this.tsVectorTable2.Count != other.tsVectorTable2.Count) {
+                this.FPVectorTable.Count != other.FPVectorTable.Count ||
+                this.FPVectorTable2.Count != other.FPVectorTable2.Count) {
 
                 return false;
             }
@@ -382,22 +382,22 @@ namespace KBEngine {
                 }
             }
 
-            var tsVectorTableEnum = id1.tsVectorTable.GetEnumerator();
+            var FPVectorTableEnum = id1.FPVectorTable.GetEnumerator();
 
-            while (tsVectorTableEnum.MoveNext()) {
-                var pair = tsVectorTableEnum.Current;
+            while (FPVectorTableEnum.MoveNext()) {
+                var pair = FPVectorTableEnum.Current;
 
-                if (!id2.tsVectorTable.ContainsKey(pair.Key) || pair.Value != id2.tsVectorTable[pair.Key]) {
+                if (!id2.FPVectorTable.ContainsKey(pair.Key) || pair.Value != id2.FPVectorTable[pair.Key]) {
                     return false;
                 }
             }
 
-            var tsVectorTable2Enum = id1.tsVectorTable2.GetEnumerator();
+            var FPVectorTable2Enum = id1.FPVectorTable2.GetEnumerator();
 
-            while (tsVectorTable2Enum.MoveNext()) {
-                var pair = tsVectorTable2Enum.Current;
+            while (FPVectorTable2Enum.MoveNext()) {
+                var pair = FPVectorTable2Enum.Current;
 
-                if (!id2.tsVectorTable2.ContainsKey(pair.Key) || pair.Value != id2.tsVectorTable2[pair.Key]) {
+                if (!id2.FPVectorTable2.ContainsKey(pair.Key) || pair.Value != id2.FPVectorTable2[pair.Key]) {
                     return false;
                 }
             }
@@ -410,7 +410,7 @@ namespace KBEngine {
          **/
         public int Count {
             get {
-                return (this.stringTable.Count + this.byteTable.Count + this.intTable.Count + this.fpTable.Count + this.byteArrayTable.Count + this.tsVectorTable.Count + this.tsVectorTable2.Count);
+                return (this.stringTable.Count + this.byteTable.Count + this.intTable.Count + this.fpTable.Count + this.byteArrayTable.Count + this.FPVectorTable.Count + this.FPVectorTable2.Count);
             }
         }
 
@@ -462,17 +462,17 @@ namespace KBEngine {
         }
 
         /**
-         * @brief Adds a new TSVector value.
+         * @brief Adds a new FPVector value.
          **/
-        internal void AddTSVector(byte key, TSVector value) {
-            this.tsVectorTable[key] = value;
+        internal void AddFPVector(byte key, FPVector value) {
+            this.FPVectorTable[key] = value;
         }
 
         /**
-         * @brief Adds a new TSVector2 value.
+         * @brief Adds a new FPVector2 value.
          **/
-        internal void AddTSVector2(byte key, TSVector2 value) {
-            this.tsVectorTable2[key] = value;
+        internal void AddFPVector2(byte key, FPVector2 value) {
+            this.FPVectorTable2[key] = value;
         }
 
         /**
@@ -531,25 +531,25 @@ namespace KBEngine {
         }
 
         /**
-         * @brief Gets a TSVector value.
+         * @brief Gets a FPVector value.
          **/
-        public TSVector GetTSVector(byte key) {
-            if (!this.tsVectorTable.ContainsKey(key)) {
-                return TSVector.zero;
+        public FPVector GetFPVector(byte key) {
+            if (!this.FPVectorTable.ContainsKey(key)) {
+                return FPVector.zero;
             }
 
-            return this.tsVectorTable[key];
+            return this.FPVectorTable[key];
         }
 
         /**
-         * @brief Gets a TSVector2 value.
+         * @brief Gets a FPVector2 value.
          **/
-        public TSVector2 GetTSVector2(byte key) {
-            if (!this.tsVectorTable2.ContainsKey(key)) {
-                return TSVector2.zero;
+        public FPVector2 GetFPVector2(byte key) {
+            if (!this.FPVectorTable2.ContainsKey(key)) {
+                return FPVector2.zero;
             }
 
-            return this.tsVectorTable2[key];
+            return this.FPVectorTable2[key];
         }
 
         /**
@@ -590,15 +590,15 @@ namespace KBEngine {
         /**
          * @brief Returns true if the key exists.
          **/
-        public bool HasTSVector(byte key) {
-            return this.tsVectorTable.ContainsKey(key);
+        public bool HasFPVector(byte key) {
+            return this.FPVectorTable.ContainsKey(key);
         }
 
         /**
          * @brief Returns true if the key exists.
          **/
-        public bool HasTSVector2(byte key) {
-            return this.tsVectorTable2.ContainsKey(key);
+        public bool HasFPVector2(byte key) {
+            return this.FPVectorTable2.ContainsKey(key);
         }
 
     }

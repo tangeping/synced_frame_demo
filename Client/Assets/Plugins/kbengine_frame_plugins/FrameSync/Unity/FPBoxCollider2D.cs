@@ -10,15 +10,15 @@ namespace KBEngine {
 
         [FormerlySerializedAs("size")]
         [SerializeField]
-        private TSVector2 _size = TSVector2.one;
+        private FPVector2 _size = FPVector2.one;
 
         /**
          *  @brief Size of the box. 
          **/
-        public TSVector2 size {
+        public FPVector2 size {
             get {
                 if (_body != null) {
-                    TSVector2 halfVector = ((Physics2D.PolygonShape)_body.FixtureList[0].Shape).Vertices[0] * 2;
+                    FPVector2 halfVector = ((Physics2D.PolygonShape)_body.FixtureList[0].Shape).Vertices[0] * 2;
                     halfVector.x /= lossyScale.x;
                     halfVector.y /= -lossyScale.y;
 
@@ -31,8 +31,8 @@ namespace KBEngine {
                 _size = value;
 
                 if (_body != null) {
-                    TSVector size3 = new TSVector(_size.x, _size.y, 1);
-                    TSVector sizeScaled = TSVector.Scale(size3, lossyScale);
+                    FPVector size3 = new FPVector(_size.x, _size.y, 1);
+                    FPVector sizeScaled = FPVector.Scale(size3, lossyScale);
 
                     ((Physics2D.PolygonShape)_body.FixtureList[0].Shape).Vertices = KBEngine.Physics2D.PolygonTools.CreateRectangle(sizeScaled.x * FP.Half, sizeScaled.y * FP.Half);
                 }
@@ -47,14 +47,14 @@ namespace KBEngine {
             if (GetComponent<BoxCollider2D>() != null) {
                 BoxCollider2D boxCollider2D = GetComponent<BoxCollider2D>();
 
-                size = new TSVector2(boxCollider2D.size.x, boxCollider2D.size.y);
-                Center = new TSVector2(boxCollider2D.offset.x, boxCollider2D.offset.y);
+                size = new FPVector2(boxCollider2D.size.x, boxCollider2D.size.y);
+                Center = new FPVector2(boxCollider2D.offset.x, boxCollider2D.offset.y);
                 isTrigger = boxCollider2D.isTrigger;
             } else if (GetComponent<BoxCollider>() != null) {
                 BoxCollider boxCollider = GetComponent<BoxCollider>();
 
-                size = boxCollider.size.ToTSVector2();
-                Center = boxCollider.center.ToTSVector2();
+                size = boxCollider.size.ToFPVector2();
+                Center = boxCollider.center.ToFPVector2();
                 isTrigger = boxCollider.isTrigger;
             }
         }
@@ -63,8 +63,8 @@ namespace KBEngine {
          *  @brief Create the internal shape used to represent a TSBoxCollider.
          **/
         public override KBEngine.Physics2D.Shape CreateShape() {
-            TSVector size3 = new TSVector(size.x, size.y, 1);
-            TSVector sizeScaled = TSVector.Scale(size3, lossyScale);
+            FPVector size3 = new FPVector(size.x, size.y, 1);
+            FPVector sizeScaled = FPVector.Scale(size3, lossyScale);
             return new KBEngine.Physics2D.PolygonShape(KBEngine.Physics2D.PolygonTools.CreateRectangle(sizeScaled.x * FP.Half, sizeScaled.y * FP.Half), 1);
         }
 
@@ -73,8 +73,8 @@ namespace KBEngine {
         }
 
         protected override Vector3 GetGizmosSize() {
-            TSVector size3 = new TSVector(size.x, size.y, 1);
-            return TSVector.Scale(size3, lossyScale).ToVector();
+            FPVector size3 = new FPVector(size.x, size.y, 1);
+            return FPVector.Scale(size3, lossyScale).ToVector();
         }
 
     }

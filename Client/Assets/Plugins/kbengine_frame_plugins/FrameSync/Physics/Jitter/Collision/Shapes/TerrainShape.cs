@@ -108,8 +108,8 @@ namespace KBEngine.Physics3D {
         }
 
 
-        private TSVector[] points = new TSVector[3];
-        private TSVector normal = TSVector.up;
+        private FPVector[] points = new FPVector[3];
+        private FPVector normal = FPVector.up;
 
         /// <summary>
         /// Sets the current shape. First <see cref="Prepare"/> has to be called.
@@ -143,18 +143,18 @@ namespace KBEngine.Physics3D {
                 points[2].Set((minX + quadIndexX + 0) * scaleX, heights[minX + quadIndexX + 0, minZ + quadIndexZ + 1], (minZ + quadIndexZ + 1) * scaleZ);
             }
 
-            TSVector sum = points[0];
-            TSVector.Add(ref sum, ref points[1], out sum);
-            TSVector.Add(ref sum, ref points[2], out sum);
-            TSVector.Multiply(ref sum, FP.One / (3 * FP.One), out sum);
+            FPVector sum = points[0];
+            FPVector.Add(ref sum, ref points[1], out sum);
+            FPVector.Add(ref sum, ref points[2], out sum);
+            FPVector.Multiply(ref sum, FP.One / (3 * FP.One), out sum);
             geomCen = sum;
 
-            TSVector.Subtract(ref points[1], ref points[0], out sum);
-            TSVector.Subtract(ref points[2], ref points[0], out normal);
-            TSVector.Cross(ref sum, ref normal, out normal);
+            FPVector.Subtract(ref points[1], ref points[0], out sum);
+            FPVector.Subtract(ref points[2], ref points[0], out normal);
+            FPVector.Cross(ref sum, ref normal, out normal);
         }
 
-        public void CollisionNormal(out TSVector normal)
+        public void CollisionNormal(out FPVector normal)
         {
             normal = this.normal;
         }
@@ -179,28 +179,28 @@ namespace KBEngine.Physics3D {
             else
             {
                 minX = (int)FP.Floor(((box.min.x - sphericalExpansion) / scaleX));
-                minX = (int)TSMath.Max(minX, 0);
+                minX = (int)FPMath.Max(minX, 0);
             }
 
             if (box.max.x > boundings.max.x) maxX = heightsLength0 - 1;
             else
             {
 				maxX = (int)FP.Ceiling(((box.max.x + sphericalExpansion) / scaleX));
-				maxX = (int)TSMath.Min(maxX, heightsLength0 - 1);
+				maxX = (int)FPMath.Min(maxX, heightsLength0 - 1);
             }
 
             if (box.min.z < boundings.min.z) minZ = 0;
             else
             {
 				minZ = (int)FP.Floor(((box.min.z - sphericalExpansion) / scaleZ));
-				minZ = (int)TSMath.Max(minZ, 0);
+				minZ = (int)FPMath.Max(minZ, 0);
             }
 
             if (box.max.z > boundings.max.z) maxZ = heightsLength1 - 1;
             else
             {
 				maxZ = (int)FP.Ceiling((FP)((box.max.z + sphericalExpansion) / scaleZ));
-				maxZ = (int)TSMath.Min(maxZ, heightsLength1 - 1);
+				maxZ = (int)FPMath.Min(maxZ, heightsLength1 - 1);
             }
 
             numX = maxX - minX;
@@ -215,7 +215,7 @@ namespace KBEngine.Physics3D {
         /// </summary>
         public override void CalculateMassInertia()
         {
-            this.inertia = TSMatrix.Identity;
+            this.inertia = FPMatrix.Identity;
             this.Mass = FP.One;
         }
 
@@ -225,7 +225,7 @@ namespace KBEngine.Physics3D {
         /// </summary>
         /// <param name="orientation">The orientation of the shape.</param>
         /// <param name="box">The axis aligned bounding box of the shape.</param>
-        public override void GetBoundingBox(ref TSMatrix orientation, out TSBBox box)
+        public override void GetBoundingBox(ref FPMatrix orientation, out TSBBox box)
         {
             box = boundings;
 
@@ -241,20 +241,20 @@ namespace KBEngine.Physics3D {
             box.Transform(ref orientation);
         }
 
-        public override void MakeHull(ref List<TSVector> triangleList, int generationThreshold)
+        public override void MakeHull(ref List<FPVector> triangleList, int generationThreshold)
         {
             for (int index = 0; index < (heightsLength0 - 1) * (heightsLength1 - 1); index++)
             {
                 int quadIndexX = index % (heightsLength0 - 1);
                 int quadIndexZ = index / (heightsLength0 - 1);
 
-                triangleList.Add(new TSVector((0 + quadIndexX + 0) * scaleX, heights[0 + quadIndexX + 0, 0 + quadIndexZ + 0], (0 + quadIndexZ + 0) * scaleZ));
-                triangleList.Add(new TSVector((0 + quadIndexX + 1) * scaleX, heights[0 + quadIndexX + 1, 0 + quadIndexZ + 0], (0 + quadIndexZ + 0) * scaleZ));
-                triangleList.Add(new TSVector((0 + quadIndexX + 0) * scaleX, heights[0 + quadIndexX + 0, 0 + quadIndexZ + 1], (0 + quadIndexZ + 1) * scaleZ));
+                triangleList.Add(new FPVector((0 + quadIndexX + 0) * scaleX, heights[0 + quadIndexX + 0, 0 + quadIndexZ + 0], (0 + quadIndexZ + 0) * scaleZ));
+                triangleList.Add(new FPVector((0 + quadIndexX + 1) * scaleX, heights[0 + quadIndexX + 1, 0 + quadIndexZ + 0], (0 + quadIndexZ + 0) * scaleZ));
+                triangleList.Add(new FPVector((0 + quadIndexX + 0) * scaleX, heights[0 + quadIndexX + 0, 0 + quadIndexZ + 1], (0 + quadIndexZ + 1) * scaleZ));
 
-                triangleList.Add(new TSVector((0 + quadIndexX + 1) * scaleX, heights[0 + quadIndexX + 1, 0 + quadIndexZ + 0], (0 + quadIndexZ + 0) * scaleZ));
-                triangleList.Add(new TSVector((0 + quadIndexX + 1) * scaleX, heights[0 + quadIndexX + 1, 0 + quadIndexZ + 1], (0 + quadIndexZ + 1) * scaleZ));
-                triangleList.Add(new TSVector((0 + quadIndexX + 0) * scaleX, heights[0 + quadIndexX + 0, 0 + quadIndexZ + 1], (0 + quadIndexZ + 1) * scaleZ));
+                triangleList.Add(new FPVector((0 + quadIndexX + 1) * scaleX, heights[0 + quadIndexX + 1, 0 + quadIndexZ + 0], (0 + quadIndexZ + 0) * scaleZ));
+                triangleList.Add(new FPVector((0 + quadIndexX + 1) * scaleX, heights[0 + quadIndexX + 1, 0 + quadIndexZ + 1], (0 + quadIndexZ + 1) * scaleZ));
+                triangleList.Add(new FPVector((0 + quadIndexX + 0) * scaleX, heights[0 + quadIndexX + 0, 0 + quadIndexZ + 1], (0 + quadIndexZ + 1) * scaleZ));
             }
         }
 
@@ -265,28 +265,28 @@ namespace KBEngine.Physics3D {
         /// </summary>
         /// <param name="direction">The direction.</param>
         /// <param name="result">The result.</param>
-        public override void SupportMapping(ref TSVector direction, out TSVector result)
+        public override void SupportMapping(ref FPVector direction, out FPVector result)
         {
-            TSVector expandVector;
-            TSVector.Normalize(ref direction, out expandVector);
-            TSVector.Multiply(ref expandVector, sphericalExpansion, out expandVector);
+            FPVector expandVector;
+            FPVector.Normalize(ref direction, out expandVector);
+            FPVector.Multiply(ref expandVector, sphericalExpansion, out expandVector);
 
             int minIndex = 0;
-            FP min = TSVector.Dot(ref points[0], ref direction);
-            FP dot = TSVector.Dot(ref points[1], ref direction);
+            FP min = FPVector.Dot(ref points[0], ref direction);
+            FP dot = FPVector.Dot(ref points[1], ref direction);
             if (dot > min)
             {
                 min = dot;
                 minIndex = 1;
             }
-            dot = TSVector.Dot(ref points[2], ref direction);
+            dot = FPVector.Dot(ref points[2], ref direction);
             if (dot > min)
             {
                 min = dot;
                 minIndex = 2;
             }
 
-            TSVector.Add(ref points[minIndex], ref expandVector, out result);
+            FPVector.Add(ref points[minIndex], ref expandVector, out result);
         }
 
         /// <summary>
@@ -295,13 +295,13 @@ namespace KBEngine.Physics3D {
         /// <param name="rayOrigin"></param>
         /// <param name="rayDelta"></param>
         /// <returns></returns>
-        public override int Prepare(ref TSVector rayOrigin, ref TSVector rayDelta)
+        public override int Prepare(ref FPVector rayOrigin, ref FPVector rayDelta)
         {
             TSBBox box = TSBBox.SmallBox;
 
             #region RayEnd + Expand Spherical
-            TSVector rayEnd;
-            TSVector.Normalize(ref rayDelta, out rayEnd);
+            FPVector rayEnd;
+            FPVector.Normalize(ref rayDelta, out rayEnd);
             rayEnd = rayOrigin + rayDelta + rayEnd * sphericalExpansion;
             #endregion
 

@@ -16,7 +16,7 @@ namespace KBEngine {
 
         private StartState startState;
 
-        public TSVector TestCenter;
+        public FPVector TestCenter;
         /** 
          * @brief Player prefabs to be instantiated in each machine.
          **/
@@ -126,10 +126,10 @@ namespace KBEngine {
         /** 
          * @brief Returns the simulated gravity.
          **/
-        public static TSVector Gravity {
+        public static FPVector Gravity {
             get {
                 if (instance == null) {
-                    return TSVector.zero;
+                    return FPVector.zero;
                 }
 
                 return instance.ActiveConfig.gravity3D;
@@ -206,7 +206,7 @@ namespace KBEngine {
             StateTracker.Init(currentConfig.rollbackWindow);
 
             // TODO: 随机数种子在这里指定，需要修改为由 Server 统一指定
-            TSRandom.Init();
+            FPRandom.Init();
 
             if (currentConfig.physics2DEnabled || currentConfig.physics3DEnabled) {
                 PhysicsManager.New(currentConfig);
@@ -320,9 +320,9 @@ namespace KBEngine {
 
         private void initBehaviors() {
             behaviorsByPlayer = new Dictionary<byte, List<FrameSyncManagedBehaviour>>();
-            List<TSVector> playerPosition = new List<TSVector>();
-            playerPosition.Add(new TSVector(-5.0f, 0, 0));
-            playerPosition.Add(new TSVector(-5.0f, 0, 5.0f));
+            List<FPVector> playerPosition = new List<FPVector>();
+            playerPosition.Add(new FPVector(-5.0f, 0, 0));
+            playerPosition.Add(new FPVector(-5.0f, 0, 5.0f));
             int playerIndex = 0;
 
             var playersEnum = lockstep.Players.GetEnumerator();
@@ -336,7 +336,7 @@ namespace KBEngine {
 
                     GameObject prefabInst = Instantiate(prefab);
                     prefabInst.transform.position = playerPosition[playerIndex].ToVector();
-                    InitializeGameObject(prefabInst, prefabInst.transform.position.ToTSVector(), prefabInst.transform.rotation.ToTSQuaternion());
+                    InitializeGameObject(prefabInst, prefabInst.transform.position.ToFPVector(), prefabInst.transform.rotation.ToFPQuaternion());
 
                     FrameSyncBehaviour[] behaviours = prefabInst.GetComponentsInChildren<FrameSyncBehaviour>();
                     for (int index2 = 0, length2 = behaviours.Length; index2 < length2; index2++) {
@@ -483,7 +483,7 @@ namespace KBEngine {
          * @param prefab GameObject's prefab to instantiate.
          **/
         public static GameObject SyncedInstantiate(GameObject prefab) {
-            return SyncedInstantiate(prefab, prefab.transform.position.ToTSVector(), prefab.transform.rotation.ToTSQuaternion());
+            return SyncedInstantiate(prefab, prefab.transform.position.ToFPVector(), prefab.transform.rotation.ToFPQuaternion());
         }
 
         /**
@@ -493,7 +493,7 @@ namespace KBEngine {
          * @param position Position to place the new GameObject.
          * @param rotation Rotation to set in the new GameObject.
          **/
-        public static GameObject SyncedInstantiate(GameObject prefab, TSVector position, TSQuaternion rotation) {
+        public static GameObject SyncedInstantiate(GameObject prefab, FPVector position, FPQuaternion rotation) {
             if (instance != null && instance.lockstep != null) {
                 GameObject go = GameObject.Instantiate(prefab, position.ToVector(), rotation.ToQuaternion()) as GameObject;
 
@@ -554,7 +554,7 @@ namespace KBEngine {
             safeMap.Remove(FrameSyncManager.LastSafeTick);
         }
 
-        private static void InitializeGameObject(GameObject go, TSVector position, TSQuaternion rotation) {
+        private static void InitializeGameObject(GameObject go, FPVector position, FPQuaternion rotation) {
             ICollider[] tsColliders = go.GetComponentsInChildren<ICollider>();
             if (tsColliders != null) {
                 for (int index = 0, length = tsColliders.Length; index < length; index++) {
@@ -585,7 +585,7 @@ namespace KBEngine {
             if (rootFPTransform2D != null) {
                 rootFPTransform2D.Initialize();
 
-                rootFPTransform2D.position = new TSVector2(position.x, position.y);
+                rootFPTransform2D.position = new FPVector2(position.x, position.y);
                 rootFPTransform2D.rotation = rotation.ToQuaternion().eulerAngles.z;
             }
 
@@ -608,8 +608,8 @@ namespace KBEngine {
          * @param position Position to place the new GameObject.
          * @param rotation Rotation to set in the new GameObject.
          **/
-        public static GameObject SyncedInstantiate(GameObject prefab, TSVector2 position, TSQuaternion rotation) {
-            return SyncedInstantiate(prefab, new TSVector(position.x, position.y, 0), rotation);
+        public static GameObject SyncedInstantiate(GameObject prefab, FPVector2 position, FPQuaternion rotation) {
+            return SyncedInstantiate(prefab, new FPVector(position.x, position.y, 0), rotation);
         }
 
         /**

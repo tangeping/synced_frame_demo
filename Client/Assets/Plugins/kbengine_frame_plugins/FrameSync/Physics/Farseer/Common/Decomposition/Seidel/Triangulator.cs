@@ -182,7 +182,7 @@ namespace KBEngine.Physics2D
 
         private static void Shuffle<T>(IList<T> list)
         {
-            KBEngine.TSRandom rng = KBEngine.TSRandom.New(0);
+            KBEngine.FPRandom rng = KBEngine.FPRandom.New(0);
             int n = list.Count;
             while (n > 1)
             {

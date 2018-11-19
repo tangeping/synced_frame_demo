@@ -13,14 +13,14 @@ namespace KBEngine {
         [SerializeField]
         [HideInInspector]
         [AddTracking]
-        private TSVector _position;
+        private FPVector _position;
 
         /**
         *  @brief Property access to position. 
         *  
         *  It works as proxy to a Body's position when there is a collider attached.
         **/
-        public TSVector position {
+        public FPVector position {
             get {
                 if (tsCollider != null && tsCollider.Body != null) {
 					return tsCollider.Body.TSPosition - scaledCenter;
@@ -40,17 +40,17 @@ namespace KBEngine {
         [SerializeField]
         [HideInInspector]
         [AddTracking]
-        private TSQuaternion _rotation;
+        private FPQuaternion _rotation;
 
         /**
         *  @brief Property access to rotation. 
         *  
         *  It works as proxy to a Body's rotation when there is a collider attached.
         **/
-        public TSQuaternion rotation {
+        public FPQuaternion rotation {
             get {
                 if (tsCollider != null && tsCollider.Body != null) {
-                    return TSQuaternion.CreateFromMatrix(tsCollider.Body.TSOrientation);
+                    return FPQuaternion.CreateFromMatrix(tsCollider.Body.TSOrientation);
                 }
 
                 return _rotation;
@@ -59,7 +59,7 @@ namespace KBEngine {
                 _rotation = value;
 
                 if (tsCollider != null && tsCollider.Body != null) {
-                    tsCollider.Body.TSOrientation = TSMatrix.CreateFromQuaternion(_rotation);
+                    tsCollider.Body.TSOrientation = FPMatrix.CreateFromQuaternion(_rotation);
                 }
             }
         }
@@ -67,12 +67,12 @@ namespace KBEngine {
         [SerializeField]
         [HideInInspector]
         [AddTracking]
-        private TSVector _scale;
+        private FPVector _scale;
 
         /**
         *  @brief Property access to scale. 
         **/
-        public TSVector scale {
+        public FPVector scale {
             get {
                 return _scale;
             }
@@ -85,13 +85,13 @@ namespace KBEngine {
         [HideInInspector]
         private bool _serialized;
 
-        private TSVector scaledCenter {
+        private FPVector scaledCenter {
             get {
                 if (tsCollider != null) {
                     return tsCollider.ScaledCenter;
                 }
 
-                return TSVector.zero;
+                return FPVector.zero;
             }
         }
 
@@ -109,8 +109,8 @@ namespace KBEngine {
         *  
         *  @param target Target position.
         **/
-        public void LookAt(TSVector target) {
-            this.rotation = TSQuaternion.CreateFromMatrix(TSMatrix.CreateFromLookAt(position, target));
+        public void LookAt(FPVector target) {
+            this.rotation = FPQuaternion.CreateFromMatrix(FPMatrix.CreateFromLookAt(position, target));
         }
 
         /**
@@ -126,7 +126,7 @@ namespace KBEngine {
         *  If relative space is SELF then the game object will move based on its forward vector.
         **/
         public void Translate(FP x, FP y, FP z, Space relativeTo) {
-            Translate(new TSVector(x, y, z), relativeTo);
+            Translate(new FPVector(x, y, z), relativeTo);
         }
 
         /**
@@ -135,13 +135,13 @@ namespace KBEngine {
         *  The game object will move based on FPTransform's forward vector.
         **/
         public void Translate(FP x, FP y, FP z, FPTransform relativeTo) {
-            Translate(new TSVector(x, y, z), relativeTo);
+            Translate(new FPVector(x, y, z), relativeTo);
         }
 
         /**
         *  @brief Moves game object based on provided translation vector.
         **/
-        public void Translate(TSVector translation) {
+        public void Translate(FPVector translation) {
             Translate(translation, Space.Self);
         }
 
@@ -150,7 +150,7 @@ namespace KBEngine {
         *  
         *  If relative space is SELF then the game object will move based on its forward vector.
         **/
-        public void Translate(TSVector translation, Space relativeTo) {
+        public void Translate(FPVector translation, Space relativeTo) {
             if (relativeTo == Space.Self) {
                 Translate(translation, this);
             } else {
@@ -163,17 +163,17 @@ namespace KBEngine {
         *  
         *  The game object will move based on FPTransform's forward vector.
         **/
-        public void Translate(TSVector translation, FPTransform relativeTo) {
-            this.position += TSVector.Transform(translation, TSMatrix.CreateFromQuaternion(relativeTo.rotation));
+        public void Translate(FPVector translation, FPTransform relativeTo) {
+            this.position += FPVector.Transform(translation, FPMatrix.CreateFromQuaternion(relativeTo.rotation));
         }
 
         /**
         *  @brief Rotates game object based on provided axis, point and angle of rotation.
         **/
-        public void RotateAround(TSVector point, TSVector axis, FP angle) {
-            TSVector vector = this.position;
-            TSVector vector2 = vector - point;
-            vector2 = TSVector.Transform(vector2, TSMatrix.AngleAxis(angle * FP.Deg2Rad, axis));
+        public void RotateAround(FPVector point, FPVector axis, FP angle) {
+            FPVector vector = this.position;
+            FPVector vector2 = vector - point;
+            vector2 = FPVector.Transform(vector2, FPMatrix.AngleAxis(angle * FP.Deg2Rad, axis));
             vector = point + vector2;
             this.position = vector;
 
@@ -183,7 +183,7 @@ namespace KBEngine {
         /**
         *  @brief Rotates game object based on provided axis and angle of rotation.
         **/
-        public void RotateAround(TSVector axis, FP angle) {
+        public void RotateAround(FPVector axis, FP angle) {
             Rotate(axis, angle);
         }
 
@@ -191,7 +191,7 @@ namespace KBEngine {
         *  @brief Rotates game object based on provided axis angles of rotation.
         **/
         public void Rotate(FP xAngle, FP yAngle, FP zAngle) {
-            Rotate(new TSVector(xAngle, yAngle, zAngle), Space.Self);
+            Rotate(new FPVector(xAngle, yAngle, zAngle), Space.Self);
         }
 
         /**
@@ -200,20 +200,20 @@ namespace KBEngine {
         *  If relative space is SELF then the game object will rotate based on its forward vector.
         **/
         public void Rotate(FP xAngle, FP yAngle, FP zAngle, Space relativeTo) {
-            Rotate(new TSVector(xAngle, yAngle, zAngle), relativeTo);
+            Rotate(new FPVector(xAngle, yAngle, zAngle), relativeTo);
         }
 
         /**
         *  @brief Rotates game object based on provided axis angles of rotation.
         **/
-        public void Rotate(TSVector eulerAngles) {
+        public void Rotate(FPVector eulerAngles) {
             Rotate(eulerAngles, Space.Self);
         }
 
         /**
         *  @brief Rotates game object based on provided axis and angle of rotation.
         **/
-        public void Rotate(TSVector axis, FP angle) {
+        public void Rotate(FPVector axis, FP angle) {
             Rotate(axis, angle, Space.Self);
         }
 
@@ -222,13 +222,13 @@ namespace KBEngine {
         *  
         *  If relative space is SELF then the game object will rotate based on its forward vector.
         **/
-        public void Rotate(TSVector axis, FP angle, Space relativeTo) {
-            TSQuaternion result = TSQuaternion.identity;
+        public void Rotate(FPVector axis, FP angle, Space relativeTo) {
+            FPQuaternion result = FPQuaternion.identity;
 
             if (relativeTo == Space.Self) {
-                result = this.rotation * TSQuaternion.AngleAxis(angle, axis);
+                result = this.rotation * FPQuaternion.AngleAxis(angle, axis);
             } else {
-                result = TSQuaternion.AngleAxis(angle, axis) * this.rotation;
+                result = FPQuaternion.AngleAxis(angle, axis) * this.rotation;
             }
 
             result.Normalize();
@@ -240,13 +240,13 @@ namespace KBEngine {
         *  
         *  If relative space is SELF then the game object will rotate based on its forward vector.
         **/
-        public void Rotate(TSVector eulerAngles, Space relativeTo) {
-            TSQuaternion result = TSQuaternion.identity;
+        public void Rotate(FPVector eulerAngles, Space relativeTo) {
+            FPQuaternion result = FPQuaternion.identity;
 
             if (relativeTo == Space.Self) {
-                result = this.rotation * TSQuaternion.Euler(eulerAngles);
+                result = this.rotation * FPQuaternion.Euler(eulerAngles);
             } else {
-                result = TSQuaternion.Euler(eulerAngles) * this.rotation;
+                result = FPQuaternion.Euler(eulerAngles) * this.rotation;
             }
 
             result.Normalize();
@@ -256,34 +256,34 @@ namespace KBEngine {
         /**
         *  @brief Current self forward vector.
         **/
-        public TSVector forward {
+        public FPVector forward {
             get {
-                return TSVector.Transform(TSVector.forward, TSMatrix.CreateFromQuaternion(rotation));
+                return FPVector.Transform(FPVector.forward, FPMatrix.CreateFromQuaternion(rotation));
             }
         }
 
         /**
         *  @brief Current self right vector.
         **/
-        public TSVector right {
+        public FPVector right {
             get {
-                return TSVector.Transform(TSVector.right, TSMatrix.CreateFromQuaternion(rotation));
+                return FPVector.Transform(FPVector.right, FPMatrix.CreateFromQuaternion(rotation));
             }
         }
 
         /**
         *  @brief Current self up vector.
         **/
-        public TSVector up {
+        public FPVector up {
             get {
-                return TSVector.Transform(TSVector.up, TSMatrix.CreateFromQuaternion(rotation));
+                return FPVector.Transform(FPVector.up, FPMatrix.CreateFromQuaternion(rotation));
             }
         }
 
         /**
         *  @brief Returns Euler angles in degrees.
         **/
-        public TSVector eulerAngles {
+        public FPVector eulerAngles {
             get {
                 return rotation.eulerAngles;
             }
@@ -328,7 +328,7 @@ namespace KBEngine {
             if (tsCollider != null) {
                 if (tsCollider.IsBodyInitialized) {
                     tsCollider.Body.TSPosition = _position + scaledCenter;
-                    tsCollider.Body.TSOrientation = TSMatrix.CreateFromQuaternion(_rotation);
+                    tsCollider.Body.TSOrientation = FPMatrix.CreateFromQuaternion(_rotation);
                 }
             } else {
                 StateTracker.AddTracking(this);
@@ -349,9 +349,9 @@ namespace KBEngine {
 
         private void UpdateEditMode() {
             if (transform.hasChanged) {
-                _position = transform.position.ToTSVector();
-                _rotation = transform.rotation.ToTSQuaternion();
-                _scale = transform.localScale.ToTSVector();
+                _position = transform.position.ToFPVector();
+                _rotation = transform.rotation.ToFPQuaternion();
+                _scale = transform.localScale.ToFPVector();
 
                 _serialized = true;
             }

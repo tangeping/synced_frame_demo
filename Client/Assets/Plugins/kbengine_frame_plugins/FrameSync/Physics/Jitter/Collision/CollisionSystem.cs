@@ -48,7 +48,7 @@ namespace KBEngine.Physics3D {
     /// <seealso cref="CollisionSystem.Detect(bool)"/>
     /// <seealso cref="CollisionSystem.Detect(RigidBody,RigidBody)"/>
     public delegate void CollisionDetectedHandler(RigidBody body1,RigidBody body2, 
-                    TSVector point1, TSVector point2, TSVector normal,FP penetration);
+                    FPVector point1, FPVector point2, FPVector normal,FP penetration);
 
     /// <summary>
     /// A delegate to inform the user that a pair of bodies passed the broadsphase
@@ -69,7 +69,7 @@ namespace KBEngine.Physics3D {
     /// <returns>If false is returned the collision information is dropped. The CollisionDetectedHandler
     /// is never called.</returns>
     public delegate bool PassedNarrowphaseHandler(RigidBody body1,RigidBody body2, 
-                    ref TSVector point, ref TSVector normal,FP penetration);
+                    ref FPVector point, ref FPVector normal,FP penetration);
 
     /// <summary>
     /// A delegate for raycasting.
@@ -79,7 +79,7 @@ namespace KBEngine.Physics3D {
     /// <param name="fraction">The fraction which gives information where at the 
     /// ray the collision occured. The hitPoint is calculated by: rayStart+friction*direction.</param>
     /// <returns>If false is returned the collision information is dropped.</returns>
-    public delegate bool RaycastCallback(RigidBody body,TSVector normal, FP fraction);
+    public delegate bool RaycastCallback(RigidBody body,FPVector normal, FP fraction);
 
     /// <summary>
     /// CollisionSystem. Used by the world class to detect all collisions. 
@@ -234,12 +234,12 @@ namespace KBEngine.Physics3D {
                 SoftBody.Triangle myTriangle = body1.dynamicTree.GetUserData(my[i]);
                 SoftBody.Triangle otherTriangle = body2.dynamicTree.GetUserData(other[i]);
 
-                TSVector point, normal;
+                FPVector point, normal;
                 FP penetration;
                 bool result;
 
-                result = XenoCollide.Detect(myTriangle, otherTriangle, ref TSMatrix.InternalIdentity, ref TSMatrix.InternalIdentity,
-                    ref TSVector.InternalZero, ref TSVector.InternalZero, out point, out normal, out penetration);
+                result = XenoCollide.Detect(myTriangle, otherTriangle, ref FPMatrix.InternalIdentity, ref FPMatrix.InternalIdentity,
+                    ref FPVector.InternalZero, ref FPVector.InternalZero, out point, out normal, out penetration);
 
                 if (result)
                 {
@@ -265,7 +265,7 @@ namespace KBEngine.Physics3D {
             bool speculative = speculativeContacts ||
                 (body1.EnableSpeculativeContacts || body2.EnableSpeculativeContacts);
 
-            TSVector point, normal;
+            FPVector point, normal;
             FP penetration;
 
             if (!b1IsMulti && !b2IsMulti)
@@ -276,18 +276,18 @@ namespace KBEngine.Physics3D {
                 {
 					//normal = JVector.Up;
 					//UnityEngine.Debug.Log("FINAL  --- >>> normal: " + normal);
-                    TSVector point1, point2;
+                    FPVector point1, point2;
                     FindSupportPoints(body1, body2, body1.Shape, body2.Shape, ref point, ref normal, out point1, out point2);
                     RaiseCollisionDetected(body1, body2, ref point1, ref point2, ref normal, penetration);
                 }
                 else if (speculative)
                 {
-                    TSVector hit1, hit2;
+                    FPVector hit1, hit2;
 
                     if (GJKCollide.ClosestPoints(body1.Shape, body2.Shape, ref body1.orientation, ref body2.orientation,
                         ref body1.position, ref body2.position, out hit1, out hit2, out normal))
                     {
-                        TSVector delta = hit2 - hit1;
+                        FPVector delta = hit2 - hit1;
 
                         if (delta.sqrMagnitude < (body1.sweptDirection - body2.sweptDirection).sqrMagnitude)
                         {
@@ -342,18 +342,18 @@ namespace KBEngine.Physics3D {
                             ref body2.orientation, ref body1.position, ref body2.position,
                             out point, out normal, out penetration))
                         {
-                            TSVector point1, point2;
+                            FPVector point1, point2;
                             FindSupportPoints(body1, body2, ms1, ms2, ref point, ref normal, out point1, out point2);
                             RaiseCollisionDetected(body1, body2, ref point1, ref point2, ref normal, penetration);
                         }
                         else if (speculative)
                         {
-                            TSVector hit1, hit2;
+                            FPVector hit1, hit2;
 
                             if (GJKCollide.ClosestPoints(ms1, ms2, ref body1.orientation, ref body2.orientation,
                                 ref body1.position, ref body2.position, out hit1, out hit2, out normal))
                             {
-                                TSVector delta = hit2 - hit1;
+                                FPVector delta = hit2 - hit1;
 
                                 if (delta.sqrMagnitude < (body1.sweptDirection - body2.sweptDirection).sqrMagnitude)
                                 {
@@ -405,30 +405,30 @@ namespace KBEngine.Physics3D {
                         ref b2.orientation, ref b1.position, ref b2.position,
                         out point, out normal, out penetration))
                     {
-                        TSVector point1, point2;
+                        FPVector point1, point2;
                         FindSupportPoints(b1, b2, ms, b2.Shape, ref point, ref normal, out point1, out point2);
 
                         if (useTerrainNormal && ms is TerrainShape)
                         {
                             (ms as TerrainShape).CollisionNormal(out normal);
-                            TSVector.Transform(ref normal, ref b1.orientation, out normal);
+                            FPVector.Transform(ref normal, ref b1.orientation, out normal);
                         }
                         else if (useTriangleMeshNormal && ms is TriangleMeshShape)
                         {
                             (ms as TriangleMeshShape).CollisionNormal(out normal);
-                            TSVector.Transform(ref normal, ref b1.orientation, out normal);
+                            FPVector.Transform(ref normal, ref b1.orientation, out normal);
                         }
 
                         RaiseCollisionDetected(b1, b2, ref point1, ref point2, ref normal, penetration);
                     }
                     else if (speculative)
                     {
-                        TSVector hit1, hit2;
+                        FPVector hit1, hit2;
 
                         if (GJKCollide.ClosestPoints(ms, b2.Shape, ref b1.orientation, ref b2.orientation,
                             ref b1.position, ref b2.position, out hit1, out hit2, out normal))
                         {
-                            TSVector delta = hit2 - hit1;
+                            FPVector delta = hit2 - hit1;
 
                             if (delta.sqrMagnitude < (body1.sweptDirection - body2.sweptDirection).sqrMagnitude)
                             {
@@ -466,7 +466,7 @@ namespace KBEngine.Physics3D {
                 {
                     SoftBody.Triangle t = softBody.dynamicTree.GetUserData(i);
 
-                    TSVector point, normal;
+                    FPVector point, normal;
                     FP penetration;
                     bool result;
 
@@ -474,8 +474,8 @@ namespace KBEngine.Physics3D {
                     {
                         ms.SetCurrentShape(e);
 
-                        result = XenoCollide.Detect(ms, t, ref rigidBody.orientation, ref TSMatrix.InternalIdentity,
-                            ref rigidBody.position, ref TSVector.InternalZero, out point, out normal, out penetration);
+                        result = XenoCollide.Detect(ms, t, ref rigidBody.orientation, ref FPMatrix.InternalIdentity,
+                            ref rigidBody.position, ref FPVector.InternalZero, out point, out normal, out penetration);
 
                         if (result)
                         {
@@ -500,12 +500,12 @@ namespace KBEngine.Physics3D {
                 {
                     SoftBody.Triangle t = softBody.dynamicTree.GetUserData(i);
 
-                    TSVector point, normal;
+                    FPVector point, normal;
                     FP penetration;
                     bool result;
 
-                    result = XenoCollide.Detect(rigidBody.Shape, t, ref rigidBody.orientation, ref TSMatrix.InternalIdentity,
-                        ref rigidBody.position, ref TSVector.InternalZero, out point, out normal, out penetration);
+                    result = XenoCollide.Detect(rigidBody.Shape, t, ref rigidBody.orientation, ref FPMatrix.InternalIdentity,
+                        ref rigidBody.position, ref FPVector.InternalZero, out point, out normal, out penetration);
 
                     if (result)
                     {
@@ -521,23 +521,23 @@ namespace KBEngine.Physics3D {
             }
         }
 
-        public static int FindNearestTrianglePoint(SoftBody sb, int id, ref TSVector point)
+        public static int FindNearestTrianglePoint(SoftBody sb, int id, ref FPVector point)
         {
             SoftBody.Triangle triangle = sb.dynamicTree.GetUserData(id);
-            TSVector p;
+            FPVector p;
 
             p = sb.VertexBodies[triangle.indices.I0].position;
-            TSVector.Subtract(ref p, ref point, out p);
+            FPVector.Subtract(ref p, ref point, out p);
 
             FP length0 = p.sqrMagnitude;
 
             p = sb.VertexBodies[triangle.indices.I1].position;
-            TSVector.Subtract(ref p, ref point, out p);
+            FPVector.Subtract(ref p, ref point, out p);
 
             FP length1 = p.sqrMagnitude;
 
             p = sb.VertexBodies[triangle.indices.I2].position;
-            TSVector.Subtract(ref p, ref point, out p);
+            FPVector.Subtract(ref p, ref point, out p);
 
             FP length2 = p.sqrMagnitude;
 
@@ -555,33 +555,33 @@ namespace KBEngine.Physics3D {
 
 
         private void FindSupportPoints(RigidBody body1, RigidBody body2,
-            Shape shape1, Shape shape2, ref TSVector point, ref TSVector normal,
-            out TSVector point1, out TSVector point2)
+            Shape shape1, Shape shape2, ref FPVector point, ref FPVector normal,
+            out FPVector point1, out FPVector point2)
         {
-            TSVector mn; TSVector.Negate(ref normal, out mn);
+            FPVector mn; FPVector.Negate(ref normal, out mn);
 
-            TSVector sA; SupportMapping(body1, shape1, ref mn, out sA);
-            TSVector sB; SupportMapping(body2, shape2, ref normal, out sB);
+            FPVector sA; SupportMapping(body1, shape1, ref mn, out sA);
+            FPVector sB; SupportMapping(body2, shape2, ref normal, out sB);
 
-            TSVector.Subtract(ref sA, ref point, out sA);
-            TSVector.Subtract(ref sB, ref point, out sB);
+            FPVector.Subtract(ref sA, ref point, out sA);
+            FPVector.Subtract(ref sB, ref point, out sB);
 
-            FP dot1 = TSVector.Dot(ref sA, ref normal);
-            FP dot2 = TSVector.Dot(ref sB, ref normal);
+            FP dot1 = FPVector.Dot(ref sA, ref normal);
+            FP dot2 = FPVector.Dot(ref sB, ref normal);
 
-            TSVector.Multiply(ref normal, dot1, out sA);
-            TSVector.Multiply(ref normal, dot2, out sB);
+            FPVector.Multiply(ref normal, dot1, out sA);
+            FPVector.Multiply(ref normal, dot2, out sB);
 
-            TSVector.Add(ref point, ref sA, out point1);
-            TSVector.Add(ref point, ref sB, out point2);
+            FPVector.Add(ref point, ref sA, out point1);
+            FPVector.Add(ref point, ref sB, out point2);
         }
 
-        private void SupportMapping(RigidBody body, Shape workingShape, ref TSVector direction, out TSVector result)
+        private void SupportMapping(RigidBody body, Shape workingShape, ref FPVector direction, out FPVector result)
         {
-            TSVector.Transform(ref direction, ref body.invOrientation, out result);
+            FPVector.Transform(ref direction, ref body.invOrientation, out result);
             workingShape.SupportMapping(ref result, out result);
-            TSVector.Transform(ref result, ref body.orientation, out result);
-            TSVector.Add(ref result, ref body.position, out result);
+            FPVector.Transform(ref result, ref body.orientation, out result);
+            FPVector.Add(ref result, ref body.position, out result);
         }
 
         #endregion
@@ -592,14 +592,14 @@ namespace KBEngine.Physics3D {
         /// against rays (rays are of infinite length). They are checked against segments
         /// which start at rayOrigin and end in rayOrigin + rayDirection.
         /// </summary>
-        public abstract bool Raycast(TSVector rayOrigin, TSVector rayDirection, RaycastCallback raycast, out RigidBody body, out TSVector normal, out FP fraction);
+        public abstract bool Raycast(FPVector rayOrigin, FPVector rayDirection, RaycastCallback raycast, out RigidBody body, out FPVector normal, out FP fraction);
 
         /// <summary>
         /// Raycasts a single body. NOTE: For performance reasons terrain and trianglemeshshape aren't checked
         /// against rays (rays are of infinite length). They are checked against segments
         /// which start at rayOrigin and end in rayOrigin + rayDirection.
         /// </summary>
-        public abstract bool Raycast(RigidBody body, TSVector rayOrigin, TSVector rayDirection, out TSVector normal, out FP fraction);
+        public abstract bool Raycast(RigidBody body, FPVector rayOrigin, FPVector rayDirection, out FPVector normal, out FP fraction);
 
 
         /// <summary>
@@ -660,8 +660,8 @@ namespace KBEngine.Physics3D {
         /// <param name="normal">The normal pointing to body1.</param>
         /// <param name="penetration">The penetration depth.</param>
         protected void RaiseCollisionDetected(RigidBody body1, RigidBody body2,
-                                            ref TSVector point1, ref TSVector point2,
-                                            ref TSVector normal, FP penetration)
+                                            ref FPVector point1, ref FPVector point2,
+                                            ref FPVector normal, FP penetration)
         {
             if (this.collisionDetected != null)
                 this.collisionDetected(body1, body2, point1, point2, normal, penetration);

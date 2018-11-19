@@ -26,12 +26,12 @@ namespace KBEngine
     /// A vector structure.
     /// </summary>
     [Serializable]
-    public struct TSVector
+    public struct FPVector
     {
 
-        private static FP ZeroEpsilonSq = TSMath.Epsilon;
-        internal static TSVector InternalZero;
-        internal static TSVector Arbitrary;
+        private static FP ZeroEpsilonSq = FPMath.Epsilon;
+        internal static FPVector InternalZero;
+        internal static FPVector Arbitrary;
 
         /// <summary>The X component of the vector.</summary>
         public FP x;
@@ -44,67 +44,67 @@ namespace KBEngine
         /// <summary>
         /// A vector with components (0,0,0);
         /// </summary>
-        public static readonly TSVector zero;
+        public static readonly FPVector zero;
         /// <summary>
         /// A vector with components (-1,0,0);
         /// </summary>
-        public static readonly TSVector left;
+        public static readonly FPVector left;
         /// <summary>
         /// A vector with components (1,0,0);
         /// </summary>
-        public static readonly TSVector right;
+        public static readonly FPVector right;
         /// <summary>
         /// A vector with components (0,1,0);
         /// </summary>
-        public static readonly TSVector up;
+        public static readonly FPVector up;
         /// <summary>
         /// A vector with components (0,-1,0);
         /// </summary>
-        public static readonly TSVector down;
+        public static readonly FPVector down;
         /// <summary>
         /// A vector with components (0,0,-1);
         /// </summary>
-        public static readonly TSVector back;
+        public static readonly FPVector back;
         /// <summary>
         /// A vector with components (0,0,1);
         /// </summary>
-        public static readonly TSVector forward;
+        public static readonly FPVector forward;
         /// <summary>
         /// A vector with components (1,1,1);
         /// </summary>
-        public static readonly TSVector one;
+        public static readonly FPVector one;
         /// <summary>
         /// A vector with components 
         /// (FP.MinValue,FP.MinValue,FP.MinValue);
         /// </summary>
-        public static readonly TSVector MinValue;
+        public static readonly FPVector MinValue;
         /// <summary>
         /// A vector with components 
         /// (FP.MaxValue,FP.MaxValue,FP.MaxValue);
         /// </summary>
-        public static readonly TSVector MaxValue;
+        public static readonly FPVector MaxValue;
         #endregion
 
         #region Private static constructor
-        static TSVector()
+        static FPVector()
         {
-            one = new TSVector(1, 1, 1);
-            zero = new TSVector(0, 0, 0);
-            left = new TSVector(-1, 0, 0);
-            right = new TSVector(1, 0, 0);
-            up = new TSVector(0, 1, 0);
-            down = new TSVector(0, -1, 0);
-            back = new TSVector(0, 0, -1);
-            forward = new TSVector(0, 0, 1);
-            MinValue = new TSVector(FP.MinValue);
-            MaxValue = new TSVector(FP.MaxValue);
-            Arbitrary = new TSVector(1, 1, 1);
+            one = new FPVector(1, 1, 1);
+            zero = new FPVector(0, 0, 0);
+            left = new FPVector(-1, 0, 0);
+            right = new FPVector(1, 0, 0);
+            up = new FPVector(0, 1, 0);
+            down = new FPVector(0, -1, 0);
+            back = new FPVector(0, 0, -1);
+            forward = new FPVector(0, 0, 1);
+            MinValue = new FPVector(FP.MinValue);
+            MaxValue = new FPVector(FP.MaxValue);
+            Arbitrary = new FPVector(1, 1, 1);
             InternalZero = zero;
         }
         #endregion
 
-        public static TSVector Abs(TSVector other) {
-            return new TSVector(FP.Abs(other.x), FP.Abs(other.y), FP.Abs(other.z));
+        public static FPVector Abs(FPVector other) {
+            return new FPVector(FP.Abs(other.x), FP.Abs(other.y), FP.Abs(other.z));
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace KBEngine
             }
         }
 
-        public static TSVector ClampMagnitude(TSVector vector, FP maxLength) {
+        public static FPVector ClampMagnitude(FPVector vector, FP maxLength) {
             return Normalize(vector) * maxLength;
         }
 
@@ -136,9 +136,9 @@ namespace KBEngine
         /// Gets a normalized version of the vector.
         /// </summary>
         /// <returns>Returns a normalized version of the vector.</returns>
-        public TSVector normalized {
+        public FPVector normalized {
             get {
-                TSVector result = new TSVector(this.x, this.y, this.z);
+                FPVector result = new FPVector(this.x, this.y, this.z);
                 result.Normalize();
 
                 return result;
@@ -152,14 +152,14 @@ namespace KBEngine
         /// <param name="y">The Y component of the vector.</param>
         /// <param name="z">The Z component of the vector.</param>
 
-        public TSVector(int x,int y,int z)
+        public FPVector(int x,int y,int z)
 		{
 			this.x = (FP)x;
 			this.y = (FP)y;
 			this.z = (FP)z;
 		}
 
-		public TSVector(FP x, FP y, FP z)
+		public FPVector(FP x, FP y, FP z)
         {
             this.x = x;
             this.y = y;
@@ -169,7 +169,7 @@ namespace KBEngine
         /// <summary>
         /// Multiplies each component of the vector by the same components of the provided vector.
         /// </summary>
-        public void Scale(TSVector other) {
+        public void Scale(FPVector other) {
             this.x = x * other.x;
             this.y = y * other.y;
             this.z = z * other.z;
@@ -192,14 +192,14 @@ namespace KBEngine
         /// Constructor initializing a new instance of the structure
         /// </summary>
         /// <param name="xyz">All components of the vector are set to xyz</param>
-        public TSVector(FP xyz)
+        public FPVector(FP xyz)
         {
             this.x = xyz;
             this.y = xyz;
             this.z = xyz;
         }
 
-		public static TSVector Lerp(TSVector from, TSVector to, FP percent) {
+		public static FPVector Lerp(FPVector from, FPVector to, FP percent) {
 			return from + (to - from) * percent;
 		}
 
@@ -222,8 +222,8 @@ namespace KBEngine
         #region public override bool Equals(object obj)
         public override bool Equals(object obj)
         {
-            if (!(obj is TSVector)) return false;
-            TSVector other = (TSVector)obj;
+            if (!(obj is FPVector)) return false;
+            FPVector other = (FPVector)obj;
 
             return (((x == other.x) && (y == other.y)) && (z == other.z));
         }
@@ -232,8 +232,8 @@ namespace KBEngine
         /// <summary>
         /// Multiplies each component of the vector by the same components of the provided vector.
         /// </summary>
-        public static TSVector Scale(TSVector vecA, TSVector vecB) {
-            TSVector result;
+        public static FPVector Scale(FPVector vecA, FPVector vecB) {
+            FPVector result;
             result.x = vecA.x * vecB.x;
             result.y = vecA.y * vecB.y;
             result.z = vecA.z * vecB.z;
@@ -248,7 +248,7 @@ namespace KBEngine
         /// <param name="value2">The second value.</param>
         /// <returns>Returns true if both values are equal, otherwise false.</returns>
         #region public static bool operator ==(JVector value1, JVector value2)
-        public static bool operator ==(TSVector value1, TSVector value2)
+        public static bool operator ==(FPVector value1, FPVector value2)
         {
             return (((value1.x == value2.x) && (value1.y == value2.y)) && (value1.z == value2.z));
         }
@@ -261,7 +261,7 @@ namespace KBEngine
         /// <param name="value2">The second value.</param>
         /// <returns>Returns false if both values are equal, otherwise true.</returns>
         #region public static bool operator !=(JVector value1, JVector value2)
-        public static bool operator !=(TSVector value1, TSVector value2)
+        public static bool operator !=(FPVector value1, FPVector value2)
         {
             if ((value1.x == value2.x) && (value1.y == value2.y))
             {
@@ -279,10 +279,10 @@ namespace KBEngine
         /// <returns>A vector with the minimum x,y and z values of both vectors.</returns>
         #region public static JVector Min(JVector value1, JVector value2)
 
-        public static TSVector Min(TSVector value1, TSVector value2)
+        public static FPVector Min(FPVector value1, FPVector value2)
         {
-            TSVector result;
-            TSVector.Min(ref value1, ref value2, out result);
+            FPVector result;
+            FPVector.Min(ref value1, ref value2, out result);
             return result;
         }
 
@@ -292,7 +292,7 @@ namespace KBEngine
         /// <param name="value1">The first value.</param>
         /// <param name="value2">The second value.</param>
         /// <param name="result">A vector with the minimum x,y and z values of both vectors.</param>
-        public static void Min(ref TSVector value1, ref TSVector value2, out TSVector result)
+        public static void Min(ref FPVector value1, ref FPVector value2, out FPVector result)
         {
             result.x = (value1.x < value2.x) ? value1.x : value2.x;
             result.y = (value1.y < value2.y) ? value1.y : value2.y;
@@ -307,14 +307,14 @@ namespace KBEngine
         /// <param name="value2">The second value.</param>
         /// <returns>A vector with the maximum x,y and z values of both vectors.</returns>
         #region public static JVector Max(JVector value1, JVector value2)
-        public static TSVector Max(TSVector value1, TSVector value2)
+        public static FPVector Max(FPVector value1, FPVector value2)
         {
-            TSVector result;
-            TSVector.Max(ref value1, ref value2, out result);
+            FPVector result;
+            FPVector.Max(ref value1, ref value2, out result);
             return result;
         }
 		
-		public static FP Distance(TSVector v1, TSVector v2) {
+		public static FP Distance(FPVector v1, FPVector v2) {
 			return FP.Sqrt ((v1.x - v2.x) * (v1.x - v2.x) + (v1.y - v2.y) * (v1.y - v2.y) + (v1.z - v2.z) * (v1.z - v2.z));
 		}
 
@@ -324,7 +324,7 @@ namespace KBEngine
         /// <param name="value1">The first value.</param>
         /// <param name="value2">The second value.</param>
         /// <param name="result">A vector with the maximum x,y and z values of both vectors.</param>
-        public static void Max(ref TSVector value1, ref TSVector value2, out TSVector result)
+        public static void Max(ref FPVector value1, ref FPVector value2, out FPVector result)
         {
             result.x = (value1.x > value2.x) ? value1.x : value2.x;
             result.y = (value1.y > value2.y) ? value1.y : value2.y;
@@ -371,10 +371,10 @@ namespace KBEngine
         /// <param name="matrix">The transform matrix.</param>
         /// <returns>The transformed vector.</returns>
         #region public static JVector Transform(JVector position, JMatrix matrix)
-        public static TSVector Transform(TSVector position, TSMatrix matrix)
+        public static FPVector Transform(FPVector position, FPMatrix matrix)
         {
-            TSVector result;
-            TSVector.Transform(ref position, ref matrix, out result);
+            FPVector result;
+            FPVector.Transform(ref position, ref matrix, out result);
             return result;
         }
 
@@ -384,7 +384,7 @@ namespace KBEngine
         /// <param name="position">The vector to transform.</param>
         /// <param name="matrix">The transform matrix.</param>
         /// <param name="result">The transformed vector.</param>
-        public static void Transform(ref TSVector position, ref TSMatrix matrix, out TSVector result)
+        public static void Transform(ref FPVector position, ref FPMatrix matrix, out FPVector result)
         {
             FP num0 = ((position.x * matrix.M11) + (position.y * matrix.M21)) + (position.z * matrix.M31);
             FP num1 = ((position.x * matrix.M12) + (position.y * matrix.M22)) + (position.z * matrix.M32);
@@ -401,7 +401,7 @@ namespace KBEngine
         /// <param name="position">The vector to transform.</param>
         /// <param name="matrix">The transform matrix.</param>
         /// <param name="result">The transformed vector.</param>
-        public static void TransposedTransform(ref TSVector position, ref TSMatrix matrix, out TSVector result)
+        public static void TransposedTransform(ref FPVector position, ref FPMatrix matrix, out FPVector result)
         {
             FP num0 = ((position.x * matrix.M11) + (position.y * matrix.M12)) + (position.z * matrix.M13);
             FP num1 = ((position.x * matrix.M21) + (position.y * matrix.M22)) + (position.z * matrix.M23);
@@ -420,9 +420,9 @@ namespace KBEngine
         /// <param name="vector2">The second vector.</param>
         /// <returns>Returns the dot product of both vectors.</returns>
         #region public static FP Dot(JVector vector1, JVector vector2)
-        public static FP Dot(TSVector vector1, TSVector vector2)
+        public static FP Dot(FPVector vector1, FPVector vector2)
         {
-            return TSVector.Dot(ref vector1, ref vector2);
+            return FPVector.Dot(ref vector1, ref vector2);
         }
 
 
@@ -432,7 +432,7 @@ namespace KBEngine
         /// <param name="vector1">The first vector.</param>
         /// <param name="vector2">The second vector.</param>
         /// <returns>Returns the dot product of both vectors.</returns>
-        public static FP Dot(ref TSVector vector1, ref TSVector vector2)
+        public static FP Dot(ref FPVector vector1, ref FPVector vector2)
         {
             return ((vector1.x * vector2.x) + (vector1.y * vector2.y)) + (vector1.z * vector2.z);
         }
@@ -445,10 +445,10 @@ namespace KBEngine
         /// <param name="value2">The second vector.</param>
         /// <returns>The sum of both vectors.</returns>
         #region public static void Add(JVector value1, JVector value2)
-        public static TSVector Add(TSVector value1, TSVector value2)
+        public static FPVector Add(FPVector value1, FPVector value2)
         {
-            TSVector result;
-            TSVector.Add(ref value1, ref value2, out result);
+            FPVector result;
+            FPVector.Add(ref value1, ref value2, out result);
             return result;
         }
 
@@ -458,7 +458,7 @@ namespace KBEngine
         /// <param name="value1">The first vector.</param>
         /// <param name="value2">The second vector.</param>
         /// <param name="result">The sum of both vectors.</param>
-        public static void Add(ref TSVector value1, ref TSVector value2, out TSVector result)
+        public static void Add(ref FPVector value1, ref FPVector value2, out FPVector result)
         {
             FP num0 = value1.x + value2.x;
             FP num1 = value1.y + value2.y;
@@ -476,9 +476,9 @@ namespace KBEngine
         /// <param name="value1">The vector to divide.</param>
         /// <param name="scaleFactor">The scale factor.</param>
         /// <returns>Returns the scaled vector.</returns>
-        public static TSVector Divide(TSVector value1, FP scaleFactor) {
-            TSVector result;
-            TSVector.Divide(ref value1, scaleFactor, out result);
+        public static FPVector Divide(FPVector value1, FP scaleFactor) {
+            FPVector result;
+            FPVector.Divide(ref value1, scaleFactor, out result);
             return result;
         }
 
@@ -488,7 +488,7 @@ namespace KBEngine
         /// <param name="value1">The vector to divide.</param>
         /// <param name="scaleFactor">The scale factor.</param>
         /// <param name="result">Returns the scaled vector.</param>
-        public static void Divide(ref TSVector value1, FP scaleFactor, out TSVector result) {
+        public static void Divide(ref FPVector value1, FP scaleFactor, out FPVector result) {
             result.x = value1.x / scaleFactor;
             result.y = value1.y / scaleFactor;
             result.z = value1.z / scaleFactor;
@@ -501,10 +501,10 @@ namespace KBEngine
         /// <param name="value2">The second vector.</param>
         /// <returns>The difference of both vectors.</returns>
         #region public static JVector Subtract(JVector value1, JVector value2)
-        public static TSVector Subtract(TSVector value1, TSVector value2)
+        public static FPVector Subtract(FPVector value1, FPVector value2)
         {
-            TSVector result;
-            TSVector.Subtract(ref value1, ref value2, out result);
+            FPVector result;
+            FPVector.Subtract(ref value1, ref value2, out result);
             return result;
         }
 
@@ -514,7 +514,7 @@ namespace KBEngine
         /// <param name="value1">The first vector.</param>
         /// <param name="value2">The second vector.</param>
         /// <param name="result">The difference of both vectors.</param>
-        public static void Subtract(ref TSVector value1, ref TSVector value2, out TSVector result)
+        public static void Subtract(ref FPVector value1, ref FPVector value2, out FPVector result)
         {
             FP num0 = value1.x - value2.x;
             FP num1 = value1.y - value2.y;
@@ -533,10 +533,10 @@ namespace KBEngine
         /// <param name="vector2">The second vector.</param>
         /// <returns>The cross product of both vectors.</returns>
         #region public static JVector Cross(JVector vector1, JVector vector2)
-        public static TSVector Cross(TSVector vector1, TSVector vector2)
+        public static FPVector Cross(FPVector vector1, FPVector vector2)
         {
-            TSVector result;
-            TSVector.Cross(ref vector1, ref vector2, out result);
+            FPVector result;
+            FPVector.Cross(ref vector1, ref vector2, out result);
             return result;
         }
 
@@ -546,7 +546,7 @@ namespace KBEngine
         /// <param name="vector1">The first vector.</param>
         /// <param name="vector2">The second vector.</param>
         /// <param name="result">The cross product of both vectors.</param>
-        public static void Cross(ref TSVector vector1, ref TSVector vector2, out TSVector result)
+        public static void Cross(ref FPVector vector1, ref FPVector vector2, out FPVector result)
         {
             FP num3 = (vector1.y * vector2.z) - (vector1.z * vector2.y);
             FP num2 = (vector1.z * vector2.x) - (vector1.x * vector2.z);
@@ -584,10 +584,10 @@ namespace KBEngine
         /// </summary>
         /// <param name="value">The vector to inverse.</param>
         /// <returns>The negated vector.</returns>
-        public static TSVector Negate(TSVector value)
+        public static FPVector Negate(FPVector value)
         {
-            TSVector result;
-            TSVector.Negate(ref value,out result);
+            FPVector result;
+            FPVector.Negate(ref value,out result);
             return result;
         }
 
@@ -596,7 +596,7 @@ namespace KBEngine
         /// </summary>
         /// <param name="value">The vector to inverse.</param>
         /// <param name="result">The negated vector.</param>
-        public static void Negate(ref TSVector value, out TSVector result)
+        public static void Negate(ref FPVector value, out FPVector result)
         {
             FP num0 = -value.x;
             FP num1 = -value.y;
@@ -614,10 +614,10 @@ namespace KBEngine
         /// <param name="value">The vector which should be normalized.</param>
         /// <returns>A normalized vector.</returns>
         #region public static JVector Normalize(JVector value)
-        public static TSVector Normalize(TSVector value)
+        public static FPVector Normalize(FPVector value)
         {
-            TSVector result;
-            TSVector.Normalize(ref value, out result);
+            FPVector result;
+            FPVector.Normalize(ref value, out result);
             return result;
         }
 
@@ -638,7 +638,7 @@ namespace KBEngine
         /// </summary>
         /// <param name="value">The vector which should be normalized.</param>
         /// <param name="result">A normalized vector.</param>
-        public static void Normalize(ref TSVector value, out TSVector result)
+        public static void Normalize(ref FPVector value, out FPVector result)
         {
             FP num2 = ((value.x * value.x) + (value.y * value.y)) + (value.z * value.z);
             FP num = FP.One / FP.Sqrt(num2);
@@ -655,7 +655,7 @@ namespace KBEngine
         /// </summary>
         /// <param name="vector1">The first vector to swap with the second.</param>
         /// <param name="vector2">The second vector to swap with the first.</param>
-        public static void Swap(ref TSVector vector1, ref TSVector vector2)
+        public static void Swap(ref FPVector vector1, ref FPVector vector2)
         {
             FP temp;
 
@@ -680,10 +680,10 @@ namespace KBEngine
         /// <param name="scaleFactor">The scale factor.</param>
         /// <returns>Returns the multiplied vector.</returns>
         #region public static JVector Multiply(JVector value1, FP scaleFactor)
-        public static TSVector Multiply(TSVector value1, FP scaleFactor)
+        public static FPVector Multiply(FPVector value1, FP scaleFactor)
         {
-            TSVector result;
-            TSVector.Multiply(ref value1, scaleFactor, out result);
+            FPVector result;
+            FPVector.Multiply(ref value1, scaleFactor, out result);
             return result;
         }
 
@@ -693,7 +693,7 @@ namespace KBEngine
         /// <param name="value1">The vector to multiply.</param>
         /// <param name="scaleFactor">The scale factor.</param>
         /// <param name="result">Returns the multiplied vector.</param>
-        public static void Multiply(ref TSVector value1, FP scaleFactor, out TSVector result)
+        public static void Multiply(ref FPVector value1, FP scaleFactor, out FPVector result)
         {
             result.x = value1.x * scaleFactor;
             result.y = value1.y * scaleFactor;
@@ -708,9 +708,9 @@ namespace KBEngine
         /// <param name="value2">The second vector.</param>
         /// <returns>Returns the cross product of both.</returns>
         #region public static JVector operator %(JVector value1, JVector value2)
-        public static TSVector operator %(TSVector value1, TSVector value2)
+        public static FPVector operator %(FPVector value1, FPVector value2)
         {
-            TSVector result; TSVector.Cross(ref value1, ref value2, out result);
+            FPVector result; FPVector.Cross(ref value1, ref value2, out result);
             return result;
         }
         #endregion
@@ -722,9 +722,9 @@ namespace KBEngine
         /// <param name="value2">The second vector.</param>
         /// <returns>Returns the dot product of both.</returns>
         #region public static FP operator *(JVector value1, JVector value2)
-        public static FP operator *(TSVector value1, TSVector value2)
+        public static FP operator *(FPVector value1, FPVector value2)
         {
-            return TSVector.Dot(ref value1, ref value2);
+            return FPVector.Dot(ref value1, ref value2);
         }
         #endregion
 
@@ -735,10 +735,10 @@ namespace KBEngine
         /// <param name="value2">The scale factor.</param>
         /// <returns>Returns the scaled vector.</returns>
         #region public static JVector operator *(JVector value1, FP value2)
-        public static TSVector operator *(TSVector value1, FP value2)
+        public static FPVector operator *(FPVector value1, FP value2)
         {
-            TSVector result;
-            TSVector.Multiply(ref value1, value2,out result);
+            FPVector result;
+            FPVector.Multiply(ref value1, value2,out result);
             return result;
         }
         #endregion
@@ -750,10 +750,10 @@ namespace KBEngine
         /// <param name="value1">The scale factor.</param>
         /// <returns>Returns the scaled vector.</returns>
         #region public static JVector operator *(FP value1, JVector value2)
-        public static TSVector operator *(FP value1, TSVector value2)
+        public static FPVector operator *(FP value1, FPVector value2)
         {
-            TSVector result;
-            TSVector.Multiply(ref value2, value1, out result);
+            FPVector result;
+            FPVector.Multiply(ref value2, value1, out result);
             return result;
         }
         #endregion
@@ -765,9 +765,9 @@ namespace KBEngine
         /// <param name="value2">The second vector.</param>
         /// <returns>The difference of both vectors.</returns>
         #region public static JVector operator -(JVector value1, JVector value2)
-        public static TSVector operator -(TSVector value1, TSVector value2)
+        public static FPVector operator -(FPVector value1, FPVector value2)
         {
-            TSVector result; TSVector.Subtract(ref value1, ref value2, out result);
+            FPVector result; FPVector.Subtract(ref value1, ref value2, out result);
             return result;
         }
         #endregion
@@ -779,9 +779,9 @@ namespace KBEngine
         /// <param name="value2">The second vector.</param>
         /// <returns>The sum of both vectors.</returns>
         #region public static JVector operator +(JVector value1, JVector value2)
-        public static TSVector operator +(TSVector value1, TSVector value2)
+        public static FPVector operator +(FPVector value1, FPVector value2)
         {
-            TSVector result; TSVector.Add(ref value1, ref value2, out result);
+            FPVector result; FPVector.Add(ref value1, ref value2, out result);
             return result;
         }
         #endregion
@@ -792,18 +792,18 @@ namespace KBEngine
         /// <param name="value1">The vector to divide.</param>
         /// <param name="scaleFactor">The scale factor.</param>
         /// <returns>Returns the scaled vector.</returns>
-        public static TSVector operator /(TSVector value1, FP value2) {
-            TSVector result;
-            TSVector.Divide(ref value1, value2, out result);
+        public static FPVector operator /(FPVector value1, FP value2) {
+            FPVector result;
+            FPVector.Divide(ref value1, value2, out result);
             return result;
         }
 
-        public static FP Angle(TSVector a, TSVector b) {
+        public static FP Angle(FPVector a, FPVector b) {
             return FP.Acos(a.normalized * b.normalized) * FP.Rad2Deg;
         }
 
-        public TSVector2 ToTSVector2() {
-            return new TSVector2(this.x, this.y);
+        public FPVector2 ToFPVector2() {
+            return new FPVector2(this.x, this.y);
         }
 
     }

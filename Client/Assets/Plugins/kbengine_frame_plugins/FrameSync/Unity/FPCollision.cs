@@ -11,12 +11,12 @@ namespace KBEngine {
         /**
         *  @brief Contact point between two bodies
         **/
-        public TSVector point;
+        public FPVector point;
 
         /**
         *  @brief Normal vector from the contact point
         **/
-        public TSVector normal;
+        public FPVector normal;
 
     }
 
@@ -53,7 +53,7 @@ namespace KBEngine {
         /**
         *  @brief The {@link FPTransform} of the body hit
         **/
-        public TSVector relativeVelocity;
+        public FPVector relativeVelocity;
 
         internal void Update(GameObject otherGO, Contact c) {
             if (this.gameObject == null) {

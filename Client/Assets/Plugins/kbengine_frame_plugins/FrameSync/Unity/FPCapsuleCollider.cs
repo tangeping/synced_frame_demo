@@ -66,8 +66,8 @@ namespace KBEngine {
 
         protected override void DrawGizmos() {
             Gizmos.DrawWireSphere(Vector3.zero, 1);
-            Gizmos.DrawWireSphere(new TSVector(0, length / radius - 2 * radius, 0).ToVector(), 1);
-            Gizmos.DrawWireSphere(new TSVector(0, -length / radius + 2 * radius, 0).ToVector(), 1);
+            Gizmos.DrawWireSphere(new FPVector(0, length / radius - 2 * radius, 0).ToVector(), 1);
+            Gizmos.DrawWireSphere(new FPVector(0, -length / radius + 2 * radius, 0).ToVector(), 1);
         }
 
         protected override Vector3 GetGizmosSize() {

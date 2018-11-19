@@ -109,11 +109,11 @@ namespace KBEngine.Physics2D
         /// <param name="radius">The explosion radius </param>
         /// <param name="maxForce">The explosion force at the explosion point (then is inversely proportional to the square of the distance)</param>
         /// <returns>A list of bodies and the amount of force that was applied to them.</returns>
-        public Dictionary<Fixture, TSVector2> Activate(TSVector2 pos, FP radius, FP maxForce)
+        public Dictionary<Fixture, FPVector2> Activate(FPVector2 pos, FP radius, FP maxForce)
         {
             AABB aabb;
-            aabb.LowerBound = pos + new TSVector2(-radius, -radius);
-            aabb.UpperBound = pos + new TSVector2(radius, radius);
+            aabb.LowerBound = pos + new FPVector2(-radius, -radius);
+            aabb.UpperBound = pos + new FPVector2(radius, radius);
             Fixture[] shapes = new Fixture[MaxShapes];
 
             // More than 5 shapes in an explosion could be possible, but still strange.
@@ -147,9 +147,9 @@ namespace KBEngine.Physics2D
                 }, ref aabb);
 
             if (exit)
-                return new Dictionary<Fixture, TSVector2>();
+                return new Dictionary<Fixture, FPVector2>();
 
-            Dictionary<Fixture, TSVector2> exploded = new Dictionary<Fixture, TSVector2>(shapeCount + containedShapeCount);
+            Dictionary<Fixture, FPVector2> exploded = new Dictionary<Fixture, FPVector2>(shapeCount + containedShapeCount);
 
             // Per shape max/min angles for now.
             FP[] vals = new FP[shapeCount * 2];
@@ -162,13 +162,13 @@ namespace KBEngine.Physics2D
                 {
                     // We create a "diamond" approximation of the circle
                     Vertices v = new Vertices();
-                    TSVector2 vec = TSVector2.zero + new TSVector2(cs.Radius, 0);
+                    FPVector2 vec = FPVector2.zero + new FPVector2(cs.Radius, 0);
                     v.Add(vec);
-                    vec = TSVector2.zero + new TSVector2(0, cs.Radius);
+                    vec = FPVector2.zero + new FPVector2(0, cs.Radius);
                     v.Add(vec);
-                    vec = TSVector2.zero + new TSVector2(-cs.Radius, cs.Radius);
+                    vec = FPVector2.zero + new FPVector2(-cs.Radius, cs.Radius);
                     v.Add(vec);
-                    vec = TSVector2.zero + new TSVector2(0, -cs.Radius);
+                    vec = FPVector2.zero + new FPVector2(0, -cs.Radius);
                     v.Add(vec);
                     ps = new PolygonShape(v, 0);
                 }
@@ -177,7 +177,7 @@ namespace KBEngine.Physics2D
 
                 if ((shapes[i].Body.BodyType == BodyType.Dynamic) && ps != null)
                 {
-                    TSVector2 toCentroid = shapes[i].Body.GetWorldPoint(ps.MassData.Centroid) - pos;
+                    FPVector2 toCentroid = shapes[i].Body.GetWorldPoint(ps.MassData.Centroid) - pos;
                     FP angleToCentroid = FP.Atan2(toCentroid.y, toCentroid.x);
                     FP min = FP.MaxValue;
                     FP max = FP.MinValue;
@@ -186,7 +186,7 @@ namespace KBEngine.Physics2D
 
                     for (int j = 0; j < ps.Vertices.Count; ++j)
                     {
-                        TSVector2 toVertex = (shapes[i].Body.GetWorldPoint(ps.Vertices[j]) - pos);
+                        FPVector2 toVertex = (shapes[i].Body.GetWorldPoint(ps.Vertices[j]) - pos);
                         FP newAngle = FP.Atan2(toVertex.y, toVertex.x);
                         FP diff = (newAngle - angleToCentroid);
 
@@ -245,8 +245,8 @@ namespace KBEngine.Physics2D
 
                 midpt = midpt / 2;
 
-                TSVector2 p1 = pos;
-                TSVector2 p2 = radius * new TSVector2(FP.Cos(midpt), FP.Sin(midpt)) + pos;
+                FPVector2 p1 = pos;
+                FPVector2 p2 = radius * new FPVector2(FP.Cos(midpt), FP.Sin(midpt)) + pos;
 
                 // RaycastOne
                 bool hitClosest = false;
@@ -321,7 +321,7 @@ namespace KBEngine.Physics2D
 
                 FP arclen = _data[i].Max - _data[i].Min;
 
-                FP first = TSMath.Min(MaxEdgeOffset, EdgeRatio * arclen);
+                FP first = FPMath.Min(MaxEdgeOffset, EdgeRatio * arclen);
                 int insertedRays = FP.Ceiling((((arclen - 2.0f * first) - (MinRays - 1) * MaxAngle) / MaxAngle)).AsInt();
 
                 if (insertedRays < 0)
@@ -335,9 +335,9 @@ namespace KBEngine.Physics2D
                      j < _data[i].Max || MathUtils.FPEquals(j, _data[i].Max, 0.0001f);
                      j += offset)
                 {
-                    TSVector2 p1 = pos;
-                    TSVector2 p2 = pos + radius * new TSVector2(FP.Cos(j), FP.Sin(j));
-                    TSVector2 hitpoint = TSVector2.zero;
+                    FPVector2 p1 = pos;
+                    FPVector2 p2 = pos + radius * new FPVector2(FP.Cos(j), FP.Sin(j));
+                    FPVector2 hitpoint = FPVector2.zero;
                     FP minlambda = FP.MaxValue;
 
                     List<Fixture> fl = _data[i].Body.FixtureList;
@@ -361,10 +361,10 @@ namespace KBEngine.Physics2D
 
                         // the force that is to be applied for this particular ray.
                         // offset is angular coverage. lambda*length of segment is distance.
-                        FP impulse = (arclen / (MinRays + insertedRays)) * maxForce * 180.0f / FP.Pi * (1.0f - KBEngine.TSMath.Min(FP.One, minlambda));
+                        FP impulse = (arclen / (MinRays + insertedRays)) * maxForce * 180.0f / FP.Pi * (1.0f - KBEngine.FPMath.Min(FP.One, minlambda));
 
                         // We Apply the impulse!!!
-                        TSVector2 vectImp = TSVector2.Dot(impulse * new TSVector2(FP.Cos(j), FP.Sin(j)), -ro.Normal) * new TSVector2(FP.Cos(j), FP.Sin(j));
+                        FPVector2 vectImp = FPVector2.Dot(impulse * new FPVector2(FP.Cos(j), FP.Sin(j)), -ro.Normal) * new FPVector2(FP.Cos(j), FP.Sin(j));
                         _data[i].Body.ApplyLinearImpulse(ref vectImp, ref hitpoint);
 
                         // We gather the fixtures for returning them
@@ -388,7 +388,7 @@ namespace KBEngine.Physics2D
                     continue;
 
                 FP impulse = MinRays * maxForce * 180.0f / FP.Pi;
-                TSVector2 hitPoint;
+                FPVector2 hitPoint;
 
                 CircleShape circShape = fix.Shape as CircleShape;
                 if (circShape != null)
@@ -401,7 +401,7 @@ namespace KBEngine.Physics2D
                     hitPoint = fix.Body.GetWorldPoint(shape.MassData.Centroid);
                 }
 
-                TSVector2 vectImp = impulse * (hitPoint - pos);
+                FPVector2 vectImp = impulse * (hitPoint - pos);
 
                 fix.Body.ApplyLinearImpulse(ref vectImp, ref hitPoint);
 

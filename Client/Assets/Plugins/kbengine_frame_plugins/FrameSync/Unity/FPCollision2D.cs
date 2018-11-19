@@ -10,12 +10,12 @@ namespace KBEngine {
         /**
         *  @brief Contact point between two bodies
         **/
-        public TSVector2 point;
+        public FPVector2 point;
 
         /**
         *  @brief Normal vector from the contact point
         **/
-        public TSVector2 normal;
+        public FPVector2 normal;
 
     }
 
@@ -52,7 +52,7 @@ namespace KBEngine {
         /**
         *  @brief The {@link FPTransform} of the body hit
         **/
-        public TSVector2 relativeVelocity;
+        public FPVector2 relativeVelocity;
 
         internal void Update(GameObject otherGO, Physics2D.Contact c) {
             if (this.gameObject == null) {
@@ -67,8 +67,8 @@ namespace KBEngine {
                     contacts[0] = new TSContactPoint2D();
                 }
 
-                TSVector2 normal;
-                Physics2D.FixedArray2<TSVector2> points;
+                FPVector2 normal;
+                Physics2D.FixedArray2<FPVector2> points;
 
                 c.GetWorldManifold(out normal, out points);
 

@@ -27,7 +27,7 @@ namespace KBEngine.Physics2D
             //Sort by X-axis
             pointSet.Sort(_pointComparer);
 
-            TSVector2[] h = new TSVector2[pointSet.Count];
+            FPVector2[] h = new FPVector2[pointSet.Count];
             Vertices res;
 
             int top = -1; // indices for bottom and top of the stack
@@ -130,9 +130,9 @@ namespace KBEngine.Physics2D
             return res;
         }
 
-        private class PointComparer : Comparer<TSVector2>
+        private class PointComparer : Comparer<FPVector2>
         {
-            public override int Compare(TSVector2 a, TSVector2 b)
+            public override int Compare(FPVector2 a, FPVector2 b)
             {
                 int f = a.x.CompareTo(b.x);
                 return f != 0 ? f : a.y.CompareTo(b.y);

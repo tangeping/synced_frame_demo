@@ -32,7 +32,7 @@
 using System;
 using KBEngine.Physics2D;
 using FP = KBEngine.FP;
-using TSRandom = KBEngine.TSRandom;
+using TSRandom = KBEngine.FPRandom;
 
 namespace KBEngine.Physics2D
 {

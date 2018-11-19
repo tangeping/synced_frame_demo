@@ -39,15 +39,15 @@ namespace KBEngine.Physics3D {
         [Flags]
         public enum DampingType { None = 0x00, Angular = 0x01, Linear = 0x02 }
 
-        internal TSMatrix inertia;
-        internal TSMatrix invInertia;
+        internal FPMatrix inertia;
+        internal FPMatrix invInertia;
 
-        internal TSMatrix invInertiaWorld;
-        internal TSMatrix orientation;
-        internal TSMatrix invOrientation;
-        internal TSVector position;
-        internal TSVector linearVelocity;
-        internal TSVector angularVelocity;
+        internal FPMatrix invInertiaWorld;
+        internal FPMatrix orientation;
+        internal FPMatrix invOrientation;
+        internal FPVector position;
+        internal FPVector linearVelocity;
+        internal FPVector angularVelocity;
 
         internal FP staticFriction;
         internal FP restitution;
@@ -65,7 +65,7 @@ namespace KBEngine.Physics3D {
         internal CollisionIsland island;
         internal FP inverseMass;
 
-        internal TSVector force, torque;
+        internal FPVector force, torque;
 
         private int hashCode;
 
@@ -89,10 +89,10 @@ namespace KBEngine.Physics3D {
 
         internal FPRigidBodyConstraints _freezeConstraints = FPRigidBodyConstraints.None;
 
-        internal TSVector _freezePosition = TSVector.zero;
+        internal FPVector _freezePosition = FPVector.zero;
 
-        internal TSMatrix _freezeRotation = TSMatrix.Identity;
-        internal TSQuaternion _freezeRotationQuat = TSQuaternion.identity;
+        internal FPMatrix _freezeRotation = FPMatrix.Identity;
+        internal FPQuaternion _freezeRotationQuat = FPQuaternion.identity;
 
         // Previous state of gravity before switch Kinematic to true
         internal bool prevKinematicGravity;
@@ -114,7 +114,7 @@ namespace KBEngine.Physics3D {
 
                     if (_freezeRotation != orientation) {
                         _freezeRotation = orientation;
-                        _freezeRotationQuat = TSQuaternion.CreateFromMatrix(_freezeRotation);
+                        _freezeRotationQuat = FPQuaternion.CreateFromMatrix(_freezeRotation);
                     }
                 }
             }
@@ -149,9 +149,9 @@ namespace KBEngine.Physics3D {
                 }
                 else if (!isParticle && value)
                 {
-                    this.inertia = TSMatrix.Zero;
-                    this.invInertia = this.invInertiaWorld = TSMatrix.Zero;
-                    this.invOrientation = this.orientation = TSMatrix.Identity;
+                    this.inertia = FPMatrix.Zero;
+                    this.invInertia = this.invInertiaWorld = FPMatrix.Zero;
+                    this.invOrientation = this.orientation = FPMatrix.Identity;
                     inverseMass = FP.One;
 
                     this.Shape.ShapeUpdated -= updatedHandler;
@@ -188,7 +188,7 @@ namespace KBEngine.Physics3D {
             hashCode = CalculateHash(instance);
 
             this.Shape = shape;
-            orientation = TSMatrix.Identity;
+            orientation = FPMatrix.Identity;
 
             if (!isParticle)
             {
@@ -198,9 +198,9 @@ namespace KBEngine.Physics3D {
             }
             else
             {
-                this.inertia = TSMatrix.Zero;
-                this.invInertia = this.invInertiaWorld = TSMatrix.Zero;
-                this.invOrientation = this.orientation = TSMatrix.Identity;
+                this.inertia = FPMatrix.Zero;
+                this.invInertia = this.invInertiaWorld = FPMatrix.Zero;
+                this.invOrientation = this.orientation = FPMatrix.Identity;
                 inverseMass = FP.One;
             }
 
@@ -304,15 +304,15 @@ namespace KBEngine.Physics3D {
         /// linear velocity.
         /// </summary>
         /// <param name="impulse">Impulse direction and magnitude.</param>
-        public void ApplyImpulse(TSVector impulse)
+        public void ApplyImpulse(FPVector impulse)
         {
             if (this.isStatic) {
                 return;
             }
 
-            TSVector temp;
-            TSVector.Multiply(ref impulse, inverseMass, out temp);
-            TSVector.Add(ref linearVelocity, ref temp, out linearVelocity);
+            FPVector temp;
+            FPVector.Multiply(ref impulse, inverseMass, out temp);
+            FPVector.Add(ref linearVelocity, ref temp, out linearVelocity);
         }
 
         /// <summary>
@@ -322,19 +322,19 @@ namespace KBEngine.Physics3D {
         /// <param name="impulse">Impulse direction and magnitude.</param>
         /// <param name="relativePosition">The position where the impulse gets applied
         /// in Body coordinate frame.</param>
-        public void ApplyImpulse(TSVector impulse, TSVector relativePosition)
+        public void ApplyImpulse(FPVector impulse, FPVector relativePosition)
         {
             if (this.isStatic) {
                 return;
             }
 
-            TSVector temp;
-            TSVector.Multiply(ref impulse, inverseMass, out temp);
-            TSVector.Add(ref linearVelocity, ref temp, out linearVelocity);
+            FPVector temp;
+            FPVector.Multiply(ref impulse, inverseMass, out temp);
+            FPVector.Add(ref linearVelocity, ref temp, out linearVelocity);
 
-            TSVector.Cross(ref relativePosition, ref impulse, out temp);
-            TSVector.Transform(ref temp, ref invInertiaWorld, out temp);
-            TSVector.Add(ref angularVelocity, ref temp, out angularVelocity);
+            FPVector.Cross(ref relativePosition, ref impulse, out temp);
+            FPVector.Transform(ref temp, ref invInertiaWorld, out temp);
+            FPVector.Add(ref angularVelocity, ref temp, out angularVelocity);
         }
 
         /// <summary>
@@ -344,9 +344,9 @@ namespace KBEngine.Physics3D {
         /// the timestep influences the energy added to the body.
         /// </summary>
         /// <param name="force">The force to add next <see cref="World.Step"/>.</param>
-        public void AddForce(TSVector force)
+        public void AddForce(FPVector force)
         {
-            TSVector.Add(ref force, ref this.force, out this.force);
+            FPVector.Add(ref force, ref this.force, out this.force);
         }
 
         /// <summary>
@@ -357,23 +357,23 @@ namespace KBEngine.Physics3D {
         /// </summary>
         /// <param name="force">The force to add next <see cref="World.Step"/>.</param>
         /// <param name="pos">The position where the force is applied.</param>
-        public void AddForce(TSVector force, TSVector pos)
+        public void AddForce(FPVector force, FPVector pos)
         {
-            TSVector.Add(ref this.force, ref force, out this.force);
-            TSVector.Subtract(ref pos, ref this.position, out pos);
-            TSVector.Cross(ref pos, ref force, out pos);
-            TSVector.Add(ref pos, ref this.torque, out this.torque);
+            FPVector.Add(ref this.force, ref force, out this.force);
+            FPVector.Subtract(ref pos, ref this.position, out pos);
+            FPVector.Cross(ref pos, ref force, out pos);
+            FPVector.Add(ref pos, ref this.torque, out this.torque);
         }
 
         /// <summary>
         /// Returns the torque which acts this timestep on the body.
         /// </summary>
-        public TSVector Torque { get { return torque; } }
+        public FPVector Torque { get { return torque; } }
 
         /// <summary>
         /// Returns the force which acts this timestep on the body.
         /// </summary>
-        public TSVector Force { get { return force; } }
+        public FPVector Force { get { return force; } }
 
         /// <summary>
         /// Adds torque to the body. The torque gets applied
@@ -382,9 +382,9 @@ namespace KBEngine.Physics3D {
         /// the timestep influences the energy added to the body.
         /// </summary>
         /// <param name="torque">The torque to add next <see cref="World.Step"/>.</param>
-        public void AddTorque(TSVector torque)
+        public void AddTorque(FPVector torque)
         {
-            TSVector.Add(ref torque, ref this.torque, out this.torque);
+            FPVector.Add(ref torque, ref this.torque, out this.torque);
         }
 
         protected bool useShapeMassProperties = true;
@@ -395,7 +395,7 @@ namespace KBEngine.Physics3D {
         public void SetMassProperties()
         {
             this.inertia = Shape.inertia;
-            TSMatrix.Inverse(ref inertia, out invInertia);
+            FPMatrix.Inverse(ref inertia, out invInertia);
             this.inverseMass = FP.One / Shape.mass;
             useShapeMassProperties = true;
         }
@@ -408,14 +408,14 @@ namespace KBEngine.Physics3D {
         /// <param name="mass">The mass/inverse mass of the object.</param>
         /// <param name="setAsInverseValues">Sets the InverseInertia and the InverseMass
         /// to this values.</param>
-        public void SetMassProperties(TSMatrix inertia, FP mass, bool setAsInverseValues)
+        public void SetMassProperties(FPMatrix inertia, FP mass, bool setAsInverseValues)
         {
             if (setAsInverseValues)
             {
                 if (!isParticle)
                 {
                     this.invInertia = inertia;
-                    TSMatrix.Inverse(ref inertia, out this.inertia);
+                    FPMatrix.Inverse(ref inertia, out this.inertia);
                 }
                 this.inverseMass = mass;
             }
@@ -424,7 +424,7 @@ namespace KBEngine.Physics3D {
                 if (!isParticle)
                 {
                     this.inertia = inertia;
-                    TSMatrix.Inverse(ref inertia, out this.invInertia);
+                    FPMatrix.Inverse(ref inertia, out this.invInertia);
                 }
                 this.inverseMass = FP.One / mass;
             }
@@ -468,17 +468,17 @@ namespace KBEngine.Physics3D {
         /// <summary>
         /// The inertia currently used for this body.
         /// </summary>
-        public TSMatrix Inertia { get { return inertia; } }
+        public FPMatrix Inertia { get { return inertia; } }
 
         /// <summary>
         /// The inverse inertia currently used for this body.
         /// </summary>
-        public TSMatrix InverseInertia { get { return invInertia; } }
+        public FPMatrix InverseInertia { get { return invInertia; } }
 
         /// <summary>
         /// The velocity of the body.
         /// </summary>
-        public TSVector LinearVelocity
+        public FPVector LinearVelocity
         {
             get { return linearVelocity; }
             set 
@@ -495,7 +495,7 @@ namespace KBEngine.Physics3D {
         /// <summary>
         /// The angular velocity of the body.
         /// </summary>
-        public TSVector AngularVelocity
+        public FPVector AngularVelocity
         {
             get { return angularVelocity; }
             set
@@ -511,7 +511,7 @@ namespace KBEngine.Physics3D {
         /// <summary>
         /// The current position of the body.
         /// </summary>
-        public TSVector Position
+        public FPVector Position
         {
             get { return position; }
             set {
@@ -526,13 +526,13 @@ namespace KBEngine.Physics3D {
         /// <summary>
         /// The current oriention of the body.
         /// </summary>
-        public TSMatrix Orientation
+        public FPMatrix Orientation
         {
             get { return orientation; }
             set {
                 if ((_freezeConstraints & FPRigidBodyConstraints.FreezeRotation) > 0) {
                     _freezeRotation = value;
-                    _freezeRotationQuat = TSQuaternion.CreateFromMatrix(_freezeRotation);
+                    _freezeRotationQuat = FPQuaternion.CreateFromMatrix(_freezeRotation);
                 }
 
                 orientation = value; Update();
@@ -596,7 +596,7 @@ namespace KBEngine.Physics3D {
         /// <summary>
         /// The inverse inertia tensor in world space.
         /// </summary>
-        public TSMatrix InverseInertiaWorld
+        public FPMatrix InverseInertiaWorld
         {
             get
             {
@@ -618,8 +618,8 @@ namespace KBEngine.Physics3D {
                 // scale inertia
                 if (!isParticle)
                 {
-                    TSMatrix.Multiply(ref Shape.inertia, value / Shape.mass, out inertia);
-                    TSMatrix.Inverse(ref inertia, out invInertia);
+                    FPMatrix.Multiply(ref Shape.inertia, value / Shape.mass, out inertia);
+                    FPMatrix.Inverse(ref inertia, out invInertia);
                 }
 
                 inverseMass = FP.One / value;
@@ -629,7 +629,7 @@ namespace KBEngine.Physics3D {
         #endregion
 
 
-        internal TSVector sweptDirection = TSVector.zero;
+        internal FPVector sweptDirection = FPVector.zero;
 
         internal void SweptExpandBoundingBox(FP timestep)
         {
@@ -671,28 +671,28 @@ namespace KBEngine.Physics3D {
         {
             if (isParticle)
             {
-                this.inertia = TSMatrix.Zero;
-                this.invInertia = this.invInertiaWorld = TSMatrix.Zero;
-                this.invOrientation = this.orientation = TSMatrix.Identity;
+                this.inertia = FPMatrix.Zero;
+                this.invInertia = this.invInertiaWorld = FPMatrix.Zero;
+                this.invOrientation = this.orientation = FPMatrix.Identity;
                 this.boundingBox = shape.boundingBox;
-                TSVector.Add(ref boundingBox.min, ref this.position, out boundingBox.min);
-                TSVector.Add(ref boundingBox.max, ref this.position, out boundingBox.max);
+                FPVector.Add(ref boundingBox.min, ref this.position, out boundingBox.min);
+                FPVector.Add(ref boundingBox.max, ref this.position, out boundingBox.max);
 
                 angularVelocity.MakeZero();
             }
             else
             {
                 // Given: Orientation, Inertia
-                TSMatrix.Transpose(ref orientation, out invOrientation);
+                FPMatrix.Transpose(ref orientation, out invOrientation);
                 this.Shape.GetBoundingBox(ref orientation, out boundingBox);
-                TSVector.Add(ref boundingBox.min, ref this.position, out boundingBox.min);
-                TSVector.Add(ref boundingBox.max, ref this.position, out boundingBox.max);
+                FPVector.Add(ref boundingBox.min, ref this.position, out boundingBox.min);
+                FPVector.Add(ref boundingBox.max, ref this.position, out boundingBox.max);
 
 
                 if (!isStatic)
                 {
-                    TSMatrix.Multiply(ref invOrientation, ref invInertia, out invInertiaWorld);
-                    TSMatrix.Multiply(ref invInertiaWorld, ref orientation, out invInertiaWorld);
+                    FPMatrix.Multiply(ref invOrientation, ref invInertia, out invInertiaWorld);
+                    FPMatrix.Multiply(ref invInertiaWorld, ref orientation, out invInertiaWorld);
                 }
             }
         }
@@ -754,7 +754,7 @@ namespace KBEngine.Physics3D {
             }
         }
 
-        public TSVector TSLinearVelocity {
+        public FPVector TSLinearVelocity {
             get {
                 return LinearVelocity;
             }
@@ -764,7 +764,7 @@ namespace KBEngine.Physics3D {
             }
         }
 
-        public TSVector TSAngularVelocity {
+        public FPVector TSAngularVelocity {
             get {
                 return AngularVelocity;
             }
@@ -784,7 +784,7 @@ namespace KBEngine.Physics3D {
             }
         }
 
-        public TSVector TSPosition {
+        public FPVector TSPosition {
             get {
                 return Position;
             }
@@ -794,7 +794,7 @@ namespace KBEngine.Physics3D {
             }
         }
 
-        public TSMatrix TSOrientation {
+        public FPMatrix TSOrientation {
             get {
                 return Orientation;
             }
@@ -844,7 +844,7 @@ namespace KBEngine.Physics3D {
             }
         }
 
-        private List<TSVector> hullPoints = new List<TSVector>();
+        private List<FPVector> hullPoints = new List<FPVector>();
 
         private void UpdateHullData()
         {
@@ -856,7 +856,7 @@ namespace KBEngine.Physics3D {
 
         public void DebugDraw(IDebugDrawer drawer)
         {
-            TSVector pos1,pos2,pos3;
+            FPVector pos1,pos2,pos3;
 
             for(int i = 0;i<hullPoints.Count;i+=3)
             {
@@ -864,14 +864,14 @@ namespace KBEngine.Physics3D {
                 pos2 = hullPoints[i + 1];
                 pos3 = hullPoints[i + 2];
 
-                TSVector.Transform(ref pos1, ref orientation, out pos1);
-                TSVector.Add(ref pos1, ref position, out pos1);
+                FPVector.Transform(ref pos1, ref orientation, out pos1);
+                FPVector.Add(ref pos1, ref position, out pos1);
 
-                TSVector.Transform(ref pos2, ref orientation, out pos2);
-                TSVector.Add(ref pos2, ref position, out pos2);
+                FPVector.Transform(ref pos2, ref orientation, out pos2);
+                FPVector.Add(ref pos2, ref position, out pos2);
 
-                TSVector.Transform(ref pos3, ref orientation, out pos3);
-                TSVector.Add(ref pos3, ref position, out pos3);
+                FPVector.Transform(ref pos3, ref orientation, out pos3);
+                FPVector.Add(ref pos3, ref position, out pos3);
 
                 drawer.DrawTriangle(pos1, pos2, pos3);
             }
@@ -904,7 +904,7 @@ namespace KBEngine.Physics3D {
                 bool freezeRotZ = (_freezeConstraints & FPRigidBodyConstraints.FreezeRotationZ) == FPRigidBodyConstraints.FreezeRotationZ;
 
                 if (freezeRotX || freezeRotY || freezeRotZ) {
-                    TSQuaternion q = TSQuaternion.CreateFromMatrix(Orientation);
+                    FPQuaternion q = FPQuaternion.CreateFromMatrix(Orientation);
 
                     if (freezeRotX) {
                         q.x = _freezeRotationQuat.x;
@@ -920,7 +920,7 @@ namespace KBEngine.Physics3D {
 
                     q.Normalize();
 
-                    Orientation = TSMatrix.CreateFromQuaternion(q);
+                    Orientation = FPMatrix.CreateFromQuaternion(q);
                 }
             }
         }
@@ -929,23 +929,23 @@ namespace KBEngine.Physics3D {
             return string.Format("{0}|{1}", position, orientation);
         }
 
-        public void TSApplyForce(TSVector force) {
+        public void TSApplyForce(FPVector force) {
             AddForce(force);
         }
 
-        public void TSApplyForce(TSVector force, TSVector position) {
+        public void TSApplyForce(FPVector force, FPVector position) {
             AddForce(force, position);
         }
 
-        public void TSApplyImpulse(TSVector force) {
+        public void TSApplyImpulse(FPVector force) {
             ApplyImpulse(force);
         }
 
-        public void TSApplyImpulse(TSVector force, TSVector position) {
+        public void TSApplyImpulse(FPVector force, FPVector position) {
             ApplyImpulse(force, position);
         }
 
-        public void TSApplyTorque(TSVector force) {
+        public void TSApplyTorque(FPVector force) {
             AddTorque(force);
         }
 

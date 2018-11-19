@@ -32,7 +32,7 @@ namespace KBEngine.Physics2D
 
             Polygon poly = new Polygon();
 
-            foreach (TSVector2 vertex in vertices)
+            foreach (FPVector2 vertex in vertices)
                 poly.Points.Add(new TriangulationPoint(vertex.x, vertex.y));
 
             if (vertices.Holes != null)
@@ -41,7 +41,7 @@ namespace KBEngine.Physics2D
                 {
                     Polygon hole = new Polygon();
 
-                    foreach (TSVector2 vertex in holeVertices)
+                    foreach (FPVector2 vertex in holeVertices)
                         hole.Points.Add(new TriangulationPoint(vertex.x, vertex.y));
 
                     poly.AddHole(hole);
@@ -59,7 +59,7 @@ namespace KBEngine.Physics2D
                 Vertices v = new Vertices();
                 foreach (TriangulationPoint p in triangle.Points)
                 {
-                    v.Add(new TSVector2((FP)p.X, (FP)p.Y));
+                    v.Add(new FPVector2((FP)p.X, (FP)p.Y));
                 }
                 results.Add(v);
             }

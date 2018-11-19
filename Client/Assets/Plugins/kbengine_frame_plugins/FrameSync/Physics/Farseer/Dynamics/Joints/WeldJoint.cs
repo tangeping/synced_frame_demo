@@ -48,17 +48,17 @@ namespace KBEngine.Physics2D
     public class WeldJoint : Joint2D
     {
         // Solver shared
-        private TSVector _impulse;
+        private FPVector _impulse;
         private FP _gamma;
         private FP _bias;
 
         // Solver temp
         private int _indexA;
         private int _indexB;
-        private TSVector2 _rA;
-        private TSVector2 _rB;
-        private TSVector2 _localCenterA;
-        private TSVector2 _localCenterB;
+        private FPVector2 _rA;
+        private FPVector2 _rB;
+        private FPVector2 _localCenterA;
+        private FPVector2 _localCenterB;
         private FP _invMassA;
         private FP _invMassB;
         private FP _invIA;
@@ -79,7 +79,7 @@ namespace KBEngine.Physics2D
         /// <param name="anchorA">The first body anchor.</param>
         /// <param name="anchorB">The second body anchor.</param>
         /// <param name="useWorldCoordinates">Set to true if you are using world coordinates as anchors.</param>
-        public WeldJoint(Body bodyA, Body bodyB, TSVector2 anchorA, TSVector2 anchorB, bool useWorldCoordinates = false)
+        public WeldJoint(Body bodyA, Body bodyB, FPVector2 anchorA, FPVector2 anchorB, bool useWorldCoordinates = false)
             : base(bodyA, bodyB)
         {
             JointType = JointType.Weld;
@@ -101,20 +101,20 @@ namespace KBEngine.Physics2D
         /// <summary>
         /// The local anchor point on BodyA
         /// </summary>
-        public TSVector2 LocalAnchorA { get; set; }
+        public FPVector2 LocalAnchorA { get; set; }
 
         /// <summary>
         /// The local anchor point on BodyB
         /// </summary>
-        public TSVector2 LocalAnchorB { get; set; }
+        public FPVector2 LocalAnchorB { get; set; }
 
-        public override TSVector2 WorldAnchorA
+        public override FPVector2 WorldAnchorA
         {
             get { return BodyA.GetWorldPoint(LocalAnchorA); }
             set { LocalAnchorA = BodyA.GetLocalPoint(value); }
         }
 
-        public override TSVector2 WorldAnchorB
+        public override FPVector2 WorldAnchorB
         {
             get { return BodyB.GetWorldPoint(LocalAnchorB); }
             set { LocalAnchorB = BodyB.GetLocalPoint(value); }
@@ -138,9 +138,9 @@ namespace KBEngine.Physics2D
         /// </summary>
         public FP DampingRatio { get; set; }
 
-        public override TSVector2 GetReactionForce(FP invDt)
+        public override FPVector2 GetReactionForce(FP invDt)
         {
-            return invDt * new TSVector2(_impulse.x, _impulse.y);
+            return invDt * new FPVector2(_impulse.x, _impulse.y);
         }
 
         public override FP GetReactionTorque(FP invDt)
@@ -160,11 +160,11 @@ namespace KBEngine.Physics2D
             _invIB = BodyB._invI;
 
             FP aA = data.positions[_indexA].a;
-            TSVector2 vA = data.velocities[_indexA].v;
+            FPVector2 vA = data.velocities[_indexA].v;
             FP wA = data.velocities[_indexA].w;
 
             FP aB = data.positions[_indexB].a;
-            TSVector2 vB = data.velocities[_indexB].v;
+            FPVector2 vB = data.velocities[_indexB].v;
             FP wB = data.velocities[_indexB].w;
 
             Rot qA = new Rot(aA), qB = new Rot(aB);
@@ -234,7 +234,7 @@ namespace KBEngine.Physics2D
                 // Scale impulses to support a variable time step.
                 _impulse *= data.step.dtRatio;
 
-                TSVector2 P = new TSVector2(_impulse.x, _impulse.y);
+                FPVector2 P = new FPVector2(_impulse.x, _impulse.y);
 
                 vA -= mA * P;
                 wA -= iA * (MathUtils.Cross(_rA, P) + _impulse.z);
@@ -244,7 +244,7 @@ namespace KBEngine.Physics2D
             }
             else
             {
-                _impulse = TSVector.zero;
+                _impulse = FPVector.zero;
             }
 
             data.velocities[_indexA].v = vA;
@@ -255,9 +255,9 @@ namespace KBEngine.Physics2D
 
         internal override void SolveVelocityConstraints(ref SolverData data)
         {
-            TSVector2 vA = data.velocities[_indexA].v;
+            FPVector2 vA = data.velocities[_indexA].v;
             FP wA = data.velocities[_indexA].w;
-            TSVector2 vB = data.velocities[_indexB].v;
+            FPVector2 vB = data.velocities[_indexB].v;
             FP wB = data.velocities[_indexB].w;
 
             FP mA = _invMassA, mB = _invMassB;
@@ -273,13 +273,13 @@ namespace KBEngine.Physics2D
                 wA -= iA * impulse2;
                 wB += iB * impulse2;
 
-                TSVector2 Cdot1 = vB + MathUtils.Cross(wB, _rB) - vA - MathUtils.Cross(wA, _rA);
+                FPVector2 Cdot1 = vB + MathUtils.Cross(wB, _rB) - vA - MathUtils.Cross(wA, _rA);
 
-                TSVector2 impulse1 = -MathUtils.Mul22(_mass, Cdot1);
+                FPVector2 impulse1 = -MathUtils.Mul22(_mass, Cdot1);
                 _impulse.x += impulse1.x;
                 _impulse.y += impulse1.y;
 
-                TSVector2 P = impulse1;
+                FPVector2 P = impulse1;
 
                 vA -= mA * P;
                 wA -= iA * MathUtils.Cross(_rA, P);
@@ -289,14 +289,14 @@ namespace KBEngine.Physics2D
             }
             else
             {
-                TSVector2 Cdot1 = vB + MathUtils.Cross(wB, _rB) - vA - MathUtils.Cross(wA, _rA);
+                FPVector2 Cdot1 = vB + MathUtils.Cross(wB, _rB) - vA - MathUtils.Cross(wA, _rA);
                 FP Cdot2 = wB - wA;
-                TSVector Cdot = new TSVector(Cdot1.x, Cdot1.y, Cdot2);
+                FPVector Cdot = new FPVector(Cdot1.x, Cdot1.y, Cdot2);
 
-                TSVector impulse = MathUtils.Mul(_mass, Cdot) * -1;
+                FPVector impulse = MathUtils.Mul(_mass, Cdot) * -1;
                 _impulse += impulse;
 
-                TSVector2 P = new TSVector2(impulse.x, impulse.y);
+                FPVector2 P = new FPVector2(impulse.x, impulse.y);
 
                 vA -= mA * P;
                 wA -= iA * (MathUtils.Cross(_rA, P) + impulse.z);
@@ -313,9 +313,9 @@ namespace KBEngine.Physics2D
 
         internal override bool SolvePositionConstraints(ref SolverData data)
         {
-            TSVector2 cA = data.positions[_indexA].c;
+            FPVector2 cA = data.positions[_indexA].c;
             FP aA = data.positions[_indexA].a;
-            TSVector2 cB = data.positions[_indexB].c;
+            FPVector2 cB = data.positions[_indexB].c;
             FP aB = data.positions[_indexB].a;
 
             Rot qA = new Rot(aA), qB = new Rot(aB);
@@ -323,8 +323,8 @@ namespace KBEngine.Physics2D
             FP mA = _invMassA, mB = _invMassB;
             FP iA = _invIA, iB = _invIB;
 
-            TSVector2 rA = MathUtils.Mul(qA, LocalAnchorA - _localCenterA);
-            TSVector2 rB = MathUtils.Mul(qB, LocalAnchorB - _localCenterB);
+            FPVector2 rA = MathUtils.Mul(qA, LocalAnchorA - _localCenterA);
+            FPVector2 rB = MathUtils.Mul(qB, LocalAnchorB - _localCenterB);
 
             FP positionError, angularError;
 
@@ -341,12 +341,12 @@ namespace KBEngine.Physics2D
 
             if (FrequencyHz > 0.0f)
             {
-                TSVector2 C1 = cB + rB - cA - rA;
+                FPVector2 C1 = cB + rB - cA - rA;
 
                 positionError = C1.magnitude;
                 angularError = 0.0f;
 
-                TSVector2 P = -K.Solve22(C1);
+                FPVector2 P = -K.Solve22(C1);
 
                 cA -= mA * P;
                 aA -= iA * MathUtils.Cross(rA, P);
@@ -356,16 +356,16 @@ namespace KBEngine.Physics2D
             }
             else
             {
-                TSVector2 C1 = cB + rB - cA - rA;
+                FPVector2 C1 = cB + rB - cA - rA;
                 FP C2 = aB - aA - ReferenceAngle;
 
                 positionError = C1.magnitude;
                 angularError = FP.Abs(C2);
 
-                TSVector C = new TSVector(C1.x, C1.y, C2);
+                FPVector C = new FPVector(C1.x, C1.y, C2);
 
-                TSVector impulse = K.Solve33(C) * -1;
-                TSVector2 P = new TSVector2(impulse.x, impulse.y);
+                FPVector impulse = K.Solve33(C) * -1;
+                FPVector2 P = new FPVector2(impulse.x, impulse.y);
 
                 cA -= mA * P;
                 aA -= iA * (MathUtils.Cross(rA, P) + impulse.z);

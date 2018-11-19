@@ -27,13 +27,13 @@ namespace KBEngine.Physics2D
 {
     public sealed class ContactPositionConstraint
     {
-        public TSVector2[] localPoints = new TSVector2[Settings.MaxManifoldPoints];
-        public TSVector2 localNormal;
-        public TSVector2 localPoint;
+        public FPVector2[] localPoints = new FPVector2[Settings.MaxManifoldPoints];
+        public FPVector2 localNormal;
+        public FPVector2 localPoint;
         public int indexA;
         public int indexB;
         public FP invMassA, invMassB;
-        public TSVector2 localCenterA, localCenterB;
+        public FPVector2 localCenterA, localCenterB;
         public FP invIA, invIB;
         public ManifoldType type;
         public FP radiusA, radiusB;
@@ -42,8 +42,8 @@ namespace KBEngine.Physics2D
 
     public sealed class VelocityConstraintPoint
     {
-        public TSVector2 rA;
-        public TSVector2 rB;
+        public FPVector2 rA;
+        public FPVector2 rB;
         public FP normalImpulse;
         public FP tangentImpulse;
         public FP normalMass;
@@ -54,7 +54,7 @@ namespace KBEngine.Physics2D
     public sealed class ContactVelocityConstraint
     {
         public VelocityConstraintPoint[] points = new VelocityConstraintPoint[Settings.MaxManifoldPoints];
-        public TSVector2 normal;
+        public FPVector2 normal;
         public Mat22 normalMass;
         public Mat22 K;
         public int indexA;
@@ -176,8 +176,8 @@ namespace KBEngine.Physics2D
                         vcp.tangentImpulse = 0.0f;
                     }
 
-                    vcp.rA = TSVector2.zero;
-                    vcp.rB = TSVector2.zero;
+                    vcp.rA = FPVector2.zero;
+                    vcp.rB = FPVector2.zero;
                     vcp.normalMass = 0.0f;
                     vcp.tangentMass = 0.0f;
                     vcp.velocityBias = 0.0f;
@@ -205,17 +205,17 @@ namespace KBEngine.Physics2D
                 FP mB = vc.invMassB;
                 FP iA = vc.invIA;
                 FP iB = vc.invIB;
-                TSVector2 localCenterA = pc.localCenterA;
-                TSVector2 localCenterB = pc.localCenterB;
+                FPVector2 localCenterA = pc.localCenterA;
+                FPVector2 localCenterB = pc.localCenterB;
 
-                TSVector2 cA = _positions[indexA].c;
+                FPVector2 cA = _positions[indexA].c;
                 FP aA = _positions[indexA].a;
-                TSVector2 vA = _velocities[indexA].v;
+                FPVector2 vA = _velocities[indexA].v;
                 FP wA = _velocities[indexA].w;
 
-                TSVector2 cB = _positions[indexB].c;
+                FPVector2 cB = _positions[indexB].c;
                 FP aB = _positions[indexB].a;
-                TSVector2 vB = _velocities[indexB].v;
+                FPVector2 vB = _velocities[indexB].v;
                 FP wB = _velocities[indexB].w;
 
                 Debug.Assert(manifold.PointCount > 0);
@@ -227,8 +227,8 @@ namespace KBEngine.Physics2D
                 xfA.p = cA - MathUtils.Mul(xfA.q, localCenterA);
                 xfB.p = cB - MathUtils.Mul(xfB.q, localCenterB);
 
-                TSVector2 normal;
-                FixedArray2<TSVector2> points;
+                FPVector2 normal;
+                FixedArray2<FPVector2> points;
                 WorldManifold.Initialize(ref manifold, ref xfA, radiusA, ref xfB, radiusB, out normal, out points);
 
                 vc.normal = normal;
@@ -248,7 +248,7 @@ namespace KBEngine.Physics2D
 
                     vcp.normalMass = kNormal > 0.0f ? 1.0f / kNormal : 0.0f;
 
-                    TSVector2 tangent = MathUtils.Cross(vc.normal, 1.0f);
+                    FPVector2 tangent = MathUtils.Cross(vc.normal, 1.0f);
 
                     FP rtA = MathUtils.Cross(vcp.rA, tangent);
                     FP rtB = MathUtils.Cross(vcp.rB, tangent);
@@ -259,7 +259,7 @@ namespace KBEngine.Physics2D
 
                     // Setup a velocity bias for restitution.
                     vcp.velocityBias = 0.0f;
-                    FP vRel = TSVector2.Dot(vc.normal, vB + MathUtils.Cross(wB, vcp.rB) - vA - MathUtils.Cross(wA, vcp.rA));
+                    FP vRel = FPVector2.Dot(vc.normal, vB + MathUtils.Cross(wB, vcp.rB) - vA - MathUtils.Cross(wA, vcp.rA));
                     if (vRel < -Settings.VelocityThreshold)
                     {
                         vcp.velocityBias = -vc.restitution * vRel;
@@ -286,8 +286,8 @@ namespace KBEngine.Physics2D
                     if (k11 * k11 < k_maxConditionNumber * (k11 * k22 - k12 * k12))
                     {
                         // K is safe to invert.
-                        vc.K.ex = new TSVector2(k11, k12);
-                        vc.K.ey = new TSVector2(k12, k22);
+                        vc.K.ex = new FPVector2(k11, k12);
+                        vc.K.ey = new FPVector2(k12, k22);
                         vc.normalMass = vc.K.Inverse;
                     }
                     else
@@ -315,18 +315,18 @@ namespace KBEngine.Physics2D
                 FP iB = vc.invIB;
                 int pointCount = vc.pointCount;
 
-                TSVector2 vA = _velocities[indexA].v;
+                FPVector2 vA = _velocities[indexA].v;
                 FP wA = _velocities[indexA].w;
-                TSVector2 vB = _velocities[indexB].v;
+                FPVector2 vB = _velocities[indexB].v;
                 FP wB = _velocities[indexB].w;
 
-                TSVector2 normal = vc.normal;
-                TSVector2 tangent = MathUtils.Cross(normal, 1.0f);
+                FPVector2 normal = vc.normal;
+                FPVector2 tangent = MathUtils.Cross(normal, 1.0f);
 
                 for (int j = 0; j < pointCount; ++j)
                 {
                     VelocityConstraintPoint vcp = vc.points[j];
-                    TSVector2 P = vcp.normalImpulse * normal + vcp.tangentImpulse * tangent;
+                    FPVector2 P = vcp.normalImpulse * normal + vcp.tangentImpulse * tangent;
                     wA -= iA * MathUtils.Cross(vcp.rA, P);
                     vA -= mA * P;
                     wB += iB * MathUtils.Cross(vcp.rB, P);
@@ -354,13 +354,13 @@ namespace KBEngine.Physics2D
                 FP iB = vc.invIB;
                 int pointCount = vc.pointCount;
 
-                TSVector2 vA = _velocities[indexA].v;
+                FPVector2 vA = _velocities[indexA].v;
                 FP wA = _velocities[indexA].w;
-                TSVector2 vB = _velocities[indexB].v;
+                FPVector2 vB = _velocities[indexB].v;
                 FP wB = _velocities[indexB].w;
 
-                TSVector2 normal = vc.normal;
-                TSVector2 tangent = MathUtils.Cross(normal, 1.0f);
+                FPVector2 normal = vc.normal;
+                FPVector2 tangent = MathUtils.Cross(normal, 1.0f);
                 FP friction = vc.friction;
 
                 Debug.Assert(pointCount == 1 || pointCount == 2);
@@ -372,10 +372,10 @@ namespace KBEngine.Physics2D
                     VelocityConstraintPoint vcp = vc.points[j];
 
                     // Relative velocity at contact
-                    TSVector2 dv = vB + MathUtils.Cross(wB, vcp.rB) - vA - MathUtils.Cross(wA, vcp.rA);
+                    FPVector2 dv = vB + MathUtils.Cross(wB, vcp.rB) - vA - MathUtils.Cross(wA, vcp.rA);
 
                     // Compute tangent force
-                    FP vt = TSVector2.Dot(dv, tangent) - vc.tangentSpeed;
+                    FP vt = FPVector2.Dot(dv, tangent) - vc.tangentSpeed;
                     FP lambda = vcp.tangentMass * (-vt);
 
                     // b2Clamp the accumulated force
@@ -385,7 +385,7 @@ namespace KBEngine.Physics2D
                     vcp.tangentImpulse = newImpulse;
 
                     // Apply contact impulse
-                    TSVector2 P = lambda * tangent;
+                    FPVector2 P = lambda * tangent;
 
                     vA -= mA * P;
                     wA -= iA * MathUtils.Cross(vcp.rA, P);
@@ -400,19 +400,19 @@ namespace KBEngine.Physics2D
                     VelocityConstraintPoint vcp = vc.points[0];
 
                     // Relative velocity at contact
-                    TSVector2 dv = vB + MathUtils.Cross(wB, vcp.rB) - vA - MathUtils.Cross(wA, vcp.rA);
+                    FPVector2 dv = vB + MathUtils.Cross(wB, vcp.rB) - vA - MathUtils.Cross(wA, vcp.rA);
 
                     // Compute normal impulse
-                    FP vn = TSVector2.Dot(dv, normal);
+                    FP vn = FPVector2.Dot(dv, normal);
                     FP lambda = -vcp.normalMass * (vn - vcp.velocityBias);
 
                     // b2Clamp the accumulated impulse
-                    FP newImpulse = KBEngine.TSMath.Max(vcp.normalImpulse + lambda, 0.0f);
+                    FP newImpulse = KBEngine.FPMath.Max(vcp.normalImpulse + lambda, 0.0f);
                     lambda = newImpulse - vcp.normalImpulse;
                     vcp.normalImpulse = newImpulse;
 
                     // Apply contact impulse
-                    TSVector2 P = lambda * normal;
+                    FPVector2 P = lambda * normal;
                     vA -= mA * P;
                     wA -= iA * MathUtils.Cross(vcp.rA, P);
 
@@ -457,18 +457,18 @@ namespace KBEngine.Physics2D
                     VelocityConstraintPoint cp1 = vc.points[0];
                     VelocityConstraintPoint cp2 = vc.points[1];
 
-                    TSVector2 a = new TSVector2(cp1.normalImpulse, cp2.normalImpulse);
+                    FPVector2 a = new FPVector2(cp1.normalImpulse, cp2.normalImpulse);
                     Debug.Assert(a.x >= 0.0f && a.y >= 0.0f);
 
                     // Relative velocity at contact
-                    TSVector2 dv1 = vB + MathUtils.Cross(wB, cp1.rB) - vA - MathUtils.Cross(wA, cp1.rA);
-                    TSVector2 dv2 = vB + MathUtils.Cross(wB, cp2.rB) - vA - MathUtils.Cross(wA, cp2.rA);
+                    FPVector2 dv1 = vB + MathUtils.Cross(wB, cp1.rB) - vA - MathUtils.Cross(wA, cp1.rA);
+                    FPVector2 dv2 = vB + MathUtils.Cross(wB, cp2.rB) - vA - MathUtils.Cross(wA, cp2.rA);
 
                     // Compute normal velocity
-                    FP vn1 = TSVector2.Dot(dv1, normal);
-                    FP vn2 = TSVector2.Dot(dv2, normal);
+                    FP vn1 = FPVector2.Dot(dv1, normal);
+                    FP vn2 = FPVector2.Dot(dv2, normal);
 
-                    TSVector2 b = new TSVector2();
+                    FPVector2 b = new FPVector2();
                     b.x = vn1 - cp1.velocityBias;
                     b.y = vn2 - cp2.velocityBias;
 
@@ -489,16 +489,16 @@ namespace KBEngine.Physics2D
                         //
                         // x = - inv(A) * b'
                         //
-                        TSVector2 x = -MathUtils.Mul(ref vc.normalMass, b);
+                        FPVector2 x = -MathUtils.Mul(ref vc.normalMass, b);
 
                         if (x.x >= 0.0f && x.y >= 0.0f)
                         {
                             // Get the incremental impulse
-                            TSVector2 d = x - a;
+                            FPVector2 d = x - a;
 
                             // Apply incremental impulse
-                            TSVector2 P1 = d.x * normal;
-                            TSVector2 P2 = d.y * normal;
+                            FPVector2 P1 = d.x * normal;
+                            FPVector2 P2 = d.y * normal;
                             vA -= mA * (P1 + P2);
                             wA -= iA * (MathUtils.Cross(cp1.rA, P1) + MathUtils.Cross(cp2.rA, P2));
 
@@ -538,11 +538,11 @@ namespace KBEngine.Physics2D
                         if (x.x >= 0.0f && vn2 >= 0.0f)
                         {
                             // Get the incremental impulse
-                            TSVector2 d = x - a;
+                            FPVector2 d = x - a;
 
                             // Apply incremental impulse
-                            TSVector2 P1 = d.x * normal;
-                            TSVector2 P2 = d.y * normal;
+                            FPVector2 P1 = d.x * normal;
+                            FPVector2 P2 = d.y * normal;
                             vA -= mA * (P1 + P2);
                             wA -= iA * (MathUtils.Cross(cp1.rA, P1) + MathUtils.Cross(cp2.rA, P2));
 
@@ -580,11 +580,11 @@ namespace KBEngine.Physics2D
                         if (x.y >= 0.0f && vn1 >= 0.0f)
                         {
                             // Resubstitute for the incremental impulse
-                            TSVector2 d = x - a;
+                            FPVector2 d = x - a;
 
                             // Apply incremental impulse
-                            TSVector2 P1 = d.x * normal;
-                            TSVector2 P2 = d.y * normal;
+                            FPVector2 P1 = d.x * normal;
+                            FPVector2 P2 = d.y * normal;
                             vA -= mA * (P1 + P2);
                             wA -= iA * (MathUtils.Cross(cp1.rA, P1) + MathUtils.Cross(cp2.rA, P2));
 
@@ -620,11 +620,11 @@ namespace KBEngine.Physics2D
                         if (vn1 >= 0.0f && vn2 >= 0.0f)
                         {
                             // Resubstitute for the incremental impulse
-                            TSVector2 d = x - a;
+                            FPVector2 d = x - a;
 
                             // Apply incremental impulse
-                            TSVector2 P1 = d.x * normal;
-                            TSVector2 P2 = d.y * normal;
+                            FPVector2 P1 = d.x * normal;
+                            FPVector2 P2 = d.y * normal;
                             vA -= mA * (P1 + P2);
                             wA -= iA * (MathUtils.Cross(cp1.rA, P1) + MathUtils.Cross(cp2.rA, P2));
 
@@ -679,18 +679,18 @@ namespace KBEngine.Physics2D
 
                 int indexA = pc.indexA;
                 int indexB = pc.indexB;
-                TSVector2 localCenterA = pc.localCenterA;
+                FPVector2 localCenterA = pc.localCenterA;
                 FP mA = pc.invMassA;
                 FP iA = pc.invIA;
-                TSVector2 localCenterB = pc.localCenterB;
+                FPVector2 localCenterB = pc.localCenterB;
                 FP mB = pc.invMassB;
                 FP iB = pc.invIB;
                 int pointCount = pc.pointCount;
 
-                TSVector2 cA = _positions[indexA].c;
+                FPVector2 cA = _positions[indexA].c;
                 FP aA = _positions[indexA].a;
 
-                TSVector2 cB = _positions[indexB].c;
+                FPVector2 cB = _positions[indexB].c;
                 FP aB = _positions[indexB].a;
 
                 // Solve normal constraints
@@ -703,17 +703,17 @@ namespace KBEngine.Physics2D
                     xfA.p = cA - MathUtils.Mul(xfA.q, localCenterA);
                     xfB.p = cB - MathUtils.Mul(xfB.q, localCenterB);
 
-                    TSVector2 normal;
-                    TSVector2 point;
+                    FPVector2 normal;
+                    FPVector2 point;
                     FP separation;
 
                     PositionSolverManifold.Initialize(pc, xfA, xfB, j, out normal, out point, out separation);
 
-                    TSVector2 rA = point - cA;
-                    TSVector2 rB = point - cB;
+                    FPVector2 rA = point - cA;
+                    FPVector2 rB = point - cB;
 
                     // Track max constraint error.
-                    minSeparation = KBEngine.TSMath.Min(minSeparation, separation);
+                    minSeparation = KBEngine.FPMath.Min(minSeparation, separation);
 
                     // Prevent large corrections and allow slop.
                     FP C = MathUtils.Clamp(Settings.Baumgarte * (separation + Settings.LinearSlop), -Settings.MaxLinearCorrection, 0.0f);
@@ -726,7 +726,7 @@ namespace KBEngine.Physics2D
                     // Compute normal impulse
                     FP impulse = K > 0.0f ? -C / K : 0.0f;
 
-                    TSVector2 P = impulse * normal;
+                    FPVector2 P = impulse * normal;
 
                     cA -= mA * P;
                     aA -= iA * MathUtils.Cross(rA, P);
@@ -758,8 +758,8 @@ namespace KBEngine.Physics2D
 
                 int indexA = pc.indexA;
                 int indexB = pc.indexB;
-                TSVector2 localCenterA = pc.localCenterA;
-                TSVector2 localCenterB = pc.localCenterB;
+                FPVector2 localCenterA = pc.localCenterA;
+                FPVector2 localCenterB = pc.localCenterB;
                 int pointCount = pc.pointCount;
 
                 FP mA = 0.0f;
@@ -778,10 +778,10 @@ namespace KBEngine.Physics2D
                     iB = pc.invIB;
                 }
 
-                TSVector2 cA = _positions[indexA].c;
+                FPVector2 cA = _positions[indexA].c;
                 FP aA = _positions[indexA].a;
 
-                TSVector2 cB = _positions[indexB].c;
+                FPVector2 cB = _positions[indexB].c;
                 FP aB = _positions[indexB].a;
 
                 // Solve normal constraints
@@ -794,17 +794,17 @@ namespace KBEngine.Physics2D
                     xfA.p = cA - MathUtils.Mul(xfA.q, localCenterA);
                     xfB.p = cB - MathUtils.Mul(xfB.q, localCenterB);
 
-                    TSVector2 normal;
-                    TSVector2 point;
+                    FPVector2 normal;
+                    FPVector2 point;
                     FP separation;
 
                     PositionSolverManifold.Initialize(pc, xfA, xfB, j, out normal, out point, out separation);
 
-                    TSVector2 rA = point - cA;
-                    TSVector2 rB = point - cB;
+                    FPVector2 rA = point - cA;
+                    FPVector2 rB = point - cB;
 
                     // Track max constraint error.
-                    minSeparation = KBEngine.TSMath.Min(minSeparation, separation);
+                    minSeparation = KBEngine.FPMath.Min(minSeparation, separation);
 
                     // Prevent large corrections and allow slop.
                     FP C = MathUtils.Clamp(Settings.Baumgarte * (separation + Settings.LinearSlop), -Settings.MaxLinearCorrection, 0.0f);
@@ -817,7 +817,7 @@ namespace KBEngine.Physics2D
                     // Compute normal impulse
                     FP impulse = K > 0.0f ? -C / K : 0.0f;
 
-                    TSVector2 P = impulse * normal;
+                    FPVector2 P = impulse * normal;
 
                     cA -= mA * P;
                     aA -= iA * MathUtils.Cross(rA, P);
@@ -853,10 +853,10 @@ namespace KBEngine.Physics2D
             /// <param name="radiusB">The radius for B.</param>
             /// <param name="normal">World vector pointing from A to B</param>
             /// <param name="points">Torld contact point (point of intersection).</param>
-            public static void Initialize(ref Manifold manifold, ref Transform xfA, FP radiusA, ref Transform xfB, FP radiusB, out TSVector2 normal, out FixedArray2<TSVector2> points)
+            public static void Initialize(ref Manifold manifold, ref Transform xfA, FP radiusA, ref Transform xfB, FP radiusB, out FPVector2 normal, out FixedArray2<FPVector2> points)
             {
-                normal = TSVector2.zero;
-                points = new FixedArray2<TSVector2>();
+                normal = FPVector2.zero;
+                points = new FixedArray2<FPVector2>();
 
                 if (manifold.PointCount == 0)
                 {
@@ -867,17 +867,17 @@ namespace KBEngine.Physics2D
                 {
                     case ManifoldType.Circles:
                         {
-                            normal = new TSVector2(1.0f, 0.0f);
-                            TSVector2 pointA = MathUtils.Mul(ref xfA, manifold.LocalPoint);
-                            TSVector2 pointB = MathUtils.Mul(ref xfB, manifold.Points[0].LocalPoint);
-                            if (TSVector2.DistanceSquared(pointA, pointB) > Settings.EpsilonSqr)
+                            normal = new FPVector2(1.0f, 0.0f);
+                            FPVector2 pointA = MathUtils.Mul(ref xfA, manifold.LocalPoint);
+                            FPVector2 pointB = MathUtils.Mul(ref xfB, manifold.Points[0].LocalPoint);
+                            if (FPVector2.DistanceSquared(pointA, pointB) > Settings.EpsilonSqr)
                             {
                                 normal = pointB - pointA;
                                 normal.Normalize();
                             }
 
-                            TSVector2 cA = pointA + radiusA * normal;
-                            TSVector2 cB = pointB - radiusB * normal;
+                            FPVector2 cA = pointA + radiusA * normal;
+                            FPVector2 cB = pointB - radiusB * normal;
                             points[0] = 0.5f * (cA + cB);
                         }
                         break;
@@ -885,13 +885,13 @@ namespace KBEngine.Physics2D
                     case ManifoldType.FaceA:
                         {
                             normal = MathUtils.Mul(xfA.q, manifold.LocalNormal);
-                            TSVector2 planePoint = MathUtils.Mul(ref xfA, manifold.LocalPoint);
+                            FPVector2 planePoint = MathUtils.Mul(ref xfA, manifold.LocalPoint);
 
                             for (int i = 0; i < manifold.PointCount; ++i)
                             {
-                                TSVector2 clipPoint = MathUtils.Mul(ref xfB, manifold.Points[i].LocalPoint);
-                                TSVector2 cA = clipPoint + (radiusA - TSVector2.Dot(clipPoint - planePoint, normal)) * normal;
-                                TSVector2 cB = clipPoint - radiusB * normal;
+                                FPVector2 clipPoint = MathUtils.Mul(ref xfB, manifold.Points[i].LocalPoint);
+                                FPVector2 cA = clipPoint + (radiusA - FPVector2.Dot(clipPoint - planePoint, normal)) * normal;
+                                FPVector2 cB = clipPoint - radiusB * normal;
                                 points[i] = 0.5f * (cA + cB);
                             }
                         }
@@ -900,13 +900,13 @@ namespace KBEngine.Physics2D
                     case ManifoldType.FaceB:
                         {
                             normal = MathUtils.Mul(xfB.q, manifold.LocalNormal);
-                            TSVector2 planePoint = MathUtils.Mul(ref xfB, manifold.LocalPoint);
+                            FPVector2 planePoint = MathUtils.Mul(ref xfB, manifold.LocalPoint);
 
                             for (int i = 0; i < manifold.PointCount; ++i)
                             {
-                                TSVector2 clipPoint = MathUtils.Mul(ref xfA, manifold.Points[i].LocalPoint);
-                                TSVector2 cB = clipPoint + (radiusB - TSVector2.Dot(clipPoint - planePoint, normal)) * normal;
-                                TSVector2 cA = clipPoint - radiusA * normal;
+                                FPVector2 clipPoint = MathUtils.Mul(ref xfA, manifold.Points[i].LocalPoint);
+                                FPVector2 cB = clipPoint + (radiusB - FPVector2.Dot(clipPoint - planePoint, normal)) * normal;
+                                FPVector2 cA = clipPoint - radiusA * normal;
                                 points[i] = 0.5f * (cA + cB);
                             }
 
@@ -920,7 +920,7 @@ namespace KBEngine.Physics2D
 
         private static class PositionSolverManifold
         {
-            public static void Initialize(ContactPositionConstraint pc, Transform xfA, Transform xfB, int index, out TSVector2 normal, out TSVector2 point, out FP separation)
+            public static void Initialize(ContactPositionConstraint pc, Transform xfA, Transform xfB, int index, out FPVector2 normal, out FPVector2 point, out FP separation)
             {
                 Debug.Assert(pc.pointCount > 0);
 
@@ -929,22 +929,22 @@ namespace KBEngine.Physics2D
                 {
                     case ManifoldType.Circles:
                         {
-                            TSVector2 pointA = MathUtils.Mul(ref xfA, pc.localPoint);
-                            TSVector2 pointB = MathUtils.Mul(ref xfB, pc.localPoints[0]);
+                            FPVector2 pointA = MathUtils.Mul(ref xfA, pc.localPoint);
+                            FPVector2 pointB = MathUtils.Mul(ref xfB, pc.localPoints[0]);
                             normal = pointB - pointA;
                             normal.Normalize();
                             point = 0.5f * (pointA + pointB);
-                            separation = TSVector2.Dot(pointB - pointA, normal) - pc.radiusA - pc.radiusB;
+                            separation = FPVector2.Dot(pointB - pointA, normal) - pc.radiusA - pc.radiusB;
                         }
                         break;
 
                     case ManifoldType.FaceA:
                         {
                             normal = MathUtils.Mul(xfA.q, pc.localNormal);
-                            TSVector2 planePoint = MathUtils.Mul(ref xfA, pc.localPoint);
+                            FPVector2 planePoint = MathUtils.Mul(ref xfA, pc.localPoint);
 
-                            TSVector2 clipPoint = MathUtils.Mul(ref xfB, pc.localPoints[index]);
-                            separation = TSVector2.Dot(clipPoint - planePoint, normal) - pc.radiusA - pc.radiusB;
+                            FPVector2 clipPoint = MathUtils.Mul(ref xfB, pc.localPoints[index]);
+                            separation = FPVector2.Dot(clipPoint - planePoint, normal) - pc.radiusA - pc.radiusB;
                             point = clipPoint;
                         }
                         break;
@@ -952,10 +952,10 @@ namespace KBEngine.Physics2D
                     case ManifoldType.FaceB:
                         {
                             normal = MathUtils.Mul(xfB.q, pc.localNormal);
-                            TSVector2 planePoint = MathUtils.Mul(ref xfB, pc.localPoint);
+                            FPVector2 planePoint = MathUtils.Mul(ref xfB, pc.localPoint);
 
-                            TSVector2 clipPoint = MathUtils.Mul(ref xfA, pc.localPoints[index]);
-                            separation = TSVector2.Dot(clipPoint - planePoint, normal) - pc.radiusA - pc.radiusB;
+                            FPVector2 clipPoint = MathUtils.Mul(ref xfA, pc.localPoints[index]);
+                            separation = FPVector2.Dot(clipPoint - planePoint, normal) - pc.radiusA - pc.radiusB;
                             point = clipPoint;
 
                             // Ensure normal points from A to B
@@ -963,8 +963,8 @@ namespace KBEngine.Physics2D
                         }
                         break;
                     default:
-                        normal = TSVector2.zero;
-                        point = TSVector2.zero;
+                        normal = FPVector2.zero;
+                        point = FPVector2.zero;
                         separation = 0;
                         break;
 

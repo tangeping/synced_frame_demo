@@ -24,12 +24,12 @@ namespace KBEngine.Physics2D
         /// <summary>
         /// Acts like waterflow. Defaults to 0,0.
         /// </summary>
-        public TSVector2 Velocity;
+        public FPVector2 Velocity;
 
         private AABB _container;
 
-        private TSVector2 _gravity;
-        private TSVector2 _normal;
+        private FPVector2 _gravity;
+        private FPVector2 _normal;
         private FP _offset;
         private Dictionary<int, Body> _uniqueBodies = new Dictionary<int, Body>();
 
@@ -41,11 +41,11 @@ namespace KBEngine.Physics2D
         /// <param name="linearDragCoefficient">Linear drag coefficient of the fluid</param>
         /// <param name="rotationalDragCoefficient">Rotational drag coefficient of the fluid</param>
         /// <param name="gravity">The direction gravity acts. Buoyancy force will act in opposite direction of gravity.</param>
-        public BuoyancyController(AABB container, FP density, FP linearDragCoefficient, FP rotationalDragCoefficient, TSVector2 gravity)
+        public BuoyancyController(AABB container, FP density, FP linearDragCoefficient, FP rotationalDragCoefficient, FPVector2 gravity)
             : base(ControllerType.BuoyancyController)
         {
             Container = container;
-            _normal = new TSVector2(0, 1);
+            _normal = new FPVector2(0, 1);
             Density = density;
             LinearDragCoefficient = linearDragCoefficient;
             AngularDragCoefficient = rotationalDragCoefficient;
@@ -80,8 +80,8 @@ namespace KBEngine.Physics2D
             {
                 Body body = kv.Value;
 
-                TSVector2 areac = TSVector2.zero;
-                TSVector2 massc = TSVector2.zero;
+                FPVector2 areac = FPVector2.zero;
+                FPVector2 massc = FPVector2.zero;
                 FP area = 0;
                 FP mass = 0;
 
@@ -94,7 +94,7 @@ namespace KBEngine.Physics2D
 
                     Shape shape = fixture.Shape;
 
-                    TSVector2 sc;
+                    FPVector2 sc;
                     FP sarea = shape.ComputeSubmergedArea(ref _normal, _offset, ref body._xf, out sc);
                     area += sarea;
                     areac.x += sarea * sc.x;
@@ -114,11 +114,11 @@ namespace KBEngine.Physics2D
                     continue;
 
                 //Buoyancy
-                TSVector2 buoyancyForce = -Density * area * _gravity;
+                FPVector2 buoyancyForce = -Density * area * _gravity;
                 body.ApplyForce(buoyancyForce, massc);
 
                 //Linear drag
-                TSVector2 dragForce = body.GetLinearVelocityFromWorldPoint(areac) - Velocity;
+                FPVector2 dragForce = body.GetLinearVelocityFromWorldPoint(areac) - Velocity;
                 dragForce *= -LinearDragCoefficient * area;
                 body.ApplyForce(dragForce, areac);
 

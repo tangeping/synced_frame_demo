@@ -34,7 +34,7 @@ namespace KBEngine.Physics2D
     public class RevoluteJoint : Joint2D
     {
         // Solver shared
-        private TSVector _impulse;
+        private FPVector _impulse;
         private FP _motorImpulse;
 
         private bool _enableMotor;
@@ -49,10 +49,10 @@ namespace KBEngine.Physics2D
         // Solver temp
         private int _indexA;
         private int _indexB;
-        private TSVector2 _rA;
-        private TSVector2 _rB;
-        private TSVector2 _localCenterA;
-        private TSVector2 _localCenterB;
+        private FPVector2 _rA;
+        private FPVector2 _rB;
+        private FPVector2 _localCenterA;
+        private FPVector2 _localCenterB;
         private FP _invMassA;
         private FP _invMassB;
         private FP _invIA;
@@ -74,7 +74,7 @@ namespace KBEngine.Physics2D
         /// <param name="anchorA">The first body anchor.</param>
         /// <param name="anchorB">The second anchor.</param>
         /// <param name="useWorldCoordinates">Set to true if you are using world coordinates as anchors.</param>
-        public RevoluteJoint(Body bodyA, Body bodyB, TSVector2 anchorA, TSVector2 anchorB, bool useWorldCoordinates = false)
+        public RevoluteJoint(Body bodyA, Body bodyB, FPVector2 anchorA, FPVector2 anchorB, bool useWorldCoordinates = false)
             : base(bodyA, bodyB)
         {
             JointType = JointType.Revolute;
@@ -92,7 +92,7 @@ namespace KBEngine.Physics2D
 
             ReferenceAngle = BodyB.Rotation - BodyA.Rotation;
 
-            _impulse = TSVector.zero;
+            _impulse = FPVector.zero;
             _limitState = LimitState.Inactive;
         }
 
@@ -103,7 +103,7 @@ namespace KBEngine.Physics2D
         /// <param name="bodyB">The second body.</param>
         /// <param name="anchor">The shared anchor.</param>
         /// <param name="useWorldCoordinates"></param>
-        public RevoluteJoint(Body bodyA, Body bodyB, TSVector2 anchor, bool useWorldCoordinates = false)
+        public RevoluteJoint(Body bodyA, Body bodyB, FPVector2 anchor, bool useWorldCoordinates = false)
             : this(bodyA, bodyB, anchor, anchor, useWorldCoordinates)
         {
         }
@@ -111,20 +111,20 @@ namespace KBEngine.Physics2D
         /// <summary>
         /// The local anchor point on BodyA
         /// </summary>
-        public TSVector2 LocalAnchorA { get; set; }
+        public FPVector2 LocalAnchorA { get; set; }
 
         /// <summary>
         /// The local anchor point on BodyB
         /// </summary>
-        public TSVector2 LocalAnchorB { get; set; }
+        public FPVector2 LocalAnchorB { get; set; }
 
-        public override TSVector2 WorldAnchorA
+        public override FPVector2 WorldAnchorA
         {
             get { return BodyA.GetWorldPoint(LocalAnchorA); }
             set { LocalAnchorA = BodyA.GetLocalPoint(value); }
         }
 
-        public override TSVector2 WorldAnchorB
+        public override FPVector2 WorldAnchorB
         {
             get { return BodyB.GetWorldPoint(LocalAnchorB); }
             set { LocalAnchorB = BodyB.GetLocalPoint(value); }
@@ -289,9 +289,9 @@ namespace KBEngine.Physics2D
             return invDt * _motorImpulse;
         }
 
-        public override TSVector2 GetReactionForce(FP invDt)
+        public override FPVector2 GetReactionForce(FP invDt)
         {
-            TSVector2 p = new TSVector2(_impulse.x, _impulse.y);
+            FPVector2 p = new FPVector2(_impulse.x, _impulse.y);
             return invDt * p;
         }
 
@@ -312,11 +312,11 @@ namespace KBEngine.Physics2D
             _invIB = BodyB._invI;
 
             FP aA = data.positions[_indexA].a;
-            TSVector2 vA = data.velocities[_indexA].v;
+            FPVector2 vA = data.velocities[_indexA].v;
             FP wA = data.velocities[_indexA].w;
 
             FP aB = data.positions[_indexB].a;
-            TSVector2 vB = data.velocities[_indexB].v;
+            FPVector2 vB = data.velocities[_indexB].v;
             FP wB = data.velocities[_indexB].w;
 
             Rot qA = new Rot(aA), qB = new Rot(aB);
@@ -399,7 +399,7 @@ namespace KBEngine.Physics2D
                 _impulse *= data.step.dtRatio;
                 _motorImpulse *= data.step.dtRatio;
 
-                TSVector2 P = new TSVector2(_impulse.x, _impulse.y);
+                FPVector2 P = new FPVector2(_impulse.x, _impulse.y);
 
                 vA -= mA * P;
                 wA -= iA * (MathUtils.Cross(_rA, P) + MotorImpulse + _impulse.z);
@@ -409,7 +409,7 @@ namespace KBEngine.Physics2D
             }
             else
             {
-                _impulse = TSVector.zero;
+                _impulse = FPVector.zero;
                 _motorImpulse = 0.0f;
             }
 
@@ -421,9 +421,9 @@ namespace KBEngine.Physics2D
 
         internal override void SolveVelocityConstraints(ref SolverData data)
         {
-            TSVector2 vA = data.velocities[_indexA].v;
+            FPVector2 vA = data.velocities[_indexA].v;
             FP wA = data.velocities[_indexA].w;
-            TSVector2 vB = data.velocities[_indexB].v;
+            FPVector2 vB = data.velocities[_indexB].v;
             FP wB = data.velocities[_indexB].w;
 
             FP mA = _invMassA, mB = _invMassB;
@@ -448,11 +448,11 @@ namespace KBEngine.Physics2D
             // Solve limit constraint.
             if (_enableLimit && _limitState != LimitState.Inactive && fixedRotation == false)
             {
-                TSVector2 Cdot1 = vB + MathUtils.Cross(wB, _rB) - vA - MathUtils.Cross(wA, _rA);
+                FPVector2 Cdot1 = vB + MathUtils.Cross(wB, _rB) - vA - MathUtils.Cross(wA, _rA);
                 FP Cdot2 = wB - wA;
-                TSVector Cdot = new TSVector(Cdot1.x, Cdot1.y, Cdot2);
+                FPVector Cdot = new FPVector(Cdot1.x, Cdot1.y, Cdot2);
 
-                TSVector impulse = _mass.Solve33(Cdot) * -1;
+                FPVector impulse = _mass.Solve33(Cdot) * -1;
 
                 if (_limitState == LimitState.Equal)
                 {
@@ -463,8 +463,8 @@ namespace KBEngine.Physics2D
                     FP newImpulse = _impulse.z + impulse.z;
                     if (newImpulse < 0.0f)
                     {
-                        TSVector2 rhs = -Cdot1 + _impulse.z * new TSVector2(_mass.ez.x, _mass.ez.y);
-                        TSVector2 reduced = _mass.Solve22(rhs);
+                        FPVector2 rhs = -Cdot1 + _impulse.z * new FPVector2(_mass.ez.x, _mass.ez.y);
+                        FPVector2 reduced = _mass.Solve22(rhs);
                         impulse.x = reduced.x;
                         impulse.y = reduced.y;
                         impulse.z = -_impulse.z;
@@ -482,8 +482,8 @@ namespace KBEngine.Physics2D
                     FP newImpulse = _impulse.z + impulse.z;
                     if (newImpulse > 0.0f)
                     {
-                        TSVector2 rhs = -Cdot1 + _impulse.z * new TSVector2(_mass.ez.x, _mass.ez.y);
-                        TSVector2 reduced = _mass.Solve22(rhs);
+                        FPVector2 rhs = -Cdot1 + _impulse.z * new FPVector2(_mass.ez.x, _mass.ez.y);
+                        FPVector2 reduced = _mass.Solve22(rhs);
                         impulse.x = reduced.x;
                         impulse.y = reduced.y;
                         impulse.z = -_impulse.z;
@@ -497,7 +497,7 @@ namespace KBEngine.Physics2D
                     }
                 }
 
-                TSVector2 P = new TSVector2(impulse.x, impulse.y);
+                FPVector2 P = new FPVector2(impulse.x, impulse.y);
 
                 vA -= mA * P;
                 wA -= iA * (MathUtils.Cross(_rA, P) + impulse.z);
@@ -508,8 +508,8 @@ namespace KBEngine.Physics2D
             else
             {
                 // Solve point-to-point constraint
-                TSVector2 Cdot = vB + MathUtils.Cross(wB, _rB) - vA - MathUtils.Cross(wA, _rA);
-                TSVector2 impulse = _mass.Solve22(-Cdot);
+                FPVector2 Cdot = vB + MathUtils.Cross(wB, _rB) - vA - MathUtils.Cross(wA, _rA);
+                FPVector2 impulse = _mass.Solve22(-Cdot);
 
                 _impulse.x += impulse.x;
                 _impulse.y += impulse.y;
@@ -529,9 +529,9 @@ namespace KBEngine.Physics2D
 
         internal override bool SolvePositionConstraints(ref SolverData data)
         {
-            TSVector2 cA = data.positions[_indexA].c;
+            FPVector2 cA = data.positions[_indexA].c;
             FP aA = data.positions[_indexA].a;
-            TSVector2 cB = data.positions[_indexB].c;
+            FPVector2 cB = data.positions[_indexB].c;
             FP aB = data.positions[_indexB].a;
 
             Rot qA = new Rot(aA), qB = new Rot(aB);
@@ -581,10 +581,10 @@ namespace KBEngine.Physics2D
             {
                 qA.Set(aA);
                 qB.Set(aB);
-                TSVector2 rA = MathUtils.Mul(qA, LocalAnchorA - _localCenterA);
-                TSVector2 rB = MathUtils.Mul(qB, LocalAnchorB - _localCenterB);
+                FPVector2 rA = MathUtils.Mul(qA, LocalAnchorA - _localCenterA);
+                FPVector2 rB = MathUtils.Mul(qB, LocalAnchorB - _localCenterB);
 
-                TSVector2 C = cB + rB - cA - rA;
+                FPVector2 C = cB + rB - cA - rA;
                 positionError = C.magnitude;
 
                 FP mA = _invMassA, mB = _invMassB;
@@ -596,7 +596,7 @@ namespace KBEngine.Physics2D
                 K.ey.x = K.ex.y;
                 K.ey.y = mA + mB + iA * rA.x * rA.x + iB * rB.x * rB.x;
 
-                TSVector2 impulse = -K.Solve(C);
+                FPVector2 impulse = -K.Solve(C);
 
                 cA -= mA * impulse;
                 aA -= iA * MathUtils.Cross(rA, impulse);

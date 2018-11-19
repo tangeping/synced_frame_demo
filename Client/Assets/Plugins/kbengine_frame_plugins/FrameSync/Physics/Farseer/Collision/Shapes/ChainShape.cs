@@ -37,7 +37,7 @@ namespace KBEngine.Physics2D
         /// The vertices. These are not owned/freed by the chain Shape.
         /// </summary>
         public Vertices Vertices;
-        private TSVector2 _prevVertex, _nextVertex;
+        private FPVector2 _prevVertex, _nextVertex;
         private bool _hasPrevVertex, _hasNextVertex;
         private static EdgeShape _edgeShape = new EdgeShape();
 
@@ -67,11 +67,11 @@ namespace KBEngine.Physics2D
 
             for (int i = 1; i < vertices.Count; ++i)
             {
-                TSVector2 v1 = vertices[i - 1];
-                TSVector2 v2 = vertices[i];
+                FPVector2 v1 = vertices[i - 1];
+                FPVector2 v2 = vertices[i];
 
                 // If the code crashes here, it means your vertices are too close together.
-                Debug.Assert(TSVector2.DistanceSquared(v1, v2) > Settings.LinearSlop * Settings.LinearSlop);
+                Debug.Assert(FPVector2.DistanceSquared(v1, v2) > Settings.LinearSlop * Settings.LinearSlop);
             }
 
             Vertices = new Vertices(vertices);
@@ -94,7 +94,7 @@ namespace KBEngine.Physics2D
         /// Establish connectivity to a vertex that precedes the first vertex.
         /// Don't call this for loops.
         /// </summary>
-        public TSVector2 PrevVertex
+        public FPVector2 PrevVertex
         {
             get { return _prevVertex; }
             set
@@ -108,7 +108,7 @@ namespace KBEngine.Physics2D
         /// Establish connectivity to a vertex that follows the last vertex.
         /// Don't call this for loops.
         /// </summary>
-        public TSVector2 NextVertex
+        public FPVector2 NextVertex
         {
             get { return _nextVertex; }
             set
@@ -168,7 +168,7 @@ namespace KBEngine.Physics2D
             return edgeShape;
         }
 
-        public override bool TestPoint(ref Transform transform, ref TSVector2 point)
+        public override bool TestPoint(ref Transform transform, ref FPVector2 point)
         {
             return false;
         }
@@ -201,11 +201,11 @@ namespace KBEngine.Physics2D
                 i2 = 0;
             }
 
-            TSVector2 v1 = MathUtils.Mul(ref transform, Vertices[i1]);
-            TSVector2 v2 = MathUtils.Mul(ref transform, Vertices[i2]);
+            FPVector2 v1 = MathUtils.Mul(ref transform, Vertices[i1]);
+            FPVector2 v2 = MathUtils.Mul(ref transform, Vertices[i2]);
 
-            aabb.LowerBound = TSVector2.Min(v1, v2);
-            aabb.UpperBound = TSVector2.Max(v1, v2);
+            aabb.LowerBound = FPVector2.Min(v1, v2);
+            aabb.UpperBound = FPVector2.Max(v1, v2);
         }
 
         protected override void ComputeProperties()
@@ -213,9 +213,9 @@ namespace KBEngine.Physics2D
             //Does nothing. Chain shapes don't have properties.
         }
 
-        public override FP ComputeSubmergedArea(ref TSVector2 normal, FP offset, ref Transform xf, out TSVector2 sc)
+        public override FP ComputeSubmergedArea(ref FPVector2 normal, FP offset, ref Transform xf, out FPVector2 sc)
         {
-            sc = TSVector2.zero;
+            sc = FPVector2.zero;
             return 0;
         }
 

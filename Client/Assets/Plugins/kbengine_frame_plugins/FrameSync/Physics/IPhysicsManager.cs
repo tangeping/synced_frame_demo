@@ -6,7 +6,7 @@ using UnityEngine;
 **/
 public interface IPhysicsManager : IPhysicsManagerBase {
 
-    TSVector Gravity { get; set; }
+    FPVector Gravity { get; set; }
 
     bool SpeculativeContacts { get; set; }
 

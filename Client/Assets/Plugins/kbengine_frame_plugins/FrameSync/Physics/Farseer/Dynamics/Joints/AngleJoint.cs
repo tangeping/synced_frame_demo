@@ -35,13 +35,13 @@ namespace KBEngine.Physics2D
             MaxImpulse = FP.MaxValue;
         }
 
-        public override TSVector2 WorldAnchorA
+        public override FPVector2 WorldAnchorA
         {
             get { return BodyA.Position; }
             set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
         }
 
-        public override TSVector2 WorldAnchorB
+        public override FPVector2 WorldAnchorB
         {
             get { return BodyB.Position; }
             set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
@@ -81,11 +81,11 @@ namespace KBEngine.Physics2D
         /// </summary>
         public FP Softness { get; set; }
 
-        public override TSVector2 GetReactionForce(FP invDt)
+        public override FPVector2 GetReactionForce(FP invDt)
         {
             //TODO
             //return _inv_dt * _impulse;
-            return TSVector2.zero;
+            return FPVector2.zero;
         }
 
         public override FP GetReactionTorque(FP invDt)
@@ -113,8 +113,8 @@ namespace KBEngine.Physics2D
 
             FP p = (_bias - data.velocities[indexB].w + data.velocities[indexA].w) * _massFactor;
 
-            data.velocities[indexA].w -= BodyA._invI * FP.Sign(p) * KBEngine.TSMath.Min(FP.Abs(p), MaxImpulse);
-            data.velocities[indexB].w += BodyB._invI * FP.Sign(p) * KBEngine.TSMath.Min(FP.Abs(p), MaxImpulse);
+            data.velocities[indexA].w -= BodyA._invI * FP.Sign(p) * KBEngine.FPMath.Min(FP.Abs(p), MaxImpulse);
+            data.velocities[indexB].w += BodyB._invI * FP.Sign(p) * KBEngine.FPMath.Min(FP.Abs(p), MaxImpulse);
         }
 
         internal override bool SolvePositionConstraints(ref SolverData data)

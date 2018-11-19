@@ -13,7 +13,7 @@ namespace KBEngine.Physics2D
         /// <summary>
         /// Direction of the windforce
         /// </summary>
-        public TSVector2 Direction { get; set; }
+        public FPVector2 Direction { get; set; }
 
         /// <summary>
         /// The amount of Direction randomization. Allowed range is 0-1.
@@ -36,7 +36,7 @@ namespace KBEngine.Physics2D
 
                 if (decayMultiplier != 0)
                 {
-                    TSVector2 forceVector;
+                    FPVector2 forceVector;
 
                     if (ForceType == ForceTypes.Point)
                     {
@@ -49,7 +49,7 @@ namespace KBEngine.Physics2D
                         forceVector = Direction;
 
                         if (forceVector.magnitude == 0)
-                            forceVector = new TSVector2(0, 1);
+                            forceVector = new FPVector2(0, 1);
                     }
 
                     //TODO: Consider Divergence:
@@ -58,7 +58,7 @@ namespace KBEngine.Physics2D
                     // Calculate random Variation
                     if (Variation != 0)
                     {
-                        FP strengthVariation = KBEngine.TSRandom.value * TSMath.Clamp(Variation, 0, 1);
+                        FP strengthVariation = KBEngine.FPRandom.value * FPMath.Clamp(Variation, 0, 1);
                         forceVector.Normalize();
                         body.ApplyForce(forceVector * strength * decayMultiplier * strengthVariation);
                     }

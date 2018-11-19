@@ -7,23 +7,23 @@ namespace KBEngine.Physics2D
     /// </summary>
     public static class LineTools
     {
-        public static FP DistanceBetweenPointAndLineSegment(ref TSVector2 point, ref TSVector2 start, ref TSVector2 end)
+        public static FP DistanceBetweenPointAndLineSegment(ref FPVector2 point, ref FPVector2 start, ref FPVector2 end)
         {
             if (start == end)
-                return TSVector2.Distance(point, start);
+                return FPVector2.Distance(point, start);
 
-            TSVector2 v = TSVector2.Subtract(end, start);
-            TSVector2 w = TSVector2.Subtract(point, start);
+            FPVector2 v = FPVector2.Subtract(end, start);
+            FPVector2 w = FPVector2.Subtract(point, start);
 
-            FP c1 = TSVector2.Dot(w, v);
-            if (c1 <= 0) return TSVector2.Distance(point, start);
+            FP c1 = FPVector2.Dot(w, v);
+            if (c1 <= 0) return FPVector2.Distance(point, start);
 
-            FP c2 = TSVector2.Dot(v, v);
-            if (c2 <= c1) return TSVector2.Distance(point, end);
+            FP c2 = FPVector2.Dot(v, v);
+            if (c2 <= c1) return FPVector2.Distance(point, end);
 
             FP b = c1 / c2;
-            TSVector2 pointOnLine = TSVector2.Add(start, TSVector2.Multiply(v, b));
-            return TSVector2.Distance(point, pointOnLine);
+            FPVector2 pointOnLine = FPVector2.Add(start, FPVector2.Multiply(v, b));
+            return FPVector2.Distance(point, pointOnLine);
         }
 
         // From Eric Jordan's convex decomposition library
@@ -35,9 +35,9 @@ namespace KBEngine.Physics2D
         ///Grazing lines should not return true.
         /// 
         /// </summary>
-        public static bool LineIntersect2(ref TSVector2 a0, ref TSVector2 a1, ref TSVector2 b0, ref  TSVector2 b1, out TSVector2 intersectionPoint)
+        public static bool LineIntersect2(ref FPVector2 a0, ref FPVector2 a1, ref FPVector2 b0, ref  FPVector2 b1, out FPVector2 intersectionPoint)
         {
-            intersectionPoint = TSVector2.zero;
+            intersectionPoint = FPVector2.zero;
 
             if (a0 == b0 || a0 == b1 || a1 == b0 || a1 == b1)
                 return false;
@@ -52,10 +52,10 @@ namespace KBEngine.Physics2D
             FP y4 = b1.y;
 
             //AABB early exit
-            if (KBEngine.TSMath.Max(x1, x2) < KBEngine.TSMath.Min(x3, x4) || KBEngine.TSMath.Max(x3, x4) < KBEngine.TSMath.Min(x1, x2))
+            if (KBEngine.FPMath.Max(x1, x2) < KBEngine.FPMath.Min(x3, x4) || KBEngine.FPMath.Max(x3, x4) < KBEngine.FPMath.Min(x1, x2))
                 return false;
 
-            if (KBEngine.TSMath.Max(y1, y2) < KBEngine.TSMath.Min(y3, y4) || KBEngine.TSMath.Max(y3, y4) < KBEngine.TSMath.Min(y1, y2))
+            if (KBEngine.FPMath.Max(y1, y2) < KBEngine.FPMath.Min(y3, y4) || KBEngine.FPMath.Max(y3, y4) < KBEngine.FPMath.Min(y1, y2))
                 return false;
 
             FP ua = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3));
@@ -80,9 +80,9 @@ namespace KBEngine.Physics2D
         }
 
         //From Mark Bayazit's convex decomposition algorithm
-        public static TSVector2 LineIntersect(TSVector2 p1, TSVector2 p2, TSVector2 q1, TSVector2 q2)
+        public static FPVector2 LineIntersect(FPVector2 p1, FPVector2 p2, FPVector2 q1, FPVector2 q2)
         {
-            TSVector2 i = TSVector2.zero;
+            FPVector2 i = FPVector2.zero;
             FP a1 = p2.y - p1.y;
             FP b1 = p1.x - p2.x;
             FP c1 = a1 * p1.x + b1 * p1.y;
@@ -124,9 +124,9 @@ namespace KBEngine.Physics2D
         /// <param name="secondIsSegment">Set this to true to require that the
         /// intersection point be on the second line segment.</param>
         /// <returns>True if an intersection is detected, false otherwise.</returns>
-        public static bool LineIntersect(ref TSVector2 point1, ref TSVector2 point2, ref TSVector2 point3, ref TSVector2 point4, bool firstIsSegment, bool secondIsSegment, out TSVector2 point)
+        public static bool LineIntersect(ref FPVector2 point1, ref FPVector2 point2, ref FPVector2 point3, ref FPVector2 point4, bool firstIsSegment, bool secondIsSegment, out FPVector2 point)
         {
-            point = new TSVector2();
+            point = new FPVector2();
 
             // these are reused later.
             // each lettered sub-calculation is used twice, except
@@ -201,7 +201,7 @@ namespace KBEngine.Physics2D
         /// <param name="secondIsSegment">Set this to true to require that the
         /// intersection point be on the second line segment.</param>
         /// <returns>True if an intersection is detected, false otherwise.</returns>
-        public static bool LineIntersect(TSVector2 point1, TSVector2 point2, TSVector2 point3, TSVector2 point4, bool firstIsSegment, bool secondIsSegment, out TSVector2 intersectionPoint)
+        public static bool LineIntersect(FPVector2 point1, FPVector2 point2, FPVector2 point3, FPVector2 point4, bool firstIsSegment, bool secondIsSegment, out FPVector2 intersectionPoint)
         {
             return LineIntersect(ref point1, ref point2, ref point3, ref point4, firstIsSegment, secondIsSegment, out intersectionPoint);
         }
@@ -220,7 +220,7 @@ namespace KBEngine.Physics2D
         /// <param name="intersectionPoint">This is set to the intersection
         /// point if an intersection is detected.</param>
         /// <returns>True if an intersection is detected, false otherwise.</returns>
-        public static bool LineIntersect(ref TSVector2 point1, ref TSVector2 point2, ref TSVector2 point3, ref TSVector2 point4, out TSVector2 intersectionPoint)
+        public static bool LineIntersect(ref FPVector2 point1, ref FPVector2 point2, ref FPVector2 point3, ref FPVector2 point4, out FPVector2 intersectionPoint)
         {
             return LineIntersect(ref point1, ref point2, ref point3, ref point4, true, true, out intersectionPoint);
         }
@@ -239,7 +239,7 @@ namespace KBEngine.Physics2D
         /// <param name="intersectionPoint">This is set to the intersection
         /// point if an intersection is detected.</param>
         /// <returns>True if an intersection is detected, false otherwise.</returns>
-        public static bool LineIntersect(TSVector2 point1, TSVector2 point2, TSVector2 point3, TSVector2 point4, out TSVector2 intersectionPoint)
+        public static bool LineIntersect(FPVector2 point1, FPVector2 point2, FPVector2 point3, FPVector2 point4, out FPVector2 intersectionPoint)
         {
             return LineIntersect(ref point1, ref point2, ref point3, ref point4, true, true, out intersectionPoint);
         }
@@ -254,13 +254,13 @@ namespace KBEngine.Physics2D
         /// <param name="point1">The first point of the line segment to test</param>
         /// <param name="point2">The second point of the line segment to test.</param>
         /// <param name="vertices">The vertices, as described above</param>
-        public static Vertices LineSegmentVerticesIntersect(ref TSVector2 point1, ref TSVector2 point2, Vertices vertices)
+        public static Vertices LineSegmentVerticesIntersect(ref FPVector2 point1, ref FPVector2 point2, Vertices vertices)
         {
             Vertices intersectionPoints = new Vertices();
 
             for (int i = 0; i < vertices.Count; i++)
             {
-                TSVector2 point;
+                FPVector2 point;
                 if (LineIntersect(vertices[i], vertices[vertices.NextIndex(i)], point1, point2, true, true, out point))
                 {
                     intersectionPoints.Add(point);
@@ -276,7 +276,7 @@ namespace KBEngine.Physics2D
         /// <param name="point1">The first point of the line segment to test</param>
         /// <param name="point2">The second point of the line segment to test.</param>
         /// <param name="aabb">The AABB that is used for testing intersection.</param>
-        public static Vertices LineSegmentAABBIntersect(ref TSVector2 point1, ref TSVector2 point2, AABB aabb)
+        public static Vertices LineSegmentAABBIntersect(ref FPVector2 point1, ref FPVector2 point2, AABB aabb)
         {
             return LineSegmentVerticesIntersect(ref point1, ref point2, aabb.Vertices);
         }

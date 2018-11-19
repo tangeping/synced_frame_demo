@@ -42,16 +42,16 @@ namespace KBEngine.Physics2D
     public class FrictionJoint : Joint2D
     {
         // Solver shared
-        private TSVector2 _linearImpulse;
+        private FPVector2 _linearImpulse;
         private FP _angularImpulse;
 
         // Solver temp
         private int _indexA;
         private int _indexB;
-        private TSVector2 _rA;
-        private TSVector2 _rB;
-        private TSVector2 _localCenterA;
-        private TSVector2 _localCenterB;
+        private FPVector2 _rA;
+        private FPVector2 _rB;
+        private FPVector2 _localCenterA;
+        private FPVector2 _localCenterB;
         private FP _invMassA;
         private FP _invMassB;
         private FP _invIA;
@@ -71,7 +71,7 @@ namespace KBEngine.Physics2D
         /// <param name="bodyB"></param>
         /// <param name="anchor"></param>
         /// <param name="useWorldCoordinates">Set to true if you are using world coordinates as anchors.</param>
-        public FrictionJoint(Body bodyA, Body bodyB, TSVector2 anchor, bool useWorldCoordinates = false)
+        public FrictionJoint(Body bodyA, Body bodyB, FPVector2 anchor, bool useWorldCoordinates = false)
             : base(bodyA, bodyB)
         {
             JointType = JointType.Friction;
@@ -91,20 +91,20 @@ namespace KBEngine.Physics2D
         /// <summary>
         /// The local anchor point on BodyA
         /// </summary>
-        public TSVector2 LocalAnchorA { get; set; }
+        public FPVector2 LocalAnchorA { get; set; }
 
         /// <summary>
         /// The local anchor point on BodyB
         /// </summary>
-        public TSVector2 LocalAnchorB { get; set; }
+        public FPVector2 LocalAnchorB { get; set; }
 
-        public override TSVector2 WorldAnchorA
+        public override FPVector2 WorldAnchorA
         {
             get { return BodyA.GetWorldPoint(LocalAnchorA); }
             set { LocalAnchorA = BodyA.GetLocalPoint(value); }
         }
 
-        public override TSVector2 WorldAnchorB
+        public override FPVector2 WorldAnchorB
         {
             get { return BodyB.GetWorldPoint(LocalAnchorB); }
             set { LocalAnchorB = BodyB.GetLocalPoint(value); }
@@ -120,7 +120,7 @@ namespace KBEngine.Physics2D
         /// </summary>
         public FP MaxTorque { get; set; }
 
-        public override TSVector2 GetReactionForce(FP invDt)
+        public override FPVector2 GetReactionForce(FP invDt)
         {
             return invDt * _linearImpulse;
         }
@@ -142,11 +142,11 @@ namespace KBEngine.Physics2D
             _invIB = BodyB._invI;
 
             FP aA = data.positions[_indexA].a;
-            TSVector2 vA = data.velocities[_indexA].v;
+            FPVector2 vA = data.velocities[_indexA].v;
             FP wA = data.velocities[_indexA].w;
 
             FP aB = data.positions[_indexB].a;
-            TSVector2 vB = data.velocities[_indexB].v;
+            FPVector2 vB = data.velocities[_indexB].v;
             FP wB = data.velocities[_indexB].w;
 
             Rot qA = new Rot(aA), qB = new Rot(aB);
@@ -187,7 +187,7 @@ namespace KBEngine.Physics2D
                 _linearImpulse *= data.step.dtRatio;
                 _angularImpulse *= data.step.dtRatio;
 
-                TSVector2 P = new TSVector2(_linearImpulse.x, _linearImpulse.y);
+                FPVector2 P = new FPVector2(_linearImpulse.x, _linearImpulse.y);
                 vA -= mA * P;
                 wA -= iA * (MathUtils.Cross(_rA, P) + _angularImpulse);
                 vB += mB * P;
@@ -195,7 +195,7 @@ namespace KBEngine.Physics2D
             }
             else
             {
-                _linearImpulse = TSVector2.zero;
+                _linearImpulse = FPVector2.zero;
                 _angularImpulse = 0.0f;
             }
 
@@ -207,9 +207,9 @@ namespace KBEngine.Physics2D
 
         internal override void SolveVelocityConstraints(ref SolverData data)
         {
-            TSVector2 vA = data.velocities[_indexA].v;
+            FPVector2 vA = data.velocities[_indexA].v;
             FP wA = data.velocities[_indexA].w;
-            TSVector2 vB = data.velocities[_indexB].v;
+            FPVector2 vB = data.velocities[_indexB].v;
             FP wB = data.velocities[_indexB].w;
 
             FP mA = _invMassA, mB = _invMassB;
@@ -233,10 +233,10 @@ namespace KBEngine.Physics2D
 
             // Solve linear friction
             {
-                TSVector2 Cdot = vB + MathUtils.Cross(wB, _rB) - vA - MathUtils.Cross(wA, _rA);
+                FPVector2 Cdot = vB + MathUtils.Cross(wB, _rB) - vA - MathUtils.Cross(wA, _rA);
 
-                TSVector2 impulse = -MathUtils.Mul(ref _linearMass, Cdot);
-                TSVector2 oldImpulse = _linearImpulse;
+                FPVector2 impulse = -MathUtils.Mul(ref _linearMass, Cdot);
+                FPVector2 oldImpulse = _linearImpulse;
                 _linearImpulse += impulse;
 
                 FP maxImpulse = h * MaxForce;

@@ -192,7 +192,7 @@ namespace KBEngine.Physics3D
         public Queue<Arbiter> removedArbiterQueue = new Queue<Arbiter>();
         public Queue<Arbiter> addedArbiterQueue = new Queue<Arbiter>();
 
-        private TSVector gravity = new TSVector(0, -981 * FP.EN2, 0);
+        private FPVector gravity = new FPVector(0, -981 * FP.EN2, 0);
 
         public ContactSettings ContactSettings { get { return contactSettings; } }
 
@@ -356,7 +356,7 @@ namespace KBEngine.Physics3D
         /// Gets or sets the gravity in this <see cref="World"/>. The default gravity
         /// is (0,-9.81,0)
         /// </summary>
-        public TSVector Gravity { get { return gravity; } set { gravity = value; } }
+        public FPVector Gravity { get { return gravity; } set { gravity = value; } }
 
         /// <summary>
         /// Global sets or gets if a body is able to be temporarily deactivated by the engine to
@@ -675,8 +675,8 @@ namespace KBEngine.Physics3D
                 }
                 else
                 {
-                    TSVector diff; TSVector.Subtract(ref c.p1, ref c.p2, out diff);
-                    FP distance = TSVector.Dot(ref diff, ref c.normal);
+                    FPVector diff; FPVector.Subtract(ref c.p1, ref c.p2, out diff);
+                    FP distance = FPVector.Dot(ref diff, ref c.normal);
 
                     diff = diff - distance * c.normal;
                     distance = diff.sqrMagnitude;
@@ -783,21 +783,21 @@ namespace KBEngine.Physics3D
                 RigidBody body = rigidBodies[index];
                 if (!body.isStatic && body.IsActive)
                 {
-                    TSVector temp;
-                    TSVector.Multiply(ref body.force, body.inverseMass * timestep, out temp);
-                    TSVector.Add(ref temp, ref body.linearVelocity, out body.linearVelocity);
+                    FPVector temp;
+                    FPVector.Multiply(ref body.force, body.inverseMass * timestep, out temp);
+                    FPVector.Add(ref temp, ref body.linearVelocity, out body.linearVelocity);
 
                     if (!(body.isParticle))
                     {
-                        TSVector.Multiply(ref body.torque, timestep, out temp);
-                        TSVector.Transform(ref temp, ref body.invInertiaWorld, out temp);
-                        TSVector.Add(ref temp, ref body.angularVelocity, out body.angularVelocity);
+                        FPVector.Multiply(ref body.torque, timestep, out temp);
+                        FPVector.Transform(ref temp, ref body.invInertiaWorld, out temp);
+                        FPVector.Add(ref temp, ref body.angularVelocity, out body.angularVelocity);
                     }
 
                     if (body.affectedByGravity)
                     {
-                        TSVector.Multiply(ref gravity, timestep, out temp);
-                        TSVector.Add(ref body.linearVelocity, ref temp, out body.linearVelocity);
+                        FPVector.Multiply(ref gravity, timestep, out temp);
+                        FPVector.Add(ref body.linearVelocity, ref temp, out body.linearVelocity);
                     }
                 }
 
@@ -812,45 +812,45 @@ namespace KBEngine.Physics3D
         {
             RigidBody body = obj as RigidBody;
 
-            TSVector temp;
-            TSVector.Multiply(ref body.linearVelocity, timestep, out temp);
-            TSVector.Add(ref temp, ref body.position, out body.position);
+            FPVector temp;
+            FPVector.Multiply(ref body.linearVelocity, timestep, out temp);
+            FPVector.Add(ref temp, ref body.position, out body.position);
 
             if (!(body.isParticle))
             {
 
                 //exponential map
-                TSVector axis;
+                FPVector axis;
                 FP angle = body.angularVelocity.magnitude;
 
                 if (angle < FP.EN3)
                 {
                     // use Taylor's expansions of sync function
                     // axis = body.angularVelocity * (FP.Half * timestep - (timestep * timestep * timestep) * (0.020833333333f) * angle * angle);
-					TSVector.Multiply(ref body.angularVelocity, (FP.Half * timestep - (timestep * timestep * timestep) * (2082 * FP.EN6) * angle * angle), out axis);
+					FPVector.Multiply(ref body.angularVelocity, (FP.Half * timestep - (timestep * timestep * timestep) * (2082 * FP.EN6) * angle * angle), out axis);
                 }
                 else
                 {
                     // sync(fAngle) = sin(c*fAngle)/t
-                    TSVector.Multiply(ref body.angularVelocity, (FP.Sin(FP.Half * angle * timestep) / angle), out axis);
+                    FPVector.Multiply(ref body.angularVelocity, (FP.Sin(FP.Half * angle * timestep) / angle), out axis);
                 }
 
-                TSQuaternion dorn = new TSQuaternion(axis.x, axis.y, axis.z, FP.Cos(angle * timestep * FP.Half));
-                TSQuaternion ornA; TSQuaternion.CreateFromMatrix(ref body.orientation, out ornA);
+                FPQuaternion dorn = new FPQuaternion(axis.x, axis.y, axis.z, FP.Cos(angle * timestep * FP.Half));
+                FPQuaternion ornA; FPQuaternion.CreateFromMatrix(ref body.orientation, out ornA);
 
-                TSQuaternion.Multiply(ref dorn, ref ornA, out dorn);
+                FPQuaternion.Multiply(ref dorn, ref ornA, out dorn);
 
-                dorn.Normalize(); TSMatrix.CreateFromQuaternion(ref dorn, out body.orientation);
+                dorn.Normalize(); FPMatrix.CreateFromQuaternion(ref dorn, out body.orientation);
             }
 
             body.linearVelocity *= 1 / (1 + timestep * body.linearDrag);
             body.angularVelocity *= 1 / (1 + timestep * body.angularDrag);
 
             /*if ((body.Damping & RigidBody.DampingType.Linear) != 0)
-                TSVector.Multiply(ref body.linearVelocity, currentLinearDampFactor, out body.linearVelocity);
+                FPVector.Multiply(ref body.linearVelocity, currentLinearDampFactor, out body.linearVelocity);
 
             if ((body.Damping & RigidBody.DampingType.Angular) != 0)
-                TSVector.Multiply(ref body.angularVelocity, currentAngularDampFactor, out body.angularVelocity);*/
+                FPVector.Multiply(ref body.angularVelocity, currentAngularDampFactor, out body.angularVelocity);*/
 
             body.Update();
 
@@ -894,7 +894,7 @@ namespace KBEngine.Physics3D
             return true;
         }
 
-        private void CollisionDetected(RigidBody body1, RigidBody body2, TSVector point1, TSVector point2, TSVector normal, FP penetration) {
+        private void CollisionDetected(RigidBody body1, RigidBody body2, FPVector point1, FPVector point2, FPVector normal, FP penetration) {
             bool anyBodyColliderOnly = body1.IsColliderOnly || body2.IsColliderOnly;
 
             Arbiter arbiter = null;
@@ -921,7 +921,7 @@ namespace KBEngine.Physics3D
             Contact contact = null;
 
             if (arbiter.body1 == body1) {
-                TSVector.Negate(ref normal, out normal);
+                FPVector.Negate(ref normal, out normal);
                 contact = arbiter.AddContact(point1, point2, normal, penetration, contactSettings);
             } else {
                 contact = arbiter.AddContact(point2, point1, normal, penetration, contactSettings);

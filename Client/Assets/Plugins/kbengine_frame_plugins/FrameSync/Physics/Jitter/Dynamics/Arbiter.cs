@@ -183,11 +183,11 @@ namespace KBEngine.Physics3D {
         /// <param name="point2">Point on body2. In world space.</param>
         /// <param name="normal">The normal pointing to body2.</param>
         /// <param name="penetration">The estimated penetration depth.</param>
-        public Contact AddContact(TSVector point1, TSVector point2, TSVector normal, FP penetration, 
+        public Contact AddContact(FPVector point1, FPVector point2, FPVector normal, FP penetration, 
             ContactSettings contactSettings)
         {
-            TSVector relPos1;
-            TSVector.Subtract(ref point1, ref body1.position, out relPos1);
+            FPVector relPos1;
+            FPVector.Subtract(ref point1, ref body1.position, out relPos1);
 
             int index;
 
@@ -217,7 +217,7 @@ namespace KBEngine.Physics3D {
             }
         }
 
-        private void ReplaceContact(ref TSVector point1, ref TSVector point2, ref TSVector n, FP p, int index,
+        private void ReplaceContact(ref FPVector point1, ref FPVector point2, ref FPVector n, FP p, int index,
             ContactSettings contactSettings)
         {
             Contact contact = contactList[index];
@@ -228,14 +228,14 @@ namespace KBEngine.Physics3D {
 
         }
 
-        private int GetCacheEntry(ref TSVector realRelPos1, FP contactBreakThreshold)
+        private int GetCacheEntry(ref FPVector realRelPos1, FP contactBreakThreshold)
         {
             FP shortestDist = contactBreakThreshold * contactBreakThreshold;
             int size = contactList.Count;
             int nearestPoint = -1;
             for (int i = 0; i < size; i++)
             {
-                TSVector diffA; TSVector.Subtract(ref contactList[i].relativePos1,ref realRelPos1,out diffA);
+                FPVector diffA; FPVector.Subtract(ref contactList[i].relativePos1,ref realRelPos1,out diffA);
                 FP distToManiPoint = diffA.sqrMagnitude;
                 if (distToManiPoint < shortestDist)
                 {
@@ -247,7 +247,7 @@ namespace KBEngine.Physics3D {
         }
 
         // sort cached points so most isolated points come first
-        private int SortCachedPoints(ref TSVector realRelPos1, FP pen)
+        private int SortCachedPoints(ref FPVector realRelPos1, FP pen)
         {
             //calculate 4 possible cases areas, and take biggest area
             //also need to keep 'deepest'
@@ -266,32 +266,32 @@ namespace KBEngine.Physics3D {
             FP res0 = 0, res1 = 0, res2 = 0, res3 = 0;
             if (maxPenetrationIndex != 0)
             {
-                TSVector a0; TSVector.Subtract(ref realRelPos1,ref contactList[1].relativePos1,out a0);
-                TSVector b0; TSVector.Subtract(ref contactList[3].relativePos1, ref contactList[2].relativePos1, out b0);
-                TSVector cross; TSVector.Cross(ref a0, ref b0, out cross);
+                FPVector a0; FPVector.Subtract(ref realRelPos1,ref contactList[1].relativePos1,out a0);
+                FPVector b0; FPVector.Subtract(ref contactList[3].relativePos1, ref contactList[2].relativePos1, out b0);
+                FPVector cross; FPVector.Cross(ref a0, ref b0, out cross);
                 res0 = cross.sqrMagnitude;
             }
             if (maxPenetrationIndex != 1)
             {
-                TSVector a0; TSVector.Subtract(ref realRelPos1, ref contactList[0].relativePos1, out a0);
-                TSVector b0; TSVector.Subtract(ref contactList[3].relativePos1, ref contactList[2].relativePos1, out b0);
-                TSVector cross; TSVector.Cross(ref a0, ref b0, out cross);
+                FPVector a0; FPVector.Subtract(ref realRelPos1, ref contactList[0].relativePos1, out a0);
+                FPVector b0; FPVector.Subtract(ref contactList[3].relativePos1, ref contactList[2].relativePos1, out b0);
+                FPVector cross; FPVector.Cross(ref a0, ref b0, out cross);
                 res1 = cross.sqrMagnitude;
             }
 
             if (maxPenetrationIndex != 2)
             {
-                TSVector a0; TSVector.Subtract(ref realRelPos1, ref contactList[0].relativePos1, out a0);
-                TSVector b0; TSVector.Subtract(ref contactList[3].relativePos1, ref contactList[1].relativePos1, out b0);
-                TSVector cross; TSVector.Cross(ref a0, ref b0, out cross);
+                FPVector a0; FPVector.Subtract(ref realRelPos1, ref contactList[0].relativePos1, out a0);
+                FPVector b0; FPVector.Subtract(ref contactList[3].relativePos1, ref contactList[1].relativePos1, out b0);
+                FPVector cross; FPVector.Cross(ref a0, ref b0, out cross);
                 res2 = cross.sqrMagnitude;
             }
 
             if (maxPenetrationIndex != 3)
             {
-                TSVector a0; TSVector.Subtract(ref realRelPos1, ref contactList[0].relativePos1, out a0);
-                TSVector b0; TSVector.Subtract(ref contactList[2].relativePos1, ref contactList[1].relativePos1, out b0);
-                TSVector cross; TSVector.Cross(ref a0, ref b0, out cross);
+                FPVector a0; FPVector.Subtract(ref realRelPos1, ref contactList[0].relativePos1, out a0);
+                FPVector b0; FPVector.Subtract(ref contactList[2].relativePos1, ref contactList[1].relativePos1, out b0);
+                FPVector cross; FPVector.Cross(ref a0, ref b0, out cross);
                 res3 = cross.sqrMagnitude;
             }
 
