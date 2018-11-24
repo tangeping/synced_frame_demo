@@ -1503,9 +1503,9 @@ MonoBehaviour:
   _useGravity: 1
   _isKinematic: 0
   _linearDrag:
-    _serializedValue: 0
+    _serializedValue: 42949672960
   _angularDrag:
-    _serializedValue: 214748368
+    _serializedValue: 42949672960
   interpolation: 0
   _constraints: 0
 --- !u!114 &114174908965600076

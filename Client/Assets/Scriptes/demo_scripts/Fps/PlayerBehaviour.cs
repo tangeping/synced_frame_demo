@@ -222,12 +222,13 @@ public class PlayerBehaviour : MonoBehaviour {
         accell *= accellRate * FPS_Manager.instance.Config.lockedTimeStep;
         steer *= steerRate * FPS_Manager.instance.Config.lockedTimeStep;
 
-        tsTransform.Translate(0, 0, accell, Space.Self);
+        //tsTransform.Translate(0, 0, accell, Space.Self);
         tsTransform.Rotate(0, steer, 0);
 
+        tsRigidBody.velocity += tsTransform.forward * accell*10;
+        //tsRigidBody.AddForce(tsTransform.forward * accell);
 
-        TSRigidBody rb = GetComponent<TSRigidBody>();
-        rb.AddForce(TSVector.forward * FPS_Manager.instance.Config.lockedTimeStep);
+        //tsRigidBody.AddForce(TSVector.forward * FPS_Manager.instance.Config.lockedTimeStep);
     }
 
     public void OnSyncedUpdate(UInt32 frameid, ENTITY_DATA operation)

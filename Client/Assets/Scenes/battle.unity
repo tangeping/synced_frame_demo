@@ -482,7 +482,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mass:
-    _serializedValue: 4294967296
+    _serializedValue: 42949672960000
   _useGravity: 1
   _isKinematic: 1
   _linearDrag:
