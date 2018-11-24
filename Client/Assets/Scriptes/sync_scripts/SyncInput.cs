@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using TrueSync;
+using KBEngine;
 using UnityEngine;
 
 namespace SyncFrame
@@ -182,7 +182,7 @@ namespace SyncFrame
 
         private static void LogInvalidKeyAccess()
         {
-            UnityEngine.Debug.LogWarning("You can't access an input in a TrueSyncBehaviour that has no player owner.");
+            UnityEngine.Debug.LogWarning("You can't access an input in a FrameSyncBehaviour that has no player owner.");
         }
 
         /**

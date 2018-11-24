@@ -4,12 +4,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using SyncFrame;
-using TrueSync;
+using KBEngine;
 
 namespace SyncFrame
 {
     public enum CMD
     {
+        EMPTY = 0,
         MOUSE = 1,
         KEYBOARD=2,
         USER = 3,

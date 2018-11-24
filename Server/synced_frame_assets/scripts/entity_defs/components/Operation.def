@@ -1,0 +1,113 @@
+<root>
+	<Properties>
+		<state>
+			<Type>			INT8		</Type>
+			<Flags>			OWN_CLIENT		</Flags>
+		</state>
+
+		<winScore>
+			<Type>		INT32				</Type>
+			<Flags>		OWN_CLIENT			</Flags>
+			<Persistent>		true		</Persistent>
+			<Default>		0				</Default>
+		</winScore>
+
+		<lossScore>
+			<Type>		INT32				</Type>
+			<Flags>		OWN_CLIENT			</Flags>
+			<Persistent>		true		</Persistent>
+			<Default>		0				</Default>
+		</lossScore>
+
+		<isWathcher>
+			<Type>		INT8				</Type>
+			<Flags>		OWN_CLIENT			</Flags>
+			<Persistent>		true		</Persistent>
+			<Default>		0				</Default>
+		</isWathcher>
+
+		<seatNo>
+			<Type>		INT8				</Type>
+			<Flags>		OWN_CLIENT			</Flags>
+			<Persistent>		true		</Persistent>
+			<Default>		0				</Default>
+		</seatNo>
+
+	</Properties>
+
+	<CellEvents>
+
+	</CellEvents>
+	
+	<CellMethods>
+
+		<reqReady>
+		<Exposed/>
+		<Arg>		INT8		</Arg>
+		</reqReady>
+
+		<reqLoginOutSpace>
+		<Exposed/>
+		</reqLoginOutSpace>
+
+		<reqGamePause>
+		<Exposed/>
+		</reqGamePause>
+
+		<reqGameRunning>
+		<Exposed/>
+		</reqGameRunning>
+
+	</CellMethods>
+
+	<BaseMethods>
+		<reqSpaceList>
+		<Exposed/>
+		</reqSpaceList>
+
+		<reqCreateSpace>
+		<Exposed/>
+		</reqCreateSpace>
+
+		<reqRemoveSpace>
+		<Exposed/>
+		<Arg>		SPACE_KEY		</Arg>
+		</reqRemoveSpace>	
+
+		<reqLoginSpace>
+		<Exposed/>
+		<Arg>		SPACE_KEY		</Arg>
+		</reqLoginSpace>
+
+		<reqLeaveSpace>
+		<Arg>		SPACE_KEY		</Arg>
+		</reqLeaveSpace>
+
+	</BaseMethods>
+
+	<ClientMethods>
+
+		<onReqSpaceList>
+		<Arg>		SPACE_LIST		</Arg>
+		</onReqSpaceList>
+
+		<onCreateSpaceResult>
+		<Arg>		SPACE_KEY		</Arg>
+		</onCreateSpaceResult>
+
+		<onLoginSpaceResult>
+		<Arg>		SPACE_KEY		</Arg>
+		</onLoginSpaceResult>
+
+		<onLoginOutSpaceResult>
+		<Arg>		ENTITY_ID		</Arg>
+		<Arg>		SPACE_KEY		</Arg>
+		</onLoginOutSpaceResult>
+
+		<onGamePause>
+		<Arg>		FRAMEID		</Arg>
+		</onGamePause>
+
+	</ClientMethods>
+</root>
+

@@ -5,7 +5,7 @@ using SyncFrame;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using TrueSync;
+using KBEngine;
 using UnityEngine;
 
 public class GameEntity : MonoBehaviour {

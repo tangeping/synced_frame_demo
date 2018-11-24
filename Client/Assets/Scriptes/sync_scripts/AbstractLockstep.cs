@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using TrueSync;
+using KBEngine;
 using UnityEngine;
 
 namespace SyncFrame
@@ -9,17 +9,17 @@ namespace SyncFrame
     {
         private FP deltaTime;
 
-        private TrueSyncConfig config;
+        private FrameSyncConfig config;
 
         private IPhysicsManagerBase physicsManager;
 
-        public static AbstractLockstep NewInstance(FP deltaTime,TrueSyncConfig config, IPhysicsManagerBase physicsManager)
+        public static AbstractLockstep NewInstance(FP deltaTime,FrameSyncConfig config, IPhysicsManagerBase physicsManager)
         {
             return new DefaultLockstep(deltaTime, config, physicsManager);
             
         }
 
-        public AbstractLockstep(FP deltaTime, TrueSyncConfig config, IPhysicsManagerBase physicsManager)
+        public AbstractLockstep(FP deltaTime, FrameSyncConfig config, IPhysicsManagerBase physicsManager)
         {
             this.deltaTime = deltaTime;
             this.config = config;

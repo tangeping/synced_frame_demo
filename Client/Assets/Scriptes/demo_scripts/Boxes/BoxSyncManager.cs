@@ -1,7 +1,7 @@
 ﻿using SyncFrame;
 using System.Collections;
 using System.Collections.Generic;
-using TrueSync;
+using KBEngine;
 using UnityEngine;
 
 public class BoxSyncManager : MonoBehaviour {
@@ -33,9 +33,9 @@ public class BoxSyncManager : MonoBehaviour {
             for (int j = 0; j < numberOfBoxesZ; j++)
             {
                 GameObject box = FPS_Manager.SyncedInstantiate(this.boxPrefab, TSVector.zero, TSQuaternion.identity);
-                TSRigidBody body = box.GetComponent<TSRigidBody>();
-                //body.position = new TrueSync.TSVector(i * 2 - 5, 1, j * 2);
-                body.position = new TrueSync.TSVector(-i * 0.4f + 1, 0.6f, -2-j * 0.4f);
+                FPRigidBody body = box.GetComponent<FPRigidBody>();
+                //body.position = new KBEngine.TSVector(i * 2 - 5, 1, j * 2);
+                body.position = new KBEngine.TSVector(-i * 0.4f + 1, 0.6f, -2-j * 0.4f);
             }
         }
     }

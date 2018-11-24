@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using TrueSync;
+using KBEngine;
 using SyncFrame;
 using CBFrame.Sys;
 using KBEngine;
@@ -13,17 +13,17 @@ public class PlayerContorl : MonoBehaviour
 {
 
     /**
-    * @brief Key to set/get horizontal position from {@link TrueSyncInput}.
+    * @brief Key to set/get horizontal position from {@link FrameSyncInput}.
     **/
     private const byte INPUT_KEY_HORIZONTAL = 0;
 
     /**
-    * @brief Key to set/get vertical position from {@link TrueSyncInput}.
+    * @brief Key to set/get vertical position from {@link FrameSyncInput}.
     **/
     private const byte INPUT_KEY_VERTICAL = 1;
 
     /**
-    * @brief Key to set/get jump state from {@link TrueSyncInput}.
+    * @brief Key to set/get jump state from {@link FrameSyncInput}.
     **/
     private const byte INPUT_KEY_CREATE = 2;
 
@@ -43,9 +43,9 @@ public class PlayerContorl : MonoBehaviour
     [AddTracking]
     private bool lastCreateState = false;
 
-    public TSRigidBody tsRigidBody;
+    public FPRigidBody FPRigidBody;
 
-    public TSTransform tsTransform;
+    public FPTransform FPTransform;
 
     public KBEngine.Avatar owner;
 
@@ -64,13 +64,13 @@ public class PlayerContorl : MonoBehaviour
         //KBEngine.Event.registerOut("recieveFrameTick", this, "OnSyncedUpdate");
 
 
-        tsRigidBody = GetComponent<TSRigidBody>();
+        FPRigidBody = GetComponent<FPRigidBody>();
 
-        tsTransform = GetComponent<TSTransform>();
+        FPTransform = GetComponent<FPTransform>();
 
         anim = GetComponent<Animator>();
 
-        Debug.Log("PlayerContorl::start:" + tsRigidBody + ",tsTransform:" + tsTransform + ",anim:"+anim);
+        Debug.Log("PlayerContorl::start:" + FPRigidBody + ",FPTransform:" + FPTransform + ",anim:"+anim);
 
         // if is first player then changes ball's color to black
     }
@@ -82,9 +82,9 @@ public class PlayerContorl : MonoBehaviour
             GUI.contentColor = Color.green;
             GUI.Label(new Rect(0, Screen.height - 20, 400, 100), "id: " + owner.id);
             GUI.Label(new Rect(0, Screen.height - 35, 400, 100), "frameCount: " + FrameCount);
-            GUI.Label(new Rect(0, Screen.height - 50, 400, 100), "position: " + tsRigidBody.position);
-            GUI.Label(new Rect(0, Screen.height - 65, 400, 100), "velocity: " + tsRigidBody.velocity);
-            GUI.Label(new Rect(0, Screen.height - 80, 400, 100), "angularVelocity: " + tsRigidBody.angularVelocity);
+            GUI.Label(new Rect(0, Screen.height - 50, 400, 100), "position: " + FPRigidBody.position);
+            GUI.Label(new Rect(0, Screen.height - 65, 400, 100), "velocity: " + FPRigidBody.velocity);
+            GUI.Label(new Rect(0, Screen.height - 80, 400, 100), "angularVelocity: " + FPRigidBody.angularVelocity);
             GUI.Label(new Rect(0, Screen.height - 95, 400, 100), "force: " + force);
         }
         else
@@ -92,9 +92,9 @@ public class PlayerContorl : MonoBehaviour
             GUI.contentColor = Color.yellow;
             GUI.Label(new Rect(Screen.width - 200, Screen.height - 20, 400, 100), "id: " + owner.id);
             GUI.Label(new Rect(Screen.width - 200, Screen.height - 35, 400, 100), "frameCount: " + FrameCount);
-            GUI.Label(new Rect(Screen.width - 200, Screen.height - 50, 400, 100), "position: " + tsRigidBody.position);
-            GUI.Label(new Rect(Screen.width - 200, Screen.height - 65, 400, 100), "velocity: " + tsRigidBody.velocity);
-            GUI.Label(new Rect(Screen.width - 200, Screen.height - 80, 400, 100), "angularVelocity: " + tsRigidBody.angularVelocity);
+            GUI.Label(new Rect(Screen.width - 200, Screen.height - 50, 400, 100), "position: " + FPRigidBody.position);
+            GUI.Label(new Rect(Screen.width - 200, Screen.height - 65, 400, 100), "velocity: " + FPRigidBody.velocity);
+            GUI.Label(new Rect(Screen.width - 200, Screen.height - 80, 400, 100), "angularVelocity: " + FPRigidBody.angularVelocity);
             GUI.Label(new Rect(Screen.width - 200, Screen.height - 95, 400, 100), "force: " + force);
         }
 
@@ -128,27 +128,27 @@ public class PlayerContorl : MonoBehaviour
     {
         if (FrameCount < 1000)
         {
-            tsRigidBody.AddForce(new TSVector(0.0, 0.0, -2.2), ForceMode.Impulse);
+            FPRigidBody.AddForce(new TSVector(0.0, 0.0, -2.2), ForceMode.Impulse);
         }
         else if (FrameCount < 2000)
         {
-            tsRigidBody.AddForce(new TSVector(0.0, 0.0, 2.2), ForceMode.Impulse);
+            FPRigidBody.AddForce(new TSVector(0.0, 0.0, 2.2), ForceMode.Impulse);
         }
         else if (FrameCount < 2400)
         {
-            tsRigidBody.AddForce(new TSVector(2.2, 0.0, 0.0), ForceMode.Impulse);
+            FPRigidBody.AddForce(new TSVector(2.2, 0.0, 0.0), ForceMode.Impulse);
         }
         else if (FrameCount < 2800)
         {
-            tsRigidBody.AddForce(new TSVector(-2.2, 0.0, 0.0), ForceMode.Impulse);
+            FPRigidBody.AddForce(new TSVector(-2.2, 0.0, 0.0), ForceMode.Impulse);
         }
         else if (FrameCount < 3000)
         {
-            tsRigidBody.AddForce(new TSVector(-2.2, 0.0, -2.2), ForceMode.Impulse);
+            FPRigidBody.AddForce(new TSVector(-2.2, 0.0, -2.2), ForceMode.Impulse);
         }
         else
         {
-            tsRigidBody.AddForce(new TSVector(0.0, 0.0, 0.0), ForceMode.Impulse);
+            FPRigidBody.AddForce(new TSVector(0.0, 0.0, 0.0), ForceMode.Impulse);
         }
     }
 
@@ -206,18 +206,18 @@ public class PlayerContorl : MonoBehaviour
 
         string Snapshot = "id: " + owner.id
             + ",frameCount: " + FrameCount
-//             + ",mass: " + tsRigidBody.mass
-//             + ",useGravity: " + tsRigidBody.useGravity
-//             + ",isKinematic: " + tsRigidBody.isKinematic
-//             + ",drag: " + tsRigidBody.drag
-//             + ",angularDrag: " + tsRigidBody.angularDrag
-            + ",position: " + tsRigidBody.position
-            + ",rotation: " + tsRigidBody.rotation
-            + ",velocity: " + tsRigidBody.velocity
-            + ",angularVelocity: " + tsRigidBody.angularVelocity
-            + ",LinearVelocity:" + ((TrueSync.Physics3D.RigidBody)tsRigidBody.tsCollider.Body).LinearVelocity
-            + ",IsParticle:" + ((TrueSync.Physics3D.RigidBody)tsRigidBody.tsCollider.Body).IsParticle
-            + ",force: " + ((TrueSync.Physics3D.RigidBody)tsRigidBody.tsCollider.Body).Force;
+//             + ",mass: " + FPRigidBody.mass
+//             + ",useGravity: " + FPRigidBody.useGravity
+//             + ",isKinematic: " + FPRigidBody.isKinematic
+//             + ",drag: " + FPRigidBody.drag
+//             + ",angularDrag: " + FPRigidBody.angularDrag
+            + ",position: " + FPRigidBody.position
+            + ",rotation: " + FPRigidBody.rotation
+            + ",velocity: " + FPRigidBody.velocity
+            + ",angularVelocity: " + FPRigidBody.angularVelocity
+            + ",LinearVelocity:" + ((KBEngine.Physics3D.RigidBody)FPRigidBody.tsCollider.Body).LinearVelocity
+            + ",IsParticle:" + ((KBEngine.Physics3D.RigidBody)FPRigidBody.tsCollider.Body).IsParticle
+            + ",force: " + ((KBEngine.Physics3D.RigidBody)FPRigidBody.tsCollider.Body).Force;
         
 
         //CBFrame.Utils.Logger.Debug(owner.id.ToString(),Snapshot);
@@ -247,7 +247,7 @@ public class PlayerContorl : MonoBehaviour
         //         }
         // 
         //         force += movement;
-        /*        tsRigidBody.AddForce(movement, ForceMode.Impulse);*/
+        /*        FPRigidBody.AddForce(movement, ForceMode.Impulse);*/
 
     }
 
@@ -264,7 +264,7 @@ public class PlayerContorl : MonoBehaviour
     /**
     * @brief Tints box's material with gray color when it collides with the ball.
     **/
-    public void OnSyncedCollisionEnter(TSCollision other)
+    public void OnSyncedCollisionEnter(FPCollision other)
     {
         
         if (other.gameObject.name == "Box(Clone)")
@@ -277,7 +277,7 @@ public class PlayerContorl : MonoBehaviour
     /**
     * @brief Increases box's local scale by 1% while collision with a ball remains active.
     **/
-    public void OnSyncedCollisionStay(TSCollision other)
+    public void OnSyncedCollisionStay(FPCollision other)
     {
         
         if (other.gameObject.name == "Box(Clone)")
@@ -290,7 +290,7 @@ public class PlayerContorl : MonoBehaviour
     /**
     * @brief Resets changes in box's properties when there is no more collision with the ball.
     **/
-    public void OnSyncedCollisionExit(TSCollision other)
+    public void OnSyncedCollisionExit(FPCollision other)
     {
         
         if (other.gameObject.name == "Box(Clone)")
